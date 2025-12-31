@@ -1,0 +1,11 @@
+# misc
+.DS_Store
+
+# editor
+.vscode
+.idea
+
+node_modules
+__pycache__
+.terraform
+.venv
