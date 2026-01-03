@@ -1,0 +1,10 @@
+[project]
+name = "openai-realtime-api-try"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "strands-agents-tools[mem0-memory,rss,use-computer]>=0.2.19",
+    "strands-agents[bidi-all,bidi-openai]==1.21.0",
+]
