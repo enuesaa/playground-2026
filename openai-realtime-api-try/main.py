@@ -22,8 +22,9 @@ async def main() -> None:
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
-    await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])
 
+    # see https://github.com/strands-agents/sdk-python/issues/1376
+    await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])
 
 if __name__ == "__main__":
     asyncio.run(main())
