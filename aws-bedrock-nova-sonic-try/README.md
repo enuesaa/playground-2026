@@ -7,3 +7,10 @@
 
 ### Links
 - https://strandsagents.com/latest/documentation/docs/user-guide/concepts/experimental/bidirectional-streaming/quickstart/
+
+### AWS公式サンプルアプリ
+
+ローカルでサクッと動いた。
+
+- https://github.com/aws-samples/amazon-nova-samples/tree/main/speech-to-speech/amazon-nova-2-sonic/repeatable-patterns/nova-sonic-speaks-first
+- https://blog.denet.co.jp/adcale2025_amazon-nova2-sonic-santa-voice-chat/
