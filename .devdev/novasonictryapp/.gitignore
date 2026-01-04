@@ -9,3 +9,4 @@ node_modules
 dist
 .svelte-kit
 .env.local
+build

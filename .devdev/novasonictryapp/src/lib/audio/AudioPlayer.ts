@@ -1,26 +1,28 @@
-const WorkletUrl: string = new URL('./AudioPlayerProcessor.worklet.js', import.meta.url).toString();
+const WORKLET_URL: string = new URL('./AudioPlayerProcessor.worklet.js', import.meta.url).toString()
+const SAMPLE_RATE = 24000
 
 export class AudioPlayer {
-    public initialized: boolean = false;
-    private ctx: AudioContext | null = null;
-    private node: AudioWorkletNode | null = null;
+	public initialized: boolean = false
+	private audioContext: AudioContext | null = null
+	private workletNode: AudioWorkletNode | null = null
 
-    constructor() { }
+	// 初期化
+	async init(): Promise<void> {
+		this.audioContext = new AudioContext({ sampleRate: SAMPLE_RATE })
+		await this.audioContext.audioWorklet.addModule(WORKLET_URL)
+		this.workletNode = new AudioWorkletNode(this.audioContext, 'audio-player-processor')
+		this.workletNode.connect(this.audioContext.destination)
+		this.initialized = true
+	}
 
-    async init(): Promise<void> {
-        this.ctx = new AudioContext({ sampleRate: 24000 });
-        await this.ctx.audioWorklet.addModule(WorkletUrl);
-        this.node = new AudioWorkletNode(this.ctx, "audio-player-processor");
-        this.node.connect(this.ctx.destination);
-        this.initialized = true;
-    }
+	// 音声再生
+	playAudio(samples: Float32Array): void {
+		this.workletNode?.port.postMessage(samples)
+	}
 
-    playAudio(samples: Float32Array): void {
-        this.node?.port.postMessage(samples);
-    }
-
-    stop(): void {
-        this.ctx?.close();
-        this.initialized = false;
-    }
+	// 停止
+	stop(): void {
+		this.audioContext?.close()
+		this.initialized = false
+	}
 }
