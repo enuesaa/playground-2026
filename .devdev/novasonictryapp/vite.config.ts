@@ -2,12 +2,12 @@ import { defineConfig } from 'vite'
 import { sveltekit } from '@sveltejs/kit/vite'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
-import { setupSocketServer } from './src/lib/server/socket'
+import { setupWebSocketServer } from './src/lib/server/websocket'
 
 const webSocketServer = {
 	name: 'webSocketServer',
 	configureServer(server: import('vite').ViteDevServer) {
-		setupSocketServer(server)
+		setupWebSocketServer(server.httpServer)
 	}
 }
 

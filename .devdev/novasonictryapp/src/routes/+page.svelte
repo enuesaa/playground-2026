@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte'
-	import { io, Socket } from 'socket.io-client'
 	import { AudioPlayer } from '$lib/audio/AudioPlayer'
 	import { AudioRecorder } from '$lib/audio/AudioRecorder'
 	import { Mic, MicOff } from 'lucide-svelte'
@@ -10,7 +9,7 @@
 	const SCROLL_DELAY_MS = 50
 
 	// 状態
-	let socket: Socket
+	let ws: WebSocket | null = null
 	let audioPlayer: AudioPlayer
 	let audioRecorder: AudioRecorder | null = null
 	let history: { role: string; message: string }[] = []
@@ -20,13 +19,13 @@
 	const addMessageToHistory = (role: string, message: string) => {
 		const updatedHistory = [...history]
 		const lastMessage = updatedHistory[updatedHistory.length - 1]
-
+		
 		if (updatedHistory.length && lastMessage.role === role) {
-			lastMessage.message += ' ' + message
+			lastMessage.message += " " + message
 		} else {
 			updatedHistory.push({ role, message })
 		}
-
+		
 		history = updatedHistory
 		setTimeout(() => {
 			const chatElement = document.querySelector('#chat')
@@ -34,25 +33,64 @@
 		}, SCROLL_DELAY_MS)
 	}
 
+	// WebSocket送信
+	const send = (type: string, data: any) => {
+		if (ws?.readyState === WebSocket.OPEN) {
+			ws.send(JSON.stringify({ type, data }))
+		}
+	}
+
 	// 初期化
 	onMount(() => {
-		socket = io()
+		// WebSocket接続
+		const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+		const wsUrl = `${protocol}//${window.location.host}/ws`
+		ws = new WebSocket(wsUrl)
+
 		audioPlayer = new AudioPlayer()
 
-		socket.on('textOutput', (data: any) => {
-			addMessageToHistory(data.role, data.content)
-		})
+		// メッセージ受信
+		ws.onmessage = (event) => {
+			try {
+				const { type, data } = JSON.parse(event.data)
 
-		socket.on('audioOutput', (data: any) => {
-			if (!data.content) return
+				if (type === 'textOutput') {
+					addMessageToHistory(data.role, data.content)
+				}
 
-			const base64Audio = data.content
-			const binaryData = Uint8Array.from(atob(base64Audio), (char) => char.charCodeAt(0))
-			const int16Array = new Int16Array(binaryData.buffer)
-			const floatArray = new Float32Array(int16Array).map((value) => value / INT16_TO_FLOAT_DIVISOR)
+				if (type === 'audioOutput' && data.content) {
+					const base64Audio = data.content
+					const binaryData = Uint8Array.from(atob(base64Audio), char => char.charCodeAt(0))
+					const int16Array = new Int16Array(binaryData.buffer)
+					const floatArray = new Float32Array(int16Array).map(value => value / INT16_TO_FLOAT_DIVISOR)
+					audioPlayer.playAudio(floatArray)
+				}
 
-			audioPlayer.playAudio(floatArray)
-		})
+				if (type === 'audioReady') {
+					send('textInput', { content: 'hi' })
+
+					// AudioRecorder初期化
+					navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
+						audioRecorder = new AudioRecorder()
+						audioRecorder.init(mediaStream, (pcmData: Int16Array) => {
+							if (!isStreaming) return
+							const base64Audio = btoa(String.fromCharCode(...new Uint8Array(pcmData.buffer)))
+							send('audioInput', base64Audio)
+						})
+					})
+				}
+			} catch (error) {
+				console.error('WebSocket message error:', error)
+			}
+		}
+
+		ws.onerror = (error) => {
+			console.error('WebSocket error:', error)
+		}
+
+		ws.onclose = () => {
+			console.log('WebSocket closed')
+		}
 	})
 
 	// 音声ストリーミング切り替え
@@ -66,33 +104,17 @@
 		}
 
 		// 開始処理
-		const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true })
-
 		if (!audioPlayer.initialized) {
 			await audioPlayer.init()
 		}
 
-		socket.emit('startAudio')
-
-		socket.once('audioReady', () => {
-			socket.emit('textInput', { content: 'hi' })
-
-			// AudioRecorder初期化
-			audioRecorder = new AudioRecorder()
-			audioRecorder.init(mediaStream, (pcmData: Int16Array) => {
-				if (!isStreaming) return
-
-				const base64Audio = btoa(String.fromCharCode(...new Uint8Array(pcmData.buffer)))
-				socket.emit('audioInput', base64Audio)
-			})
-		})
-
+		send('startAudio', {})
 		isStreaming = true
 	}
 
 	// クリーンアップ
 	onDestroy(() => {
-		socket?.disconnect()
+		ws?.close()
 		audioRecorder?.stop()
 	})
 </script>
