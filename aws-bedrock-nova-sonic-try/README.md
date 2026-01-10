@@ -19,3 +19,5 @@
 ```bash
 apt install -y portaudio19-dev python3-pyaudio
 ```
+
+なんかサンプルレートが違うとかで上手くできてない。
