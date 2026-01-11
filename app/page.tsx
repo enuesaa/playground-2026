@@ -15,13 +15,23 @@ type Entry = {
 }
 
 const items = entries as Entry[]
+const SLIDE_DURATION = 10000
 
-function EntryCard({ entry }: { entry: Entry }) {
+function EntryCard({
+  entry,
+  autoPlayTrigger,
+}: {
+  entry: Entry
+  autoPlayTrigger: number
+}) {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const queueRef = useRef<string[]>([])
+  const sessionRef = useRef(0)
+  const playingRef = useRef(false)
 
   const stopPlayback = useCallback(() => {
+    sessionRef.current += 1
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.src = ''
@@ -29,14 +39,19 @@ function EntryCard({ entry }: { entry: Entry }) {
     }
     queueRef.current = []
     setIsPlaying(false)
+    playingRef.current = false
   }, [])
 
-  const playNext = useCallback(async () => {
-    const next = queueRef.current.shift()
-    if (!next) {
-      setIsPlaying(false)
-      return
-    }
+  const playNext = useCallback(
+    async (sessionId: number) => {
+      if (sessionId !== sessionRef.current) {
+        return
+      }
+      const next = queueRef.current.shift()
+      if (!next) {
+        setIsPlaying(false)
+        return
+      }
 
     try {
       const response = await fetch('/api/tts', {
@@ -57,7 +72,7 @@ function EntryCard({ entry }: { entry: Entry }) {
       audioRef.current = audio
       audio.onended = () => {
         URL.revokeObjectURL(url)
-        playNext()
+        void playNext(sessionId)
       }
       audio.onerror = () => {
         URL.revokeObjectURL(url)
@@ -68,13 +83,28 @@ function EntryCard({ entry }: { entry: Entry }) {
       console.error(error)
       stopPlayback()
     }
-  }, [stopPlayback])
+    },
+    [stopPlayback]
+  )
 
   useEffect(() => {
     return () => {
       stopPlayback()
     }
   }, [stopPlayback])
+
+  const startPlayback = useCallback(async () => {
+    if (!entry.comments?.length || playingRef.current) {
+      return
+    }
+
+    sessionRef.current += 1
+    const sessionId = sessionRef.current
+    queueRef.current = [...entry.comments]
+    setIsPlaying(true)
+    playingRef.current = true
+    await playNext(sessionId)
+  }, [entry.comments, playNext])
 
   const handlePlay = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -89,10 +119,17 @@ function EntryCard({ entry }: { entry: Entry }) {
       return
     }
 
-    queueRef.current = [...entry.comments]
-    setIsPlaying(true)
-    await playNext()
+    await startPlayback()
   }
+
+  useEffect(() => {
+    stopPlayback()
+    startPlayback()
+
+    return () => {
+      stopPlayback()
+    }
+  }, [autoPlayTrigger, startPlayback, stopPlayback])
 
   return (
     <article className='group w-full'>
@@ -176,19 +213,70 @@ function EntryCard({ entry }: { entry: Entry }) {
 }
 
 export default function Home() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (!items.length) {
+      return undefined
+    }
+
+    let frameId = 0
+    let start: number | null = null
+
+    const step = (timestamp: number) => {
+      if (start === null) start = timestamp
+      const elapsed = timestamp - start
+      const ratio = Math.min(elapsed / SLIDE_DURATION, 1)
+      setProgress(ratio)
+
+      if (ratio >= 1) {
+        setActiveIndex((prev) => (prev + 1) % items.length)
+        return
+      }
+
+      frameId = requestAnimationFrame(step)
+    }
+
+    setProgress(0)
+    frameId = requestAnimationFrame(step)
+
+    return () => {
+      cancelAnimationFrame(frameId)
+    }
+  }, [activeIndex, items.length])
+
+  const current = items[activeIndex]
+
+  if (!current) {
+    return null
+  }
+
   return (
     <div className='min-h-screen bg-gradient-to-b from-zinc-50 via-white to-zinc-100 text-zinc-900 dark:from-black dark:via-zinc-950 dark:to-black dark:text-zinc-100'>
-      <main className='mx-auto flex w-full max-w-none flex-col gap-6 px-0 py-0 text-[17px] sm:px-0 sm:text-[18px]'>
+      <main className='mx-auto flex min-h-screen w-full max-w-none flex-col gap-4 px-0 py-6 text-[17px] sm:px-0 sm:text-[18px]'>
         <header className='flex flex-col gap-2 px-5 sm:px-8'>
           <p className='text-xs font-semibold uppercase tracking-[0.12em] text-amber-700 dark:text-amber-300'>
             Fresh reads
           </p>
         </header>
 
-        <section className='flex flex-col gap-0'>
-          {items.map((entry) => {
-            return <EntryCard key={entry.link} entry={entry} />
-          })}
+        <section className='flex flex-1 items-center justify-center px-5 sm:px-8'>
+          <div className='mx-auto flex w-full max-w-4xl flex-col gap-4'>
+            <EntryCard key={current.link} entry={current} autoPlayTrigger={activeIndex} />
+            <div
+              role='progressbar'
+              aria-valuenow={Math.round(progress * 100)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className='h-2 overflow-hidden rounded-full bg-zinc-200/80 ring-1 ring-zinc-200 shadow-sm dark:bg-zinc-800/70 dark:ring-zinc-800'
+            >
+              <div
+                className='h-full w-full origin-left bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 transition-[transform] duration-150 ease-out'
+                style={{ transform: `scaleX(${progress})` }}
+              />
+            </div>
+          </div>
         </section>
       </main>
     </div>
