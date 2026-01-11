@@ -1,10 +1,35 @@
+import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly'
 import { NextResponse } from 'next/server'
+import { Readable } from 'stream'
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
+
+let pollyClient: PollyClient | null = null
+
+const getPollyClient = () => {
+  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+    return null
+  }
+
+  if (!pollyClient) {
+    pollyClient = new PollyClient({
+      region: 'ap-northeast-1',
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+    })
+  }
+
+  return pollyClient
+}
 
 export async function POST(request: Request) {
-  if (!OPENAI_API_KEY) {
-    return NextResponse.json({ error: 'Missing OPENAI_API_KEY' }, { status: 500 })
+  const client = getPollyClient()
+
+  if (!client) {
+    return NextResponse.json({ error: 'Missing AWS Polly credentials' }, { status: 500 })
   }
 
   const { text } = await request.json().catch(() => ({}))
@@ -14,26 +39,37 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini-tts-2025-12-15',
-        voice: 'sage',
-        input: text,
-        speed: 2.1,
-      }),
+    const command = new SynthesizeSpeechCommand({
+      Text: `<speak><prosody rate="x-fast">${text}</prosody></speak>`,
+      OutputFormat: 'mp3',
+      TextType: 'ssml',
+      VoiceId: 'Takumi',
+      Engine: 'neural',
+      LanguageCode: 'ja-JP',
     })
 
-    if (!response.ok) {
-      const message = await response.text()
-      return NextResponse.json({ error: 'TTS failed', detail: message }, { status: response.status })
+    const response = await client.send(command)
+
+    if (!response.AudioStream) {
+      return NextResponse.json({ error: 'No audio stream returned from Polly' }, { status: 502 })
     }
 
-    const audioBuffer = await response.arrayBuffer()
+    const audioChunks: Buffer[] = []
+
+    if (response.AudioStream instanceof Readable) {
+      for await (const chunk of response.AudioStream) {
+        audioChunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+      }
+    } else if (response.AudioStream instanceof Uint8Array) {
+      audioChunks.push(Buffer.from(response.AudioStream))
+    }
+
+    if (!audioChunks.length) {
+      return NextResponse.json({ error: 'Empty audio response from Polly' }, { status: 502 })
+    }
+
+    const audioBuffer = Buffer.concat(audioChunks)
+
     return new Response(audioBuffer, {
       status: 200,
       headers: {
