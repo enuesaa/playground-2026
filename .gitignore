@@ -7,3 +7,5 @@ node_modules
 /build
 .env*
 next-env.d.ts
+
+app/data.json
