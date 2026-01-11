@@ -15,6 +15,8 @@ type Entry = {
   count?: number
 }
 
+type VoiceId = 'Takumi' | 'Kazuha'
+
 const items = entries as Entry[]
 const SLIDE_DURATION = 10000
 
@@ -72,8 +74,8 @@ function EntryCard({
     setIsPlaying(false)
   }, [])
 
-  const playQueue = useCallback(async (texts: string[], sessionId: number) => {
-    for (const text of texts) {
+  const playQueue = useCallback(async (itemsToRead: { text: string; voice: VoiceId }[], sessionId: number) => {
+    for (const { text, voice } of itemsToRead) {
       if (sessionRef.current !== sessionId) return
 
       try {
@@ -82,7 +84,7 @@ function EntryCard({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ text, voice }),
         })
 
         if (!response.ok) {
@@ -124,10 +126,15 @@ function EntryCard({
   }, [])
 
   const startPlayback = useCallback(() => {
-    const queue = [
-      entry.shortTitle ?? entry.title,
-      ...(entry.comments ?? []),
-    ].filter(Boolean)
+    const queue: { text: string; voice: VoiceId }[] = []
+
+    const headline = entry.shortTitle ?? entry.title
+    if (headline) {
+      queue.push({ text: headline, voice: 'Takumi' })
+    }
+    for (const comment of entry.comments ?? []) {
+      if (comment) queue.push({ text: comment, voice: 'Kazuha' })
+    }
 
     if (!queue.length) {
       return

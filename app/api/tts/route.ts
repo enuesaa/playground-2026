@@ -25,6 +25,10 @@ const getPollyClient = () => {
   return pollyClient
 }
 
+const ALLOWED_VOICES = ['Takumi', 'Kazuha'] as const
+type VoiceId = (typeof ALLOWED_VOICES)[number]
+const DEFAULT_VOICE: VoiceId = 'Takumi'
+
 export async function POST(request: Request) {
   const client = getPollyClient()
 
@@ -32,18 +36,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing AWS Polly credentials' }, { status: 500 })
   }
 
-  const { text } = await request.json().catch(() => ({}))
+  const { text, voice } = await request.json().catch(() => ({}))
 
   if (!text || typeof text !== 'string') {
     return NextResponse.json({ error: 'Text is required' }, { status: 400 })
   }
+
+  const voiceId: VoiceId = ALLOWED_VOICES.includes(voice) ? voice : DEFAULT_VOICE
 
   try {
     const command = new SynthesizeSpeechCommand({
       Text: `<speak><prosody rate="x-fast">${text}</prosody></speak>`,
       OutputFormat: 'mp3',
       TextType: 'ssml',
-      VoiceId: 'Takumi',
+      VoiceId: voiceId,
       Engine: 'neural',
       LanguageCode: 'ja-JP',
     })
