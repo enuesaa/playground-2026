@@ -1,0 +1,9 @@
+.DS_Store
+node_modules
+
+# next.js
+/.next/
+/out/
+/build
+.env*
+next-env.d.ts
