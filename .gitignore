@@ -9,4 +9,4 @@ node_modules
 next-env.d.ts
 
 app/data.json
-app/data.original.json
+app/data.*.json

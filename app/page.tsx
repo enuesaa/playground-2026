@@ -7,6 +7,7 @@ import entries from './data.json'
 type Entry = {
   about: string
   title: string
+  shortTitle?: string
   link: string
   subjects: string[]
   comments: string[]
@@ -17,18 +18,49 @@ type Entry = {
 const items = entries as Entry[]
 const SLIDE_DURATION = 10000
 
+function useSlideshow(length: number, durationMs: number) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (!length) return undefined
+
+    let frameId = 0
+    let start = performance.now()
+
+    const tick = (now: number) => {
+      const elapsed = now - start
+      const ratio = Math.min(elapsed / durationMs, 1)
+      setProgress(ratio)
+
+      if (ratio >= 1) {
+        start = now
+        setProgress(0)
+        setActiveIndex((prev) => (prev + 1) % length)
+      }
+
+      frameId = requestAnimationFrame(tick)
+    }
+
+    frameId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameId)
+  }, [length, durationMs])
+
+  return { activeIndex, progress }
+}
+
 function EntryCard({
   entry,
-  autoPlayTrigger,
+  autoPlayKey,
+  autoPlayEnabled,
 }: {
   entry: Entry
-  autoPlayTrigger: number
+  autoPlayKey: number
+  autoPlayEnabled: boolean
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const queueRef = useRef<string[]>([])
   const sessionRef = useRef(0)
-  const playingRef = useRef(false)
 
   const stopPlayback = useCallback(() => {
     sessionRef.current += 1
@@ -37,99 +69,94 @@ function EntryCard({
       audioRef.current.src = ''
       audioRef.current = null
     }
-    queueRef.current = []
     setIsPlaying(false)
-    playingRef.current = false
   }, [])
 
-  const playNext = useCallback(
-    async (sessionId: number) => {
-      if (sessionId !== sessionRef.current) {
+  const playQueue = useCallback(async (texts: string[], sessionId: number) => {
+    for (const text of texts) {
+      if (sessionRef.current !== sessionId) return
+
+      try {
+        const response = await fetch('/api/tts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to generate speech')
+        }
+
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
+        const audio = new Audio(url)
+        audioRef.current = audio
+
+        await new Promise<void>((resolve) => {
+          const cleanup = () => {
+            audio.onended = null
+            audio.onerror = null
+            audio.onpause = null
+            resolve()
+          }
+
+          audio.onended = cleanup
+          audio.onerror = cleanup
+          audio.onpause = cleanup
+          void audio.play().catch(cleanup)
+        })
+
+        URL.revokeObjectURL(url)
+      } catch (error) {
+        console.error(error)
+      }
+
+      if (sessionRef.current !== sessionId) {
         return
       }
-      const next = queueRef.current.shift()
-      if (!next) {
-        setIsPlaying(false)
-        return
-      }
-
-    try {
-      const response = await fetch('/api/tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: next }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate speech')
-      }
-
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const audio = new Audio(url)
-      audioRef.current = audio
-      audio.onended = () => {
-        URL.revokeObjectURL(url)
-        void playNext(sessionId)
-      }
-      audio.onerror = () => {
-        URL.revokeObjectURL(url)
-        stopPlayback()
-      }
-      await audio.play()
-    } catch (error) {
-      console.error(error)
-      stopPlayback()
     }
-    },
-    [stopPlayback]
-  )
 
-  useEffect(() => {
-    return () => {
-      stopPlayback()
+    if (sessionRef.current === sessionId) {
+      setIsPlaying(false)
     }
-  }, [stopPlayback])
+  }, [])
 
-  const startPlayback = useCallback(async () => {
-    if (!entry.comments?.length || playingRef.current) {
+  const startPlayback = useCallback(() => {
+    const queue = [
+      entry.shortTitle ?? entry.title,
+      ...(entry.comments ?? []),
+    ].filter(Boolean)
+
+    if (!queue.length) {
       return
     }
 
-    sessionRef.current += 1
-    const sessionId = sessionRef.current
-    queueRef.current = [...entry.comments]
+    const sessionId = sessionRef.current + 1
+    sessionRef.current = sessionId
     setIsPlaying(true)
-    playingRef.current = true
-    await playNext(sessionId)
-  }, [entry.comments, playNext])
+    void playQueue(queue, sessionId)
+  }, [entry.comments, entry.shortTitle, entry.title, playQueue])
 
-  const handlePlay = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePlay = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     event.stopPropagation()
 
-    if (!entry.comments?.length) {
-      return
-    }
-
     if (isPlaying) {
       stopPlayback()
-      return
+    } else {
+      startPlayback()
     }
-
-    await startPlayback()
   }
 
   useEffect(() => {
     stopPlayback()
-    startPlayback()
-
-    return () => {
-      stopPlayback()
+    if (autoPlayEnabled) {
+      startPlayback()
     }
-  }, [autoPlayTrigger, startPlayback, stopPlayback])
+    return stopPlayback
+  }, [autoPlayKey, autoPlayEnabled, startPlayback, stopPlayback])
 
   return (
     <article className='group w-full'>
@@ -137,18 +164,18 @@ function EntryCard({
         href={entry.link}
         target='_blank'
         rel='noreferrer'
-        className='block w-full overflow-hidden rounded-3xl bg-white/95 ring-1 ring-zinc-200 shadow-sm transition hover:-translate-y-[3px] hover:ring-amber-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 dark:bg-zinc-900/70 dark:ring-zinc-800 dark:hover:ring-amber-400/50'
+        className='block w-full overflow-hidden rounded-[24px] bg-white/10 ring-1 ring-white/10 shadow-lg shadow-black/40 transition hover:-translate-y-[2px] hover:ring-amber-200/60 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/80'
       >
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-4'>
           {entry.imageUrl ? (
-            <div className='relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-800'>
+            <div className='relative overflow-hidden rounded-[20px] border border-white/10 bg-gradient-to-br from-white/5 via-white/0 to-amber-200/5'>
               <img
                 src={entry.imageUrl}
                 alt={entry.title}
-                className='h-64 w-full object-cover transition duration-500 group-hover:scale-[1.03] sm:h-80'
+                className='h-64 w-full object-cover transition duration-700 group-hover:scale-[1.05] sm:h-80'
                 loading='lazy'
               />
-              <div className='absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-900/80 to-transparent' />
+              <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent' />
               <div className='absolute inset-0 flex flex-col justify-between p-4 sm:p-5'>
                 <div className='flex justify-end'>
                   <button
@@ -156,7 +183,7 @@ function EntryCard({
                     onClick={handlePlay}
                     aria-pressed={isPlaying}
                     aria-label={isPlaying ? '音声停止' : '音声再生'}
-                    className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-zinc-900/80 text-white backdrop-blur transition hover:bg-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 dark:bg-zinc-800/80'
+                    className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/25 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                   >
                     <svg
                       viewBox='0 0 24 24'
@@ -172,21 +199,24 @@ function EntryCard({
                   </button>
                 </div>
                 <div className='flex flex-col gap-2'>
-                  <h2 className='text-2xl font-semibold leading-snug tracking-tight text-white drop-shadow-md sm:text-3xl'>
+                  <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>
+                    headline
+                  </p>
+                  <h2 className='text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl'>
                     {entry.title}
                   </h2>
                 </div>
               </div>
             </div>
           ) : (
-            <div className='relative flex flex-col gap-2 rounded-2xl bg-zinc-100 p-4 dark:bg-zinc-800'>
+            <div className='relative flex flex-col gap-3 rounded-[20px] border border-white/10 bg-white/5 p-5'>
               <div className='absolute right-3 top-3'>
                 <button
                   type='button'
                   onClick={handlePlay}
                   aria-pressed={isPlaying}
                   aria-label={isPlaying ? '音声停止' : '音声再生'}
-                  className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-zinc-900/80 text-white backdrop-blur transition hover:bg-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 dark:bg-zinc-800/80'
+                  className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/20 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                 >
                   <svg
                     viewBox='0 0 24 24'
@@ -201,7 +231,10 @@ function EntryCard({
                   </svg>
                 </button>
               </div>
-              <h2 className='text-2xl font-semibold leading-snug tracking-tight text-zinc-900 transition group-hover:text-amber-800 dark:text-zinc-50 dark:group-hover:text-amber-200 sm:text-3xl'>
+              <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>
+                headline
+              </p>
+              <h2 className='text-3xl font-semibold leading-tight tracking-tight text-white transition group-hover:text-amber-200 sm:text-4xl'>
                 {entry.title}
               </h2>
             </div>
@@ -213,68 +246,59 @@ function EntryCard({
 }
 
 export default function Home() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    if (!items.length) {
-      return undefined
-    }
-
-    let frameId = 0
-    let start: number | null = null
-
-    const step = (timestamp: number) => {
-      if (start === null) start = timestamp
-      const elapsed = timestamp - start
-      const ratio = Math.min(elapsed / SLIDE_DURATION, 1)
-      setProgress(ratio)
-
-      if (ratio >= 1) {
-        setActiveIndex((prev) => (prev + 1) % items.length)
-        return
-      }
-
-      frameId = requestAnimationFrame(step)
-    }
-
-    setProgress(0)
-    frameId = requestAnimationFrame(step)
-
-    return () => {
-      cancelAnimationFrame(frameId)
-    }
-  }, [activeIndex, items.length])
-
+  const { activeIndex, progress } = useSlideshow(items.length, SLIDE_DURATION)
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false)
   const current = items[activeIndex]
 
-  if (!current) {
-    return null
+  if (!current) return null
+
+  const handleFirstInteraction = () => {
+    if (!autoPlayEnabled) {
+      setAutoPlayEnabled(true)
+    }
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-zinc-50 via-white to-zinc-100 text-zinc-900 dark:from-black dark:via-zinc-950 dark:to-black dark:text-zinc-100'>
-      <main className='mx-auto flex min-h-screen w-full max-w-none flex-col gap-4 px-0 py-6 text-[17px] sm:px-0 sm:text-[18px]'>
-        <header className='flex flex-col gap-2 px-5 sm:px-8'>
-          <p className='text-xs font-semibold uppercase tracking-[0.12em] text-amber-700 dark:text-amber-300'>
-            Fresh reads
-          </p>
+    <div
+      className='min-h-screen bg-[radial-gradient(circle_at_20%_20%,rgba(255,210,128,0.22),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(56,189,248,0.16),transparent_30%),linear-gradient(to_bottom,#0f0f11,#050507)] text-zinc-50'
+      onClick={handleFirstInteraction}
+    >
+      <main className='mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-5 py-8 sm:px-10 sm:py-10'>
+        <header className='flex items-center justify-between'>
+          <div className='flex flex-col gap-1'>
+            <p className='text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80'>
+              instant brief
+            </p>
+            <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
+              今日のニュースをサクッと
+            </h1>
+          </div>
+          {!autoPlayEnabled && (
+            <span className='rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-amber-200 ring-1 ring-white/10 backdrop-blur'>
+              クリックで音声オン
+            </span>
+          )}
         </header>
 
-        <section className='flex flex-1 items-center justify-center px-5 sm:px-8'>
-          <div className='mx-auto flex w-full max-w-4xl flex-col gap-4'>
-            <EntryCard key={current.link} entry={current} autoPlayTrigger={activeIndex} />
-            <div
-              role='progressbar'
-              aria-valuenow={Math.round(progress * 100)}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              className='h-2 overflow-hidden rounded-full bg-zinc-200/80 ring-1 ring-zinc-200 shadow-sm dark:bg-zinc-800/70 dark:ring-zinc-800'
-            >
+        <section className='flex flex-1 items-center justify-center'>
+          <div className='relative w-full max-w-4xl'>
+            <div className='absolute -inset-6 -z-10 rounded-[32px] bg-white/5 blur-3xl opacity-60' />
+            <div className='absolute -inset-1 -z-10 rounded-[32px] bg-gradient-to-r from-white/10 via-amber-200/15 to-cyan-200/20 opacity-70 blur-xl' />
+
+            <div className='flex w-full flex-col gap-6 rounded-[28px] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-6'>
+              <EntryCard key={current.link} entry={current} autoPlayKey={activeIndex} autoPlayEnabled={autoPlayEnabled} />
               <div
-                className='h-full w-full origin-left bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 transition-[transform] duration-150 ease-out'
-                style={{ transform: `scaleX(${progress})` }}
-              />
+                role='progressbar'
+                aria-valuenow={Math.round(progress * 100)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                className='h-3 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/15'
+              >
+                <div
+                  className='h-full w-full origin-left bg-gradient-to-r from-amber-300 via-amber-400 to-white transition-[transform] duration-200 ease-out'
+                  style={{ transform: `scaleX(${progress})` }}
+                />
+              </div>
             </div>
           </div>
         </section>
