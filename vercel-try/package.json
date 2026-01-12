@@ -11,6 +11,7 @@
   "dependencies": {
     "@vercel/blob": "^2.0.0",
     "@vercel/edge-config": "^1.4.3",
+    "ai": "^6.0.27",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"

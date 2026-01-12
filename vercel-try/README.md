@@ -48,3 +48,9 @@ vercel env pull
 - ファイルをアップロードできる
 - アップロードしたらURLが発行される
 - Vercel のコンソールからファイルを確認可能
+
+## AI Gateway
+
+- vercel ai sdk を使って llm を呼び出せる
+- クレジットカードの登録が必須
+- OpenAI API のキーを持ち込む (Bring Your Own Key) のもできる
