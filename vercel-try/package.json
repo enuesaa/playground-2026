@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "biome format --write app/**.tsx *.ts *.mjs *.json"
+    "format": "biome format --write ./app"
   },
   "dependencies": {
+    "@vercel/blob": "^2.0.0",
     "@vercel/edge-config": "^1.4.3",
     "next": "16.1.1",
     "react": "19.2.3",

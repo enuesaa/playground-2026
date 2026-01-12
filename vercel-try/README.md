@@ -3,15 +3,23 @@
 - 本格的に使うのは地味に初めてかも
 - まあ next.js とかフロントエンドアプリが動くよってだけ。
 - db を立てようと思えば立てられる
+- 相変わらず良くできてる。
+  - DX が素晴らしい
 
-## Deploy
+## Commands
+
 ```bash
 vercel login
 
 # deploy to preview
 vercel
+
 # deploy to prod
 vercel --prod
+
+# pull .env.local
+# edge config や blob store を作成したら、そこにアクセスできるよう .env.local を作成してくれる
+vercel env pull
 ```
 
 ## cron Job
@@ -33,4 +41,10 @@ vercel --prod
   - https://zenn.dev/putcho/articles/594cec9e2f2f68
 - すごく便利
 - Vercel の UI で Edge Config の設定をして、値をJSON形式でセットして、環境変数に Edge Config のURLを入れる感じ
-  - `vercel env pull` で .env.local を作成してくれる（ローカル開発用）
+
+## Blob Store
+
+- オブジェクトストレージ
+- ファイルをアップロードできる
+- アップロードしたらURLが発行される
+- Vercel のコンソールからファイルを確認可能

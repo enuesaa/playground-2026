@@ -19,5 +19,5 @@ export async function proxy() {
   return NextResponse.json(message)
 
   // リダイレクト
-  return NextResponse.rewrite('https://example.com');
+  return NextResponse.rewrite('https://example.com')
 }
