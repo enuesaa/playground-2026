@@ -3,15 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx main.ts",
+    "openai": "tsx src/openai.ts",
+    "vercelai": "tsx src/vercelai.ts",
     "format": "biome format --write main.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.7",
     "openai": "^6.16.0",
     "zod": "^4.3.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
+    "ai": "^6.0.27",
     "tsx": "^4.21.0"
   }
 }
