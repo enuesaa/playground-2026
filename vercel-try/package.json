@@ -9,6 +9,7 @@
     "format": "biome format --write ./app"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.0.0",
     "@vercel/edge-config": "^1.4.3",
     "ai": "^6.0.27",

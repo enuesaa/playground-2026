@@ -36,9 +36,7 @@ export default function Page() {
         {loading ? 'generating...' : 'run'}
       </button>
 
-      <pre style={{ whiteSpace: 'pre-wrap', marginTop: 16 }}>
-        {text}
-      </pre>
+      <pre style={{ whiteSpace: 'pre-wrap', marginTop: 16 }}>{text}</pre>
     </main>
   )
 }

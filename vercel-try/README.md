@@ -54,3 +54,16 @@ vercel env pull
 - vercel ai sdk を使って llm を呼び出せる
 - クレジットカードの登録が必須
 - OpenAI API のキーを持ち込む (Bring Your Own Key) のもできる
+
+## Web Analytics
+
+- アナリティクス
+- next.js に下記を埋め込む
+  - `import { Analytics } from '@vercel/analytics/next'`
+- ページビューとかブラウザとかわかる
+  - 基礎的な感じ
+  - あんま期待しない方がいいかも
+  - Pro プランになったらカスタムイベント (Sentryにあるようなやつだと思う) を送れたりするらしい
+- フラグの値を送れるそう
+  - だが、なんか機能してない？フィーチャーフラグの設定が必要そう
+  - https://vercel.com/docs/feature-flags/integrate-with-web-analytics
