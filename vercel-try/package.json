@@ -12,6 +12,7 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.0.0",
     "@vercel/edge-config": "^1.4.3",
+    "@vercel/toolbar": "^0.1.41",
     "ai": "^6.0.27",
     "flags": "^4.0.2",
     "next": "16.1.1",

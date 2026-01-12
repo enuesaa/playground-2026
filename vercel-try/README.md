@@ -65,11 +65,16 @@ vercel env pull
   - あんま期待しない方がいいかも
   - Pro プランになったらカスタムイベント (Sentryにあるようなやつだと思う) を送れたりするらしい
 - フラグの値を送れるそう
-  - だが、なんか機能してない？フィーチャーフラグの設定が必要そう
   - https://vercel.com/docs/feature-flags/integrate-with-web-analytics
+  - だが、なんか機能してない？
+  - フラグの設定が必要そう
+  - フラグの設定をしたが、どのフラグを使用しているか表示されない
+    - なんかいろいろ変わっているみたいで、1年前の記事が参考にならない。
+    - LaunchDarkly とか使わないとダメなのかも
 
 ## Flags
 - Flags SDK という vercel が主体となって開発しているライブラリがある
 - フラグの値のマネジメントや、コンポーネントで値の取得を行えるそう。
 - Server で値を取得する必要がある？ようで、はじめ `use client` とマークしてたせいで `Can't resolve 'async_hooks'` というエラーが出た
+- VercelToolbar でフラグの様子を確認できるそう
 - https://flags-sdk.dev/
