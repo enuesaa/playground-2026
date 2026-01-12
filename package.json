@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "biome format --write app/**.tsx *.ts *.mjs *.json"
+    "format": "biome format --write ./app"
   },
   "dependencies": {
     "@aws-sdk/client-polly": "^3.966.0",

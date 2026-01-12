@@ -192,23 +192,13 @@ function EntryCard({
                     aria-label={isPlaying ? '音声停止' : '音声再生'}
                     className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/25 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                   >
-                    <svg
-                      viewBox='0 0 24 24'
-                      aria-hidden='true'
-                      className='h-5 w-5 fill-current'
-                    >
-                      {isPlaying ? (
-                        <path d='M8 5h3v14H8V5zm5 0h3v14h-3V5z' />
-                      ) : (
-                        <path d='M7 4.5v15l11-7.5-11-7.5z' />
-                      )}
+                    <svg viewBox='0 0 24 24' aria-hidden='true' className='h-5 w-5 fill-current'>
+                      {isPlaying ? <path d='M8 5h3v14H8V5zm5 0h3v14h-3V5z' /> : <path d='M7 4.5v15l11-7.5-11-7.5z' />}
                     </svg>
                   </button>
                 </div>
                 <div className='flex flex-col gap-2'>
-                  <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>
-                    headline
-                  </p>
+                  <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>headline</p>
                   <h2 className='text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl'>
                     {entry.title}
                   </h2>
@@ -225,22 +215,12 @@ function EntryCard({
                   aria-label={isPlaying ? '音声停止' : '音声再生'}
                   className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/20 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                 >
-                  <svg
-                    viewBox='0 0 24 24'
-                    aria-hidden='true'
-                    className='h-5 w-5 fill-current'
-                  >
-                    {isPlaying ? (
-                      <path d='M8 5h3v14H8V5zm5 0h3v14h-3V5z' />
-                    ) : (
-                      <path d='M7 4.5v15l11-7.5-11-7.5z' />
-                    )}
+                  <svg viewBox='0 0 24 24' aria-hidden='true' className='h-5 w-5 fill-current'>
+                    {isPlaying ? <path d='M8 5h3v14H8V5zm5 0h3v14h-3V5z' /> : <path d='M7 4.5v15l11-7.5-11-7.5z' />}
                   </svg>
                 </button>
               </div>
-              <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>
-                headline
-              </p>
+              <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>headline</p>
               <h2 className='text-3xl font-semibold leading-tight tracking-tight text-white transition group-hover:text-amber-200 sm:text-4xl'>
                 {entry.title}
               </h2>
@@ -273,12 +253,8 @@ export default function Home() {
       <main className='mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-5 py-8 sm:px-10 sm:py-10'>
         <header className='flex items-center justify-between'>
           <div className='flex flex-col gap-1'>
-            <p className='text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80'>
-              instant brief
-            </p>
-            <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>
-              今日のニュースをサクッと
-            </h1>
+            <p className='text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300/80'>instant brief</p>
+            <h1 className='text-2xl font-semibold tracking-tight sm:text-3xl'>今日のニュースをサクッと</h1>
           </div>
           {!autoPlayEnabled && (
             <span className='rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-amber-200 ring-1 ring-white/10 backdrop-blur'>
@@ -293,7 +269,12 @@ export default function Home() {
             <div className='absolute -inset-1 -z-10 rounded-[32px] bg-gradient-to-r from-white/10 via-amber-200/15 to-cyan-200/20 opacity-70 blur-xl' />
 
             <div className='flex w-full flex-col gap-6 rounded-[28px] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-6'>
-              <EntryCard key={current.link} entry={current} autoPlayKey={activeIndex} autoPlayEnabled={autoPlayEnabled} />
+              <EntryCard
+                key={current.link}
+                entry={current}
+                autoPlayKey={activeIndex}
+                autoPlayEnabled={autoPlayEnabled}
+              />
               <div
                 role='progressbar'
                 aria-valuenow={Math.round(progress * 100)}
