@@ -20,9 +20,7 @@ export default function Home() {
           call
         </button>
 
-        <pre className='text-sm'>
-          {JSON.stringify(result, null, 2)}
-        </pre>
+        <pre className='text-sm'>{JSON.stringify(result, null, 2)}</pre>
       </main>
     </div>
   )
