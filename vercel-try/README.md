@@ -67,3 +67,9 @@ vercel env pull
 - フラグの値を送れるそう
   - だが、なんか機能してない？フィーチャーフラグの設定が必要そう
   - https://vercel.com/docs/feature-flags/integrate-with-web-analytics
+
+## Flags
+- Flags SDK という vercel が主体となって開発しているライブラリがある
+- フラグの値のマネジメントや、コンポーネントで値の取得を行えるそう。
+- Server で値を取得する必要がある？ようで、はじめ `use client` とマークしてたせいで `Can't resolve 'async_hooks'` というエラーが出た
+- https://flags-sdk.dev/

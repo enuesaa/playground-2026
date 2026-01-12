@@ -1,20 +1,14 @@
-'use client'
+import { exampleFlag } from '../../flags'
+import { track } from '@vercel/analytics/server';
+import { reportValue } from 'flags';
 
-import { track } from '@vercel/analytics'
+// this is on server
+export default async function Page() {
+  const example = await exampleFlag()
 
-// see https://vercel.com/docs/feature-flags/integrate-with-web-analytics
-export default function Page() {
-  return (
-    <main style={{ padding: 24 }}>
-      <h1>Web Analytics Button</h1>
+  // see https://vercel.com/docs/feature-flags/integrate-with-web-analytics
+  reportValue('example-flag', example);
+  track('My Event', {}, { flags: ['example-flag'] })
 
-      <button onClick={() => track('My Event', {}, { flags: ['A'] })}>
-        A button
-      </button>
-
-      <button onClick={() => track('My Event', {}, { flags: ['B'] })}>
-        B button
-      </button>
-    </main>
-  )
+  return <div>Flag {example ? 'on' : 'off'}</div>
 }

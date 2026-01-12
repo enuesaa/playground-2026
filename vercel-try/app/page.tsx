@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ping } from './ping'
- 
+
 export default function Home() {
   const [result, setResult] = useState<any>(null)
 
