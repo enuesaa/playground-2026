@@ -4,6 +4,16 @@
 - まあ next.js とかフロントエンドアプリが動くよってだけ。
 - db を立てようと思えば立てられる
 
+## Deploy
+```bash
+vercel login
+
+# deploy to preview
+vercel
+# deploy to prod
+vercel --prod
+```
+
 ## cron Job
 - cron みたいな仕組み
 - api route を定期的に叩く感じ。
@@ -14,3 +24,13 @@
   - hobby ではタイムウィンドウ的になっているらしい。時間指定できない
     - `On the Hobby plan, Vercel cannot assure a timely cron job invocation. For example, a cron job configured as 0 1 * * * (every day at 1 am) will trigger anywhere between 1:00 am and 1:59 am.`
     - https://vercel.com/docs/cron-jobs/usage-and-pricing#hobby-scheduling-limits
+
+## Edge Config
+
+- フィーチャーフレグ的なの
+- Edge の KV
+- 例えばメンテナンスモードへの切り替えに使える
+  - https://zenn.dev/putcho/articles/594cec9e2f2f68
+- すごく便利
+- Vercel の UI で Edge Config の設定をして、値をJSON形式でセットして、環境変数に Edge Config のURLを入れる感じ
+  - `vercel env pull` で .env.local を作成してくれる（ローカル開発用）
