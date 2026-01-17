@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
-export function useSlideshow(length: number, durationMs: number) {
-  const [activeIndex, setActiveIndex] = useState(0)
+export const useSlideshow = (length: number, durationMs: number) => {
+  const [slideNumber, setSlideNumber] = useState(0)
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export function useSlideshow(length: number, durationMs: number) {
       if (ratio >= 1) {
         start = now
         setProgress(0)
-        setActiveIndex((prev) => (prev + 1) % length)
+        setSlideNumber((prev) => (prev + 1) % length)
       }
 
       frameId = requestAnimationFrame(tick)
@@ -30,5 +30,5 @@ export function useSlideshow(length: number, durationMs: number) {
     return () => cancelAnimationFrame(frameId)
   }, [length, durationMs])
 
-  return { activeIndex, progress }
+  return { slideNumber, progress }
 }
