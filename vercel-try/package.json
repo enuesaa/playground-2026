@@ -9,6 +9,7 @@
     "format": "biome format --write ./app"
   },
   "dependencies": {
+    "@upstash/redis": "^1.36.1",
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.0.0",
     "@vercel/edge-config": "^1.4.3",
