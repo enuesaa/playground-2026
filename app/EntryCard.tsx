@@ -1,9 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SvgStop, SvgPlay } from './svgs'
-import { callTts, VoiceId } from './client'
-import { type Entry } from './types'
+import { PlayIcon, StopIcon } from '../lib/icons'
+import { invokeTTS, VoiceId } from '../lib/apiclient'
+import { type Entry } from '../lib/apiclient'
 
 type Props = {
   entry: Entry
@@ -30,7 +30,7 @@ export const EntryCard = ({ entry, autoPlayKey, autoPlayEnabled }: Props) => {
       if (sessionRef.current !== sessionId) return
 
       try {
-        const url = await callTts(text, voice)
+        const url = await invokeTTS(text, voice)
         const audio = new Audio(url)
         audioRef.current = audio
 
@@ -153,7 +153,7 @@ export const EntryCard = ({ entry, autoPlayKey, autoPlayEnabled }: Props) => {
                   aria-label={isPlaying ? '音声停止' : '音声再生'}
                   className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/20 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                 >
-                  {isPlaying ? <SvgStop /> : <SvgPlay />}
+                  {isPlaying ? <StopIcon /> : <PlayIcon />}
                 </button>
               </div>
               <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>headline</p>

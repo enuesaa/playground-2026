@@ -8,5 +8,4 @@ node_modules
 .env*
 next-env.d.ts
 
-app/data.json
-app/data.*.json
+app/api/entries/data.json
