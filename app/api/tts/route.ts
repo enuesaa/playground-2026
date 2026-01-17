@@ -1,6 +1,7 @@
 import { Polly } from '@aws-sdk/client-polly'
 import { NextResponse } from 'next/server'
-import { Readable } from 'stream'
+import { Readable } from 'node:stream'
+import { z } from 'zod'
 
 const polly = new Polly({
   region: 'ap-northeast-1',
@@ -10,35 +11,37 @@ const polly = new Polly({
   },
 })
 
+const schema = z.object({
+  text: z.string().min(1),
+  voice: z.enum(['Takumi', 'Kazuha']),
+})
+
 export async function POST(request: Request) {
-  const { text, voice } = await request.json()
-  if (!text || !voice) {
+  const body = schema.safeParse(await request.json())
+  if (!body.success) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 })
   }
 
   try {
     const res = await polly.synthesizeSpeech({
-      Text: `<speak><prosody rate="x-fast">${text}</prosody></speak>`,
+      Text: `<speak><prosody rate="x-fast">${body.data.text}</prosody></speak>`,
       OutputFormat: 'mp3',
       TextType: 'ssml',
-      VoiceId: voice,
+      VoiceId: body.data.voice,
       Engine: 'neural',
       LanguageCode: 'ja-JP',
     })
-    if (!res.AudioStream) {
-      return NextResponse.json({ error: 'No audio stream' }, { status: 502 })
-    }
-    if (res.AudioStream instanceof Readable === false) {
+    if (res.AudioStream === undefined || res.AudioStream instanceof Readable === false) {
       return NextResponse.json({ error: 'No audio stream' }, { status: 502 })
     }
 
-    const audioChunks: Buffer[] = []
+    const chunks: Buffer[] = []
     for await (const chunk of res.AudioStream) {
-      audioChunks.push(Buffer.from(chunk))
+      chunks.push(Buffer.from(chunk))
     }
-    const audioBuffer = Buffer.concat(audioChunks)
+    const audio = Buffer.concat(chunks)
 
-    return new Response(audioBuffer, {
+    return new Response(audio, {
       status: 200,
       headers: {
         'Content-Type': 'audio/mpeg',
