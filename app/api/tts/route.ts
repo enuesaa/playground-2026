@@ -1,79 +1,41 @@
-import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly'
+import { Polly } from '@aws-sdk/client-polly'
 import { NextResponse } from 'next/server'
 import { Readable } from 'stream'
 
-const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
-const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
-
-let pollyClient: PollyClient | null = null
-
-const getPollyClient = () => {
-  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
-    return null
-  }
-
-  if (!pollyClient) {
-    pollyClient = new PollyClient({
-      region: 'ap-northeast-1',
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-      },
-    })
-  }
-
-  return pollyClient
-}
-
-const ALLOWED_VOICES = ['Takumi', 'Kazuha'] as const
-type VoiceId = (typeof ALLOWED_VOICES)[number]
-const DEFAULT_VOICE: VoiceId = 'Takumi'
+const polly = new Polly({
+  region: 'ap-northeast-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
+  },
+})
 
 export async function POST(request: Request) {
-  const client = getPollyClient()
-
-  if (!client) {
-    return NextResponse.json({ error: 'Missing AWS Polly credentials' }, { status: 500 })
+  const { text, voice } = await request.json()
+  if (!text || !voice) {
+    return NextResponse.json({ error: 'invalid request' }, { status: 400 })
   }
-
-  const { text, voice } = await request.json().catch(() => ({}))
-
-  if (!text || typeof text !== 'string') {
-    return NextResponse.json({ error: 'Text is required' }, { status: 400 })
-  }
-
-  const voiceId: VoiceId = ALLOWED_VOICES.includes(voice) ? voice : DEFAULT_VOICE
 
   try {
-    const command = new SynthesizeSpeechCommand({
+    const res = await polly.synthesizeSpeech({
       Text: `<speak><prosody rate="x-fast">${text}</prosody></speak>`,
       OutputFormat: 'mp3',
       TextType: 'ssml',
-      VoiceId: voiceId,
+      VoiceId: voice,
       Engine: 'neural',
       LanguageCode: 'ja-JP',
     })
-
-    const response = await client.send(command)
-
-    if (!response.AudioStream) {
-      return NextResponse.json({ error: 'No audio stream returned from Polly' }, { status: 502 })
+    if (!res.AudioStream) {
+      return NextResponse.json({ error: 'No audio stream' }, { status: 502 })
+    }
+    if (res.AudioStream instanceof Readable === false) {
+      return NextResponse.json({ error: 'No audio stream' }, { status: 502 })
     }
 
     const audioChunks: Buffer[] = []
-
-    if (response.AudioStream instanceof Readable) {
-      for await (const chunk of response.AudioStream) {
-        audioChunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
-      }
-    } else if (response.AudioStream instanceof Uint8Array) {
-      audioChunks.push(Buffer.from(response.AudioStream))
+    for await (const chunk of res.AudioStream) {
+      audioChunks.push(Buffer.from(chunk))
     }
-
-    if (!audioChunks.length) {
-      return NextResponse.json({ error: 'Empty audio response from Polly' }, { status: 502 })
-    }
-
     const audioBuffer = Buffer.concat(audioChunks)
 
     return new Response(audioBuffer, {
@@ -84,6 +46,6 @@ export async function POST(request: Request) {
       },
     })
   } catch (error) {
-    return NextResponse.json({ error: 'Unexpected error', detail: `${error}` }, { status: 500 })
+    return NextResponse.json({ error: `${error}` }, { status: 500 })
   }
 }
