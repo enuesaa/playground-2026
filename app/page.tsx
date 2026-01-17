@@ -1,15 +1,33 @@
 'use client'
 
+import { useState } from 'react'
 import { fetchEntries } from '../lib/apiclient'
 import { EntryCards } from './EntryCards'
 
 export default function Home() {
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false)
   const { data, error, isLoading } = fetchEntries()
   if (isLoading || data === undefined) {
-    return <>loading</>
+    return <></>
   }
   if (error) {
     return <>{error}</>
   }
-  return <EntryCards entries={data} />
+
+  const handleToggleAutoPlay = () => {
+    setAutoPlayEnabled((v) => !v)
+  }
+
+  return (
+    <main className='py-10 min-h-screen bg-[radial-gradient(circle_at_20%_20%,rgba(255,210,128,0.22),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(56,189,248,0.16),transparent_30%),linear-gradient(to_bottom,#0f0f11,#050507)] text-zinc-50'>
+      <header className='py-5 flex items-center justify-between mx-auto max-w-4xl' onClick={handleToggleAutoPlay}>
+        {!autoPlayEnabled && (
+          <span className='rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-amber-200 ring-1 ring-white/10 backdrop-blur'>
+            音声オン
+          </span>
+        )}
+      </header>
+      <EntryCards entries={data} autoPlayEnabled={autoPlayEnabled} />
+    </main>
+  )
 }
