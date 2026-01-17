@@ -1,29 +1,16 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { SvgStop, SvgPlay } from './svgs'
+import { callTts, VoiceId } from './client'
+import { type Entry } from './types'
 
-export type Entry = {
-  // about: string
-  title: string
-  shortTitle?: string
-  link: string
-  subjects: string[]
-  comments: string[]
-  imageUrl?: string
-  count?: number
-}
-
-type VoiceId = 'Takumi' | 'Kazuha'
-
-export function EntryCard({
-  entry,
-  autoPlayKey,
-  autoPlayEnabled,
-}: {
+type Props = {
   entry: Entry
   autoPlayKey: number
   autoPlayEnabled: boolean
-}) {
+}
+export const EntryCard = ({ entry, autoPlayKey, autoPlayEnabled }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const sessionRef = useRef(0)
@@ -43,20 +30,7 @@ export function EntryCard({
       if (sessionRef.current !== sessionId) return
 
       try {
-        const response = await fetch('/api/tts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text, voice }),
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to generate speech')
-        }
-
-        const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
+        const url = await callTts(text, voice)
         const audio = new Audio(url)
         audioRef.current = audio
 
@@ -135,18 +109,18 @@ export function EntryCard({
         href={entry.link}
         target='_blank'
         rel='noreferrer'
-        className='block w-full overflow-hidden rounded-[24px] bg-white/10 ring-1 ring-white/10 shadow-lg shadow-black/40 transition hover:-translate-y-[2px] hover:ring-amber-200/60 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/80'
+        className='block w-full overflow-hidden rounded-3xl bg-white/10 ring-1 ring-white/10 shadow-lg shadow-black/40 transition hover:-translate-y-0.5 hover:ring-amber-200/60 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/80'
       >
         <div className='flex flex-col gap-4'>
           {entry.imageUrl ? (
-            <div className='relative overflow-hidden rounded-[20px] border border-white/10 bg-gradient-to-br from-white/5 via-white/0 to-amber-200/5'>
+            <div className='relative overflow-hidden rounded-[20px] border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
               <img
                 src={entry.imageUrl}
                 alt={entry.title}
                 className='h-64 w-full object-cover transition duration-700 group-hover:scale-[1.05] sm:h-80'
                 loading='lazy'
               />
-              <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent' />
+              <div className='absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent' />
               <div className='absolute inset-0 flex flex-col justify-between p-4 sm:p-5'>
                 <div className='flex justify-end'>
                   <button
@@ -179,9 +153,7 @@ export function EntryCard({
                   aria-label={isPlaying ? '音声停止' : '音声再生'}
                   className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/20 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
                 >
-                  <svg viewBox='0 0 24 24' aria-hidden='true' className='h-5 w-5 fill-current'>
-                    {isPlaying ? <path d='M8 5h3v14H8V5zm5 0h3v14h-3V5z' /> : <path d='M7 4.5v15l11-7.5-11-7.5z' />}
-                  </svg>
+                  {isPlaying ? <SvgStop /> : <SvgPlay />}
                 </button>
               </div>
               <p className='text-xs uppercase tracking-[0.24em] text-amber-200/80'>headline</p>

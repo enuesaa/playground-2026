@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { EntryCard, type Entry } from './EntryCard'
+import { EntryCard } from './EntryCard'
+import { type Entry } from './types'
 import { useSlideshow } from './use'
 import entries from './data.json'
 
@@ -41,7 +42,7 @@ export default function Home() {
         <section className='flex flex-1 items-center justify-center'>
           <div className='relative w-full max-w-4xl'>
             <div className='absolute -inset-6 -z-10 rounded-4xl bg-white/5 blur-3xl opacity-60' />
-            <div className='absolute -inset-1 -z-10 rounded-[32px] bg-gradient-to-r from-white/10 via-amber-200/15 to-cyan-200/20 opacity-70 blur-xl' />
+            <div className='absolute -inset-1 -z-10 rounded-4xl bg-linear-to-r from-white/10 via-amber-200/15 to-cyan-200/20 opacity-70 blur-xl' />
 
             <div className='flex w-full flex-col gap-6 rounded-[28px] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-6'>
               <EntryCard
@@ -58,7 +59,7 @@ export default function Home() {
                 className='h-3 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/15'
               >
                 <div
-                  className='h-full w-full origin-left bg-gradient-to-r from-amber-300 via-amber-400 to-white transition-[transform] duration-200 ease-out'
+                  className='h-full w-full origin-left bg-linear-to-r from-amber-300 via-amber-400 to-white transition-[transform] duration-200 ease-out'
                   style={{ transform: `scaleX(${progress})` }}
                 />
               </div>
