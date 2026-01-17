@@ -78,3 +78,17 @@ vercel env pull
 - Server で値を取得する必要がある？ようで、はじめ `use client` とマークしてたせいで `Can't resolve 'async_hooks'` というエラーが出た
 - VercelToolbar でフラグの様子を確認できるそう
 - https://flags-sdk.dev/
+
+## Upstash Redis
+
+- Marketplace から起動できる
+- 普通の redis
+- `vercel env pull` して普通にローカルから接続できた
+  - ということはパブリックにあるんだろうな
+- Vercel のコンソールに REPL がついていて redis cli でデータを探索できる
+  - Command+Enter でコマンド実行らしい。あんま見慣れないかも
+  - デフォルトでは Safe モードで、この時は `KEYS *` とかが使えず `NOPERM this user has no permissions to run the 'keys' command or its subcommand` というエラーが用事される
+- free プランあり
+- tokyo にも立てられる
+  - 裏側は AWS Tokyo Region らしい
+- Upstash のコンソールにも入れた
