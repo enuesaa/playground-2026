@@ -2,7 +2,7 @@
 
 import { EntryCard } from './EntryCard'
 import { useSlideshow } from '../lib/useSlideshow'
-import { Entry } from '../lib/apiclient'
+import { type Entry } from '@/app/api/entries/route'
 
 type Props = {
   entries: Entry[]

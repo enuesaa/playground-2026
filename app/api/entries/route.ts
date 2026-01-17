@@ -1,14 +1,24 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Redis } from '@upstash/redis'
-import { ulid } from "ulid";
+import { ulid } from 'ulid'
 
 const redis = Redis.fromEnv()
+
+export type Entry = {
+  title: string
+  shortTitle?: string
+  link: string
+  subjects: string[]
+  comments: string[]
+  imageUrl?: string
+  count?: number
+}
 
 export async function GET() {
   const keys = await redis.keys('entry-*')
 
-  const list = []
+  const list: Entry[] = []
   for (const key of keys) {
     const d = await redis.get(key)
     if (typeof d !== 'string') {
@@ -20,13 +30,15 @@ export async function GET() {
 }
 
 const schema = z.object({
-  entries: z.array(z.object({
-    title: z.string().min(1),
-    link: z.string().min(1),
-    comments: z.string().min(1),
-    imageUrl: z.string(),
-    popularity: z.number(),
-  })),
+  entries: z.array(
+    z.object({
+      title: z.string().min(1),
+      link: z.string().min(1),
+      comments: z.string().min(1),
+      imageUrl: z.string(),
+      popularity: z.number(),
+    }),
+  ),
 })
 
 export async function POST(request: Request) {
@@ -38,5 +50,5 @@ export async function POST(request: Request) {
   for (const entry of body.data.entries) {
     await redis.set(`entry-${ulid()}`, JSON.stringify(entry))
   }
-  return NextResponse.json({}, {status: 200})
+  return NextResponse.json({}, { status: 200 })
 }

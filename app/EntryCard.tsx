@@ -2,7 +2,8 @@
 
 import { MouseEventHandler, useCallback, useEffect, useRef } from 'react'
 import { PlayIcon, StopIcon } from '../lib/icons'
-import { invokeTTS, VoiceId, type Entry } from '../lib/apiclient'
+import { invokeTTS, VoiceId } from '../lib/apiclient'
+import { type Entry } from '@/app/api/entries/route'
 
 type Scrpt = {
   text: string
