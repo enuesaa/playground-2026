@@ -1,4 +1,3 @@
-// import entries from './data.json'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Redis } from '@upstash/redis'
@@ -7,7 +6,17 @@ import { ulid } from "ulid";
 const redis = Redis.fromEnv()
 
 export async function GET() {
-  // return NextResponse.json(entries)
+  const keys = await redis.keys('entry-*')
+
+  const list = []
+  for (const key of keys) {
+    const d = await redis.get(key)
+    if (typeof d !== 'string') {
+      continue
+    }
+    list.push(JSON.parse(d))
+  }
+  return NextResponse.json(list)
 }
 
 const schema = z.object({
