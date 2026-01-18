@@ -66,11 +66,11 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
   }, [autoPlayEnabled, startPlayback, stopPlayback])
 
   return (
-    <div className='relative overflow-hidden rounded-[20px] border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5 min-h-60'>
+    <div className='relative overflow-hidden rounded-4xl border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
       {entry.imageUrl && (
         <img
           src={entry.imageUrl}
-          className='h-64 w-full object-cover sm:h-80 transition duration-700 group-hover:scale-[1.05]'
+          className='w-full object-cover transition duration-700 group-hover:scale-[1.05]'
         />
       )}
       <div className='absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent' />
@@ -87,6 +87,11 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
           {entry.title}
         </div>
       </div>
+              <div>
+          {entry.comments.map((v, i) => (
+            <div key={i}>{v}</div>
+          ))}
+        </div>
     </div>
   )
 }

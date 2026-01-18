@@ -19,12 +19,12 @@ export default function Home() {
   }
 
   return (
-    <main className='py-10 min-h-screen bg-[radial-gradient(circle_at_20%_20%,rgba(255,210,128,0.22),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(56,189,248,0.16),transparent_30%),linear-gradient(to_bottom,#0f0f11,#050507)] text-zinc-50'>
-      <header className='py-5 flex items-center justify-between mx-auto max-w-4xl' onClick={handleToggleAutoPlay}>
+    <main className='min-h-screen bg-[radial-gradient(circle_at_20%_20%,rgba(255,210,128,0.22),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(56,189,248,0.16),transparent_30%),linear-gradient(to_bottom,#0f0f11,#050507)] text-zinc-50'>
+      <header className='absolute top-5 left-5' onClick={handleToggleAutoPlay}>
         {!autoPlayEnabled && (
-          <span className='rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-amber-200 ring-1 ring-white/10 backdrop-blur'>
+          <button className='rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-amber-200 ring-1 ring-white/10 backdrop-blur cursor-pointer'>
             音声オン
-          </span>
+          </button>
         )}
       </header>
       <EntryCards entries={data} autoPlayEnabled={autoPlayEnabled} />
