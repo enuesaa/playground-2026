@@ -13,19 +13,19 @@ body {
 
 @keyframes comment-scroll-up {
   0% {
-    transform: translateY(100dvh);
+    transform: translateY(60dvh);
   }
   20% {
-    transform: translateY(100dvh);
+    transform: translateY(60dvh);
   }
   100% {
-    transform: translateY(-200dvh);
+    transform: translateY(-100dvh);
   }
 }
 
 @utility comment-scroll-up {
   animation-name: comment-scroll-up;
   animation-duration: 10s;
-  animation-timing-function: linear;
+  animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }

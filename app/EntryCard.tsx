@@ -70,16 +70,6 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
           <div className='pointer-events-none absolute inset-0 bg-black/50' />
         </>
       )}
-      {entry.comments.length > 0 && (
-        <div key={entry.url} className='max-w-3xl pointer-events-none absolute inset-0 overflow-hidden text-white'>
-          <div
-            className='comment-scroll-up flex flex-col gap-8 px-3 py-2 font-bold tracking-tight drop-shadow-2xl text-3xl ease-linear'>
-            {entry.comments.map((v, i) => (
-              <p key={i}>{v}</p>
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   )
 }

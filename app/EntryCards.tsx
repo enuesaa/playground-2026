@@ -4,6 +4,7 @@ import { EntryCard } from './EntryCard'
 import { EntryCardFooter } from './EntryCardFooter'
 import { useSlideshow } from '../lib/useSlideshow'
 import { type Entry } from '@/app/api/entries/route'
+import { EntryCardCommentsLayer } from './EntryCardCommentsLayer'
 
 type Props = {
   entries: Entry[]
@@ -18,6 +19,7 @@ export const EntryCards = ({ entries, autoPlayEnabled }: Props) => {
   return (
     <>
       <EntryCard entry={current} autoPlayEnabled={autoPlayEnabled} />
+      <EntryCardCommentsLayer entry={current} />
       <EntryCardFooter entry={current} progress={progress} />
     </>
   )
