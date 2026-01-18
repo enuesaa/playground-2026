@@ -85,35 +85,28 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
   }, [entry.title, entry.url, entry.comments])
 
   return (
-    <div className='overflow-hidden rounded-4xl border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
-      <div className='relative'>
-        {entry.imageUrl && (
-          <>
-            <img
-              src={entry.imageUrl}
-              className='max-h-[56vh] w-full object-cover transition duration-700 group-hover:scale-[1.03]'
-            />
-            <div className='pointer-events-none absolute inset-0 bg-black/50' />
-          </>
-        )}
-        {entry.comments.length > 0 && (
-          <div ref={scrollViewportRef} className='max-w-3xl pointer-events-none absolute inset-0 overflow-hidden text-white'>
-            <div
-              ref={scrollContentRef}
-              className='flex flex-col gap-8 px-3 py-2 font-bold tracking-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)] text-3xl'
-            >
-              {entry.comments.map((v, i) => (
-                <p key={i}>{v}</p>
-              ))}
-            </div>
+    <section className='max-w-5xl mx-auto overflow-hidden rounded-4xl border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
+      {entry.imageUrl && (
+        <>
+          <img
+            src={entry.imageUrl}
+            className='max-h-[56vh] w-full object-cover transition duration-700 group-hover:scale-[1.03]'
+          />
+          <div className='pointer-events-none absolute inset-0 bg-black/50' />
+        </>
+      )}
+      {entry.comments.length > 0 && (
+        <div ref={scrollViewportRef} className='max-w-3xl pointer-events-none absolute inset-0 overflow-hidden text-white'>
+          <div
+            ref={scrollContentRef}
+            className='flex flex-col gap-8 px-3 py-2 font-bold tracking-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)] text-3xl'
+          >
+            {entry.comments.map((v, i) => (
+              <p key={i}>{v}</p>
+            ))}
           </div>
-        )}
-      </div>
-      <div className='border-t border-white/10 bg-black/55 p-4 text-white sm:p-5'>
-        <div className='text-2xl font-semibold leading-tight tracking-tight drop-shadow-md sm:text-3xl'>
-          {entry.title}
         </div>
-      </div>
-    </div>
+      )}
+    </section>
   )
 }

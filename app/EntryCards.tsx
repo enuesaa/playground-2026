@@ -1,6 +1,7 @@
 'use client'
 
 import { EntryCard } from './EntryCard'
+import { EntryCardFooter } from './EntryCardFooter'
 import { useSlideshow } from '../lib/useSlideshow'
 import { type Entry } from '@/app/api/entries/route'
 
@@ -15,22 +16,9 @@ export const EntryCards = ({ entries, autoPlayEnabled }: Props) => {
   if (!current) return null
 
   return (
-    <section className='max-w-5xl mx-auto'>
-      <div className='flex flex-col gap-6 rounded-4xl border border-white/10 bg-white/5 shadow-2xl shadow-black/40 backdrop-blur-2xl p-6'>
-        <EntryCard key={current.url} entry={current} autoPlayEnabled={autoPlayEnabled} />
-        <div
-          role='progressbar'
-          aria-valuenow={Math.round(progress * 100)}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          className='h-3 overflow-hidden rounded-full bg-white/10 ring-1 ring-white/15'
-        >
-          <div
-            className='h-full w-full origin-left bg-linear-to-r from-amber-300 via-amber-400 to-white transition-[transform] duration-200 ease-out'
-            style={{ transform: `scaleX(${progress})` }}
-          />
-        </div>
-      </div>
-    </section>
+    <>
+      <EntryCard entry={current} autoPlayEnabled={autoPlayEnabled} />
+      <EntryCardFooter entry={current} progress={progress} />
+    </>
   )
 }
