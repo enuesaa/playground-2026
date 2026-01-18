@@ -1,22 +1,12 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: var(--font-geist-sans), "Hiragino Sans", "Noto Sans JP", system-ui, -apple-system, sans-serif;
 }
 
 @keyframes comment-scroll-up {
   0% {
-    transform: translateY(60dvh);
-  }
-  20% {
-    transform: translateY(60dvh);
+    transform: translateY(100dvh);
   }
   100% {
     transform: translateY(-100dvh);

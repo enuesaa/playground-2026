@@ -8,7 +8,7 @@ type Props = {
 }
 export const EntryCardFooter = ({ entry, progress }: Props) => {
   return (
-    <section className='absolute bottom-5 w-full'>
+    <section className='absolute bottom-0 py-10 w-full bg-[#050507]'>
       <div className='max-w-6xl mx-auto'>
         <div className='text-3xl font-bold text-white leading-tight tracking-tight drop-shadow-md'>{entry.title}</div>
         <div
