@@ -17,7 +17,7 @@ export const EntryCards = ({ entries, autoPlayEnabled }: Props) => {
   return (
     <section className='max-w-4xl mx-auto'>
       <div className='flex w-full flex-col gap-6 rounded-[28px] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-6'>
-        <EntryCard key={current.link} entry={current} autoPlayEnabled={autoPlayEnabled} />
+        <EntryCard key={current.url} entry={current} autoPlayEnabled={autoPlayEnabled} />
         <div
           role='progressbar'
           aria-valuenow={Math.round(progress * 100)}

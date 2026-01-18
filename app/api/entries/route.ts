@@ -7,48 +7,36 @@ const redis = Redis.fromEnv()
 
 export type Entry = {
   title: string
-  shortTitle?: string
-  link: string
-  subjects: string[]
+  url: string
   comments: string[]
-  imageUrl?: string
-  count?: number
+  imageUrl: string|null
+  popularity: number
 }
 
 export async function GET() {
   const keys = await redis.keys('entry-*')
-
   const list: Entry[] = []
   for (const key of keys) {
-    const d = await redis.get(key)
-    if (typeof d !== 'string') {
-      continue
-    }
-    list.push(JSON.parse(d))
+    const data = await redis.get(key)
+    list.push(data as Entry)
   }
   return NextResponse.json(list)
 }
 
 const schema = z.object({
-  entries: z.array(
-    z.object({
-      title: z.string().min(1),
-      link: z.string().min(1),
-      comments: z.string().min(1),
-      imageUrl: z.string(),
-      popularity: z.number(),
-    }),
-  ),
+  title: z.string().min(1),
+  url: z.string().min(1),
+  comments: z.array(z.string().min(1)),
+  imageUrl: z.string().nullable(),
+  popularity: z.number(),
 })
 
 export async function POST(request: Request) {
   const body = schema.safeParse(await request.json())
   if (!body.success) {
+    console.log(body.error)
     return NextResponse.json({ error: 'invalid request' }, { status: 400 })
   }
-
-  for (const entry of body.data.entries) {
-    await redis.set(`entry-${ulid()}`, JSON.stringify(entry))
-  }
+  await redis.set(`entry-${ulid()}`, body.data)
   return NextResponse.json({}, { status: 200 })
 }

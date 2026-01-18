@@ -18,7 +18,7 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
 
   const startPlayback = useCallback(async () => {
     const scrpts: Scrpt[] = [
-      { text: entry.shortTitle ?? entry.title, voice: 'Takumi' },
+      { text: entry.title, voice: 'Takumi' },
       ...entry.comments.map((t) => ({ text: t, voice: 'Kazuha' as const })),
     ]
 
@@ -43,7 +43,7 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
         console.error(error)
       }
     }
-  }, [entry.comments, entry.shortTitle, entry.title])
+  }, [entry.comments, entry.title])
 
   const stopPlayback = useCallback(() => {
     if (!audioRef.current) return
