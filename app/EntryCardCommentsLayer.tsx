@@ -7,7 +7,7 @@ type Props = {
 }
 export const EntryCardCommentsLayer = ({ entry }: Props) => {
   return (
-    <div key={entry.url} className='absolute max-w-3xl top-0 bottom-0 z-0 pointer-events-none overflow-hidden'>
+    <div key={entry.url} className='absolute max-w-2xl top-0 bottom-0 z-0 pointer-events-none overflow-hidden'>
       {entry.comments.map((v, i) => {
         if (i > 2) {
           return
