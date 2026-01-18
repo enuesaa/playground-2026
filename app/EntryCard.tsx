@@ -60,15 +60,12 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
   }, [autoPlayEnabled, startPlayback, stopPlayback])
 
   return (
-    <section className='max-w-5xl mx-auto overflow-hidden rounded-4xl border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
+    <section className='mx-auto max-w-6xl relative mb-24 overflow-hidden rounded-4xl border border-white/10 bg-linear-to-br from-white/8 via-white/0 to-amber-200/10 shadow-[0_30px_120px_rgba(0,0,0,0.55)]'>
       {entry.imageUrl && (
-        <>
-          <img
-            src={entry.imageUrl}
-            className='max-h-[56vh] w-full object-cover transition duration-700 group-hover:scale-[1.03]'
-          />
-          <div className='pointer-events-none absolute inset-0 bg-black/50' />
-        </>
+        <img
+          src={entry.imageUrl}
+          className='max-h-[56vh] w-full object-cover transition duration-700 group-hover:scale-[1.03]'
+        />
       )}
     </section>
   )
