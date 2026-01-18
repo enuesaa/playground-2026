@@ -10,3 +10,22 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), "Hiragino Sans", "Noto Sans JP", system-ui, -apple-system, sans-serif;
 }
+
+@keyframes comment-scroll-up {
+  0% {
+    transform: translateY(100dvh);
+  }
+  20% {
+    transform: translateY(100dvh);
+  }
+  100% {
+    transform: translateY(-200dvh);
+  }
+}
+
+@utility comment-scroll-up {
+  animation-name: comment-scroll-up;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}

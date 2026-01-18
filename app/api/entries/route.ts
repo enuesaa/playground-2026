@@ -9,7 +9,7 @@ export type Entry = {
   title: string
   url: string
   comments: string[]
-  imageUrl: string|null
+  imageUrl: string | null
   popularity: number
 }
 

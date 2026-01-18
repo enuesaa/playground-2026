@@ -10,9 +10,7 @@ export const EntryCardFooter = ({ entry, progress }: Props) => {
   return (
     <section className='absolute bottom-5 w-full'>
       <div className='max-w-6xl mx-auto'>
-        <div className='text-3xl font-bold text-white leading-tight tracking-tight drop-shadow-md'>
-          {entry.title}
-        </div>
+        <div className='text-3xl font-bold text-white leading-tight tracking-tight drop-shadow-md'>{entry.title}</div>
         <div
           role='progressbar'
           aria-valuenow={Math.round(progress * 100)}
