@@ -1,7 +1,6 @@
 'use client'
 
-import { MouseEventHandler, useCallback, useEffect, useRef } from 'react'
-import { PlayIcon, StopIcon } from '../lib/icons'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { invokeTTS, VoiceId } from '../lib/apiclient'
 import { type Entry } from '@/app/api/entries/route'
 
@@ -15,6 +14,7 @@ type Props = {
 }
 export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [revealComments, setRevealComments] = useState(false)
 
   const startPlayback = useCallback(async () => {
     const scrpts: Scrpt[] = [
@@ -52,11 +52,6 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
     audioRef.current = null
   }, [])
 
-  const handlePlay: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault()
-    audioRef.current ? stopPlayback() : startPlayback()
-  }
-
   useEffect(() => {
     stopPlayback()
     if (autoPlayEnabled) {
@@ -64,6 +59,12 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
     }
     return stopPlayback
   }, [autoPlayEnabled, startPlayback, stopPlayback])
+
+  useEffect(() => {
+    setRevealComments(false)
+    const id = requestAnimationFrame(() => setRevealComments(true))
+    return () => cancelAnimationFrame(id)
+  }, [entry.title, entry.url, entry.comments])
 
   return (
     <div className='relative overflow-hidden rounded-4xl border border-white/10 bg-linear-to-r from-white/5 via-white/0 to-amber-200/5'>
@@ -74,24 +75,29 @@ export const EntryCard = ({ entry, autoPlayEnabled }: Props) => {
         />
       )}
       <div className='absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent' />
-      <div className='absolute inset-0 flex flex-col justify-between p-4 sm:p-5'>
-        <div className='flex justify-end'>
-          <button
-            onClick={handlePlay}
-            className='inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur transition hover:-translate-y-px hover:bg-white/25 hover:ring-amber-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/90'
-          >
-            {audioRef.current ? <StopIcon /> : <PlayIcon />}
-          </button>
-        </div>
-        <div className='text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl'>
+      <div className='absolute inset-0 flex flex-col p-4 sm:p-5'>
+        {entry.comments.length > 0 && (
+          <div className='flex flex-1 flex-col gap-3 overflow-hidden text-white sm:gap-4'>
+            {entry.comments.map((v, i) => (
+              <p
+                key={i}
+                className={[
+                  'text-2xl font-semibold leading-snug sm:text-3xl',
+                  'transition-all duration-500 ease-out',
+                  'drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]',
+                  revealComments ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2',
+                ].join(' ')}
+                style={{ transitionDelay: `${i*1500}ms`, fontFamily: 'var(--font-pop)' } as React.CSSProperties}
+              >
+                {v}
+              </p>
+            ))}
+          </div>
+        )}
+        <div className='mt-4 text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl'>
           {entry.title}
         </div>
       </div>
-              <div>
-          {entry.comments.map((v, i) => (
-            <div key={i}>{v}</div>
-          ))}
-        </div>
     </div>
   )
 }
