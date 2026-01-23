@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sample App</title>
+
+  <!-- htmx -->
+  <script src="https://unpkg.com/htmx.org@2.0.8"></script>
+  <!-- https://www.reddit.com/r/htmx/comments/1faljlc/why_i_get_this_error_htmxorg2021_htmxinvalidpath/ -->
+  <meta name="htmx-config" content='{"selfRequestsOnly":false}'>
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="max-w-2xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">
+      Sample App
+    </h1>
+
+    <button
+      hx-get="https://jsonplaceholder.typicode.com/posts/1"
+      hx-target="#result"
+      hx-swap="innerHTML"
+      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      Load Post
+    </button>
+
+    <div id="result" class="mt-6"></div>
+  </div>
+</body>
+</html>
