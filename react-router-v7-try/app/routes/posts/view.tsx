@@ -1,4 +1,4 @@
-import type { Route } from './+types/post'
+import type { Route } from './+types/view'
 
 type Post = {
   userId: number
