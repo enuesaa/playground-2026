@@ -2,22 +2,33 @@ import { Form, useActionData } from 'react-router'
 import type { Route } from './+types/new'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { useEffect, useState } from 'react'
-import { createPost } from '../../apiclient/post'
+import { createPost, createPostSchema } from '../../apiclient/post'
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData()
-  const res = await createPost({
+  const parsed = createPostSchema.safeParse({
     userId: 1,
-    title: formData.get('title')?.toString() ?? '',
-    body: formData.get('body')?.toString() ?? '',
+    title: formData.get('title'),
+    body: formData.get('body'),
   })
-  return res
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: parsed.error.message,
+    }
+  }
+  const res = await createPost(parsed.data)
+  return { ok: true, message: res }
 }
 
 export default function Post({}: Route.ComponentProps) {
   const actionData = useActionData()
   const [open, setOpen] = useState(false)
-  useEffect(() => actionData && setOpen(true), [actionData])
+  useEffect(() => {
+    if (actionData?.ok !== undefined) {
+      setOpen(true)
+    }
+  }, [actionData])
 
   return (
     <div className='mx-auto max-w-4/5 space-y-6'>
@@ -42,7 +53,7 @@ export default function Post({}: Route.ComponentProps) {
         <div className="fixed inset-0 flex items-center justify-center">
           <DialogPanel className="bg-white p-6 rounded">
             <DialogTitle>Created</DialogTitle>
-            <pre>{JSON.stringify(actionData, null, 2)}</pre>
+            <pre>{JSON.stringify(actionData?.message, null, 2)}</pre>
           </DialogPanel>
         </div>
       </Dialog>
