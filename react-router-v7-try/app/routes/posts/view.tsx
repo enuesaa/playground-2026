@@ -1,16 +1,8 @@
 import type { Route } from './+types/view'
-
-type Post = {
-  userId: number
-  id: number
-  title: string
-  body: string
-}
+import { fetchPost } from '../../apiclient/post'
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${params.postId}`)
-  const post = await res.json()
-  return post as Post
+  return await fetchPost(params.postId)
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {

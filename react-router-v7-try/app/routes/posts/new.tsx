@@ -2,29 +2,16 @@ import { Form, useActionData } from 'react-router'
 import type { Route } from './+types/new'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { useEffect, useState } from 'react'
-
-type Post = {
-  userId: number
-  id: number
-  title: string
-  body: string
-}
+import { createPost } from '../../apiclient/post'
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData()
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userId: 1,
-      title: formData.get('title'),
-      body: formData.get('body'),
-    }),
+  const res = await createPost({
+    userId: 1,
+    title: formData.get('title')?.toString() ?? '',
+    body: formData.get('body')?.toString() ?? '',
   })
-  const resbody = await res.json()
-  return resbody
+  return res
 }
 
 export default function Post({}: Route.ComponentProps) {
