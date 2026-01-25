@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { redis } from '@/libserver/gredis'
+import { Redis } from '@upstash/redis'
 import { ulid } from 'ulid'
 import { generateText, Output } from 'ai'
+
+const redis = Redis.fromEnv()
 
 export type Entry = {
   key: string
