@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
-import { invokeTTS, VoiceId } from '../lib/apiclient'
+import { invokeTTS, VoiceId } from '@/libclient/gapi/tts'
 import type { Entry } from '@/libclient/types'
 
 type Scrpt = {

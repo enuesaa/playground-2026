@@ -5,7 +5,7 @@ import { EntryCardFooter } from './EntryCardFooter'
 import { useSlideshow } from '../libclient/useSlideshow'
 import type { Entry } from '@/libclient/types'
 import { EntryCardCommentsLayer } from './EntryCardCommentsLayer'
-import { markSpeaked } from '@/lib/apiclient'
+import { markSpeaked } from '@/libclient/gapi/entries'
 import { useEffect } from 'react'
 
 type Props = {

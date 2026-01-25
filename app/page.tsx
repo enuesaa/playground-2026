@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { fetchEntries } from '../lib/apiclient'
+import { fetchEntries } from '@/libclient/gapi/entries'
 import { EntryCards } from './EntryCards'
 
 export default function Home() {

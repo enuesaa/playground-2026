@@ -19,7 +19,6 @@ const schema = z.object({
 export async function POST(request: Request) {
   const body = schema.safeParse(await request.json())
   if (!body.success) {
-    console.log(body.error)
     return NextResponse.json({ error: 'invalid request' }, { status: 400 })
   }
 
