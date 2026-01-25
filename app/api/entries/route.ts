@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { redis } from '@/libserver/gredis'
 import { ulid } from 'ulid'
-import { generateText, Output } from 'ai'
+import { summarizeTitleComments } from '@/libserver/gai'
 
 export type Entry = {
   key: string
@@ -40,34 +40,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 })
   }
 
-  const passdata = {
+  const output = await summarizeTitleComments({
     title: body.data.title,
     comments: body.data.comments,
-  }
-  const prompt = `
-title と comments を口語調で、意味を変えずに簡潔にしてください。
-
-ルール:
-- 文意は絶対に変えない
-- 一般名詞・固有名詞・技術用語は維持する
-- 不要な語尾や口癖（例: 「まぁ」「とか」）は削除する
-- 冗長な表現は自然な日本語になる範囲で短くする
-
-データ: 
-${JSON.stringify(passdata)}
-`
-
-  const { output } = await generateText({
-    model: 'openai/gpt-4.1',
-    output: Output.object({
-      schema: z.object({
-        title: z.string(),
-        comments: z.array(z.string()),
-      }),
-    }),
-    prompt,
   })
-
   await redis.set(`entry-${ulid()}`, {
     ...body.data,
     title: output.title,
