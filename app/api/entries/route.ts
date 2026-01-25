@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { redis } from '@/libserver/gredis'
-import { ulid } from 'ulid'
+import { saveEntry } from '@/libserver/gredis/entries'
 import { summarizeTitleComments } from '@/libserver/gai'
 
 export type Entry = {
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
     title: body.data.title,
     comments: body.data.comments,
   })
-  await redis.set(`entry-${ulid()}`, {
+  await saveEntry({
     ...body.data,
     title: output.title,
     titleOriginal: body.data.title,
