@@ -3,7 +3,7 @@
 import { EntryCard } from './EntryCard'
 import { EntryCardFooter } from './EntryCardFooter'
 import { useSlideshow } from '../libclient/useSlideshow'
-import { type Entry } from '@/app/api/entries/route'
+import type { Entry } from '@/libclient/types'
 import { EntryCardCommentsLayer } from './EntryCardCommentsLayer'
 import { markSpeaked } from '@/lib/apiclient'
 import { useEffect } from 'react'

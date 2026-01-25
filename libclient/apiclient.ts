@@ -1,4 +1,4 @@
-import { type Entry } from '@/app/api/entries/route'
+import type { Entry } from '@/libclient/types'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 

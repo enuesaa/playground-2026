@@ -3,15 +3,6 @@ import { z } from 'zod'
 import { listEntries, saveEntry } from '@/libserver/gredis/entries'
 import { summarizeTitleComments } from '@/libserver/gai'
 
-export type Entry = {
-  key: string
-  title: string
-  url: string
-  comments: string[]
-  imageUrl: string | null
-  popularity: number
-}
-
 export async function GET() {
   const list = await listEntries()
   return NextResponse.json(list)

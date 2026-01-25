@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import { invokeTTS, VoiceId } from '../lib/apiclient'
-import { type Entry } from '@/app/api/entries/route'
+import type { Entry } from '@/libclient/types'
 
 type Scrpt = {
   text: string

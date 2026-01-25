@@ -1,6 +1,6 @@
 'use client'
 
-import { type Entry } from '@/app/api/entries/route'
+import type { Entry } from '@/libclient/types'
 
 type Props = {
   entry: Entry
