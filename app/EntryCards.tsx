@@ -19,7 +19,7 @@ export const EntryCards = ({ entries, autoPlayEnabled }: Props) => {
 
   if (!current) return null
   useEffect(() => {
-    triggerMarkSpeaked({key: current.key})
+    triggerMarkSpeaked({ key: current.key })
   }, [current.key])
 
   return (

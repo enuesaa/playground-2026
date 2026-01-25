@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
   const passdata = {
     title: body.data.title,
-    comments: body.data.comments
+    comments: body.data.comments,
   }
   const prompt = `
 title と comments を口語調で、意味を変えずに簡潔にしてください。
@@ -64,10 +64,10 @@ ${JSON.stringify(passdata)}
     output: Output.object({
       schema: z.object({
         title: z.string(),
-        comments: z.array(z.string())
+        comments: z.array(z.string()),
       }),
     }),
-    prompt, 
+    prompt,
   })
 
   await redis.set(`entry-${ulid()}`, {
