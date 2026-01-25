@@ -5,6 +5,8 @@ import { EntryCardFooter } from './EntryCardFooter'
 import { useSlideshow } from '../lib/useSlideshow'
 import { type Entry } from '@/app/api/entries/route'
 import { EntryCardCommentsLayer } from './EntryCardCommentsLayer'
+import { markSpeaked } from '@/lib/apiclient'
+import { useEffect } from 'react'
 
 type Props = {
   entries: Entry[]
@@ -13,8 +15,12 @@ type Props = {
 export const EntryCards = ({ entries, autoPlayEnabled }: Props) => {
   const { slideNumber, progress } = useSlideshow(entries.length, 10000)
   const current = entries[slideNumber]
+  const { trigger: triggerMarkSpeaked } = markSpeaked()
 
   if (!current) return null
+  useEffect(() => {
+    triggerMarkSpeaked({key: current.key})
+  }, [current.key])
 
   return (
     <>

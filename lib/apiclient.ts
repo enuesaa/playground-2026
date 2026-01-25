@@ -1,4 +1,5 @@
 import { type Entry } from '@/app/api/entries/route'
+import useSWRMutation from 'swr/mutation'
 
 export type VoiceId = 'Takumi' | 'Kazuha'
 import useSWR from 'swr'
@@ -25,3 +26,6 @@ export const invokeTTS = async (text: string, voice: VoiceId): Promise<string> =
 }
 
 export const fetchEntries = () => useSWR<Entry[]>('/api/entries', fetcher)
+
+export const markSpeaked = () =>
+  useSWRMutation(`/api/mark-speaked`, (url: string, { arg }: { arg: any }) => fetch(url, { method: 'POST', body: JSON.stringify(arg) }).then(res => res.json()))

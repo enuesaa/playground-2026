@@ -7,6 +7,7 @@ import { generateText, Output } from 'ai'
 const redis = Redis.fromEnv()
 
 export type Entry = {
+  key: string
   title: string
   url: string
   comments: string[]
@@ -19,6 +20,8 @@ export async function GET() {
   const list: Entry[] = []
   for (const key of keys) {
     const data = await redis.get(key)
+    // @ts-ignore
+    data.key = key
     list.push(data as Entry)
   }
   return NextResponse.json(list)
