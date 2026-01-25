@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { saveEntry } from '@/libserver/gredis/entries'
+import { listEntries, saveEntry } from '@/libserver/gredis/entries'
 import { summarizeTitleComments } from '@/libserver/gai'
 
 export type Entry = {
@@ -13,14 +13,7 @@ export type Entry = {
 }
 
 export async function GET() {
-  const keys = await redis.keys('entry-*')
-  const list: Entry[] = []
-  for (const key of keys) {
-    const data = await redis.get(key)
-    // @ts-ignore
-    data.key = key
-    list.push(data as Entry)
-  }
+  const list = await listEntries()
   return NextResponse.json(list)
 }
 
