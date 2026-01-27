@@ -46,3 +46,8 @@ projects:
 - OpenTaco の画面の方にも、ステータスが反映されてる感じ
   - 正直この画面がなぜあるのかわからなかったが、何か便利な機能があるのだろう。
   - ドリフト検出的なことができる？かも？そんな感じのボタンがある
+
+## Links
+- https://otaco.app/
+- https://docs.opentaco.dev/ce/getting-started/with-terraform
+- https://dev.classmethod.jp/articles/open-taco-terraform-pr-comment-plan-apply/
