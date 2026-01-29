@@ -10,6 +10,10 @@ void setup() {
   M5.Display.setCursor(20, 20);
 
   M5.Lcd.println("aaa");
+
+  delay(7000);
+  M5.Display.sleep();
+  M5.Power.powerOff();
 }
 
 void loop() {}

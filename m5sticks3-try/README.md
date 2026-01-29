@@ -4,4 +4,4 @@
 - stick
 - ui flow v2 も対応していた
   - https://uiflow2.m5stack.com/
-
+- 電源ボタンダブルクリックで、電源オフ
