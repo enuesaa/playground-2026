@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { fetchEntries } from '@/libclient/gapi/entries'
 import { EntryCards } from './EntryCards'
+import './style.css'
 
-export default function Home() {
+export default function Page() {
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(false)
   const { data, error, isLoading } = fetchEntries()
   if (isLoading || data === undefined) {
