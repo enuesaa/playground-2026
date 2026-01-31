@@ -11,9 +11,8 @@ void setup() {
 
   M5.Lcd.println("aaa");
 
-  // delay(7000);
-  // M5.Display.sleep();
-  // M5.Power.powerOff();
+  delay(7000);
+  M5.Power.powerOff();
 }
 
 // see https://docs.m5stack.com/ja/arduino/m5sticks3/button
