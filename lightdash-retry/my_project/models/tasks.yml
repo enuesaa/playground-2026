@@ -20,3 +20,10 @@ models:
             time_intervals: ['RAW', 'DAY', 'WEEK', 'MONTH', 'MONTH_NUM']
       - name: created_at
         description: Task created_at
+    meta:
+      joins:
+        - join: users
+          type: inner
+          label: JOIN users
+          sql_on: ${tasks.user_id} = ${users.id}
+          relationship: many-to-one

@@ -34,6 +34,8 @@ services:
       S3_ACCESS_KEY: minioadmin
       S3_SECRET_KEY: minioadmin
       S3_FORCE_PATH_STYLE: true
+      HEADLESS_BROWSER_HOST: headless-browser
+      HEADLESS_BROWSER_PORT: 3000
     volumes:
       - ./my_project:/usr/app/dbt
     ports:
@@ -41,6 +43,7 @@ services:
     depends_on:
       - lightdashdb
       - minio
+      - headless-browser
 
   minio:
     image: coollabsio/minio:latest
@@ -52,3 +55,8 @@ services:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
       - MINIO_DEFAULT_BUCKETS=default
+
+  headless-browser:
+    image: ghcr.io/browserless/chromium:v2.38.2
+    ports:
+      - '3001:3000'

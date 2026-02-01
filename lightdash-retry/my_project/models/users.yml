@@ -17,5 +17,17 @@ models:
       primary_key: id
       joins:
         - join: tags
+          type: inner
+          label: JOIN tags
           sql_on: ${users.id} = ${tags.user_id}
           relationship: one-to-many
+      # parameters:
+      #   region:
+      #     label: "Region"
+      #     description: "Filter data by region"
+      #     options:
+      #       - "EMEA"
+      #       - "AMER"
+      #       - "APAC"
+      #     default: ["EMEA"]
+      #     multiple: false
