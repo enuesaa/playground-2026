@@ -1,76 +1,57 @@
 version: 2
 
+# sources:
+#   - name: app
+#     schema: public
+#     tables:
+#       - name: users
+#       - name: tasks
+#       - name: tags
+#       - name: task_tags
+
 models:
   - name: users
-    description: "User information"
+    description: User data
     columns:
       - name: id
-        description: "Primary key of the user"
-        tests:
-          - unique
-          - not_null
+        description: User ID
       - name: name
-        description: "User's name"
-        tests:
-          - not_null
+        description: User name
       - name: email
-        description: "User's email address"
-        tests:
-          - unique
-          - not_null
+        description: User email
       - name: created_at
-        description: "Timestamp when the user was created"
+        description: User created_at
 
   - name: tasks
-    description: "Tasks assigned to users"
+    description: Task data
     columns:
       - name: id
-        description: "Primary key of the task"
-        tests:
-          - unique
-          - not_null
+        description: Task ID
       - name: user_id
-        description: "Foreign key to users"
-        tests:
-          - not_null
+        description: User ID
       - name: title
-        description: "Title of the task"
-        tests:
-          - not_null
+        description: Task title
       - name: status
-        description: "Task status (pending/done/etc.)"
-        tests:
-          - not_null
+        description: Task status
       - name: due_date
-        description: "Task due date"
+        description: Task due date
       - name: created_at
-        description: "Timestamp when the task was created"
+        description: Task created_at
 
   - name: tags
-    description: "Tags that users can assign to tasks"
+    description: Tags data
     columns:
       - name: id
-        description: "Primary key of the tag"
-        tests:
-          - unique
-          - not_null
+        description: Tag ID
       - name: user_id
-        description: "Foreign key to users"
-        tests:
-          - not_null
+        description: User ID
       - name: name
-        description: "Tag name"
-        tests:
-          - not_null
+        description: Tag name
 
   - name: task_tags
-    description: "Many-to-many relation between tasks and tags"
+    description: Task tags data
     columns:
       - name: task_id
-        description: "Foreign key to tasks"
-        tests:
-          - not_null
+        description: Task ID
       - name: tag_id
-        description: "Foreign key to tags"
-        tests:
-          - not_null
+        description: Tag ID

@@ -17,7 +17,6 @@ clean-targets:
   - target
   - dbt_packages
 models:
-  # see https://dev.classmethod.jp/articles/dbt-materializations-three/
   my_project:
-    materialized: ephemeral
+    +materialized: view
 target-path: target
