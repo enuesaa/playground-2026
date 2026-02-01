@@ -8,3 +8,9 @@ models:
         description: Task ID
       - name: tag_id
         description: Tag ID
+    meta:
+      joins:
+        - join: tags
+          type: inner
+          sql_on: ${task_tags.tag_id} = ${tags.id}
+          relationship: many-to-one

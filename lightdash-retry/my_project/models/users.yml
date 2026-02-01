@@ -18,7 +18,6 @@ models:
       joins:
         - join: tags
           type: inner
-          label: JOIN tags
           sql_on: ${users.id} = ${tags.user_id}
           relationship: one-to-many
       # parameters:

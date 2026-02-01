@@ -6,6 +6,10 @@ models:
     columns:
       - name: id
         description: Task ID
+        meta:
+          metrics:
+            tasks_count:
+              type: count 
       - name: user_id
         description: User ID
       - name: title
@@ -21,9 +25,17 @@ models:
       - name: created_at
         description: Task created_at
     meta:
+      primary_key: id
       joins:
         - join: users
           type: inner
-          label: JOIN users
           sql_on: ${tasks.user_id} = ${users.id}
+          relationship: many-to-one
+        - join: task_tags
+          type: inner
+          sql_on: ${tasks.id} = ${task_tags.task_id}
+          relationship: one-to-many
+        - join: tags
+          type: inner
+          sql_on: ${task_tags.tag_id} = ${tags.id}
           relationship: many-to-one

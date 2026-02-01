@@ -14,3 +14,5 @@ models:
         description: User ID
       - name: name
         description: Tag name
+    meta:
+      primary_key: id
