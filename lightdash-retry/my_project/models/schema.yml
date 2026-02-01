@@ -43,6 +43,10 @@ models:
     columns:
       - name: id
         description: Tag ID
+        meta:
+          metrics:
+            tags_count:
+              type: count
       - name: user_id
         description: User ID
       - name: name
