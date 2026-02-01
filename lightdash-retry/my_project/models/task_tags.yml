@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: task_tags
+    description: Task tags data
+    columns:
+      - name: task_id
+        description: Task ID
+      - name: tag_id
+        description: Tag ID

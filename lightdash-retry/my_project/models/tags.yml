@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: tags
+    description: Tags data
+    columns:
+      - name: id
+        description: Tag ID
+        meta:
+          metrics:
+            tags_count:
+              type: count
+      - name: user_id
+        description: User ID
+      - name: name
+        description: Tag name

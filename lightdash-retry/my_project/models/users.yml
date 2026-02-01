@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: users
+    description: User data
+    columns:
+      - name: id
+        description: User ID
+      - name: name
+        description: User name
+      - name: email
+        description: User email
+      - name: created_at
+        description: User created_at
+
+    meta:
+      primary_key: id
+      joins:
+        - join: tags
+          sql_on: ${users.id} = ${tags.user_id}
+          relationship: one-to-many

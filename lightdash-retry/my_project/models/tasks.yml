@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: tasks
+    description: Task data
+    columns:
+      - name: id
+        description: Task ID
+      - name: user_id
+        description: User ID
+      - name: title
+        description: Task title
+      - name: status
+        description: Task status
+      - name: due_date
+        description: Task due date
+        meta:
+          dimension:
+            # label: 期限
+            time_intervals: ['RAW', 'DAY', 'WEEK', 'MONTH', 'MONTH_NUM']
+      - name: created_at
+        description: Task created_at
