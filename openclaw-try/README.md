@@ -1,6 +1,6 @@
-# moltbot
+# OpenClaw
 
-- clawdbot と呼ばれていたやつ。moltbot に rename された
+- clawdbot と呼ばれていたやつ。moltbot に rename された。その後 OpenClaw に rename された
 - discord とか slack に ai bot を入れるツール
 - openai api の api key を持ち込んで、チャットツールから使えるようにする
 - hub ってのがあるらしい
