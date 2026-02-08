@@ -9,6 +9,7 @@
   - ラグがある感じがまさに Remote Desktop
   - 手元の mac の chrome のなかに、WorkSpaces Secure Browser の chrome がある
   - ![chrome](./chrome.png)
+  - ![afterlogin](./afterlogin.png)
 - VPC (およびそれにつながっているオンプレ)にあるアプリへセキュアにログインできる
   - ちなみに作成するときに VPC ID と Security Group ID を求められた
   - ので、WebブラウザをVPCに置くっぽい
@@ -20,7 +21,6 @@
 - 料金体系は正確に理解できてないが、「アクティブユーザー数 * インスタンスタイプ」っぽい
   - 作成するときにインスタンスタイプを指定する必要あり
   - https://aws.amazon.com/jp/workspaces-family/secure-browser/pricing/
-![afterlogin](./afterlogin.png)
 
 ## Links
 - https://aws.amazon.com/jp/workspaces-family/secure-browser/
