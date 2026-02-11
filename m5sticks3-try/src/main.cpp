@@ -26,6 +26,9 @@ void setup() {
   M5.Display.setTextFont(1); // テキストフォント
   M5.Lcd.println("aaa");
 
+  M5.Display.setCursor(190, 13);
+  M5.Lcd.printf("%d%%", M5.Power.getBatteryLevel()); // バッテリー残量
+
   // delay(7000);
   // M5.Power.powerOff();
 }
