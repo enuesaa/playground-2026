@@ -1,0 +1,27 @@
+<html>
+<head></head>
+<body>
+<script>
+/** see https://azukiazusa.dev/blog/webmcp-for-web-applications/ */
+window.navigator.modelContext.provideContext({
+  tools: [
+    {
+      name: "hello",
+      description: "say hello",
+      inputSchema: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "your name" },
+        },
+        required: ["name"],
+      },
+      execute: async ({ name }) => {
+        console.log(`hello ${name}`);
+        return { ok: true };
+      },
+    },
+  ],
+});
+</script>
+</body>
+
