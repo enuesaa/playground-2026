@@ -1,6 +1,7 @@
 #include <M5Unified.h>
 #include <WiFi.h>
 #include <NTPClient.h>
+#include <HTTPClient.h>
 #include "speak.h"
 #include "vars.hpp"
 
@@ -25,6 +26,12 @@ void setup() {
   int hour   = ntp.getHours();
   int minute = ntp.getMinutes();
   playTime(hour, minute);
+
+  HTTPClient http;
+  http.begin("https://example.com/");
+  int httpCode = http.GET();
+
+  playNumber(httpCode/100);
 }
 
 void loop() {
