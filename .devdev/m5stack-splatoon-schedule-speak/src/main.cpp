@@ -3,6 +3,7 @@
 #include <NTPClient.h>
 #include <HTTPClient.h>
 #include "speak.h"
+#include "parse.h"
 #include "vars.hpp"
 
 WiFiUDP ntpUDP;
@@ -27,11 +28,12 @@ void setup() {
   int minute = ntp.getMinutes();
   playTime(hour, minute);
 
-  HTTPClient http;
-  http.begin("https://example.com/");
-  int httpCode = http.GET();
+  // HTTPClient http;
+  // http.begin(STAGE_API_URL);
+  // int httpCode = http.GET();
 
-  playNumber(httpCode/100);
+  // String payload = http.getString();
+  parseSchedule(MOCK_PAYLOAD);
 }
 
 void loop() {
