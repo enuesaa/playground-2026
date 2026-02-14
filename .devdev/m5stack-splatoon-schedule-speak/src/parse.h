@@ -1,6 +1,7 @@
 #include <M5Unified.h>
 #include <ArduinoJson.h>
 #include <time.h>
+#include "speakstage.h"
 
 bool isNightSlot(const char* t) {
   if (t[11] == '2' && t[12] == '3') {
@@ -36,19 +37,8 @@ void parseSchedule(String payload) {
       continue;
     }
     const char* stage1Name = stages[0]["name"];
-    if (!stage1Name) {
-      continue;
-    }
-    if (strcmp(stage1Name, "ナンプラー遺跡") == 0) {
-      playNumber(7);
-    }
+    playStage(stage1Name);
     const char* stage2Name = stages[1]["name"];
-    if (!stage2Name) {
-      continue;
-    }
-    if (strcmp(stage2Name, "デカライン高架下") == 0) {
-      playNumber(8);
-    }
-    break;
+    playStage(stage2Name);
   }
 }
