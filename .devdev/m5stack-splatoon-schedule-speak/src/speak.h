@@ -2,12 +2,9 @@
 #include <time.h>
 
 // 音声データ
-// for f in *.wav; do
-//   xxd -i "$f" > "${f%.wav}.h"
-// done
+// xxd -i desu.wav > desu.h
 #include "speak/currenttimeis.h"
-#include "speak/hour.h"
-#include "speak/minute.h"
+#include "speak/desu.h"
 #include "speak/number0.h"
 #include "speak/number1.h"
 #include "speak/number2.h"
@@ -58,11 +55,10 @@ void playTime(int hour, int minute) {
     playNumber(hour/10);
   }
   playNumber(hour%10);
-  play(hour_wav, hour_wav_len);
 
   if (minute >= 10) {
     playNumber(minute/10);
   }
   playNumber(minute%10);
-  play(minute_wav, minute_wav_len);
+  play(desu_wav, desu_wav_len);
 }
