@@ -1,7 +1,4 @@
 #include <M5Unified.h>
-#include <time.h>
-
-// 音声データ
 #include "assets/currenttimeis.h"
 #include "assets/desu.h"
 #include "assets/number0.h"
@@ -15,7 +12,6 @@
 #include "assets/number8.h"
 #include "assets/number9.h"
 
-// 数字テーブル
 struct WavData {
   const uint8_t* data;
   size_t len;

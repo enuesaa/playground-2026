@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <NTPClient.h>
 #include <HTTPClient.h>
-#include "speak.h"
+#include "speak/speak.h"
 #include "parse.h"
 #include "vars.hpp"
 
