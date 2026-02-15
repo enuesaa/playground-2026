@@ -8,7 +8,7 @@ String fetchSchedule() {
   HTTPClient http;
   http.begin(STAGE_API_URL);
   http.setUserAgent(STAGE_API_USER_AGENT);
-  http.GET();
+  int code = http.GET();
   String resbody = http.getString();
   return resbody;
 }
