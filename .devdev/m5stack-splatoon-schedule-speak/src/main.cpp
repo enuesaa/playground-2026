@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <NTPClient.h>
 #include <HTTPClient.h>
-#include "speak/speak.h"
+#include "player/player.h"
 #include "parse.h"
 #include "vars.hpp"
 
@@ -26,7 +26,7 @@ void setup() {
 
   int hour   = ntp.getHours();
   int minute = ntp.getMinutes();
-  playTime(hour, minute);
+  player::playTime(hour, minute);
 
   // HTTPClient http;
   // http.begin(STAGE_API_URL);
