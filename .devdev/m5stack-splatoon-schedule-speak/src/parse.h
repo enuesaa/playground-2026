@@ -30,7 +30,6 @@ void parseSchedule(String payload) {
     if (!isNightSlot(startTime)) {
       continue; 
     }
-    playNumber(6);
 
     JsonArray stages = item["stages"];
     if (stages.isNull() || stages.size() == 0) {

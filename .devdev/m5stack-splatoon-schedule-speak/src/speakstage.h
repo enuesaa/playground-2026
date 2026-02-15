@@ -69,5 +69,8 @@ void playStage(const char* stageName) {
   const StageWavData* wav = getStageWav(stageName);
   if (wav && wav->data) {
     M5.Speaker.playWav(wav->data, wav->len);
+    while (M5.Speaker.isPlaying()) {
+      delay(10);
+    }
   }
 }
