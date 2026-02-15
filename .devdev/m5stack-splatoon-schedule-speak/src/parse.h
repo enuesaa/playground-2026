@@ -3,7 +3,7 @@
 #include <time.h>
 #include "player/player.h"
 
-int getStartHour(const char* t) {
+int getStartHour(const char *t) {
   if (t[11] == '2' && t[12] == '3') {
     return 23;
   }
@@ -23,9 +23,9 @@ void parseSchedule(String payload) {
   JsonArray results = doc["results"];
 
   for (JsonObject item : results) {
-    const char* startTime = item["start_time"];
+    const char *startTime = item["start_time"];
     if (!startTime) {
-      continue; 
+      continue;
     }
     int startHour = getStartHour(startTime);
     if (startHour < 0) {
@@ -37,9 +37,9 @@ void parseSchedule(String payload) {
     if (stages.isNull() || stages.size() == 0) {
       continue;
     }
-    const char* stage1Name = stages[0]["name"];
+    const char *stage1Name = stages[0]["name"];
     player::playStage(stage1Name);
-    const char* stage2Name = stages[1]["name"];
+    const char *stage2Name = stages[1]["name"];
     player::playStage(stage2Name);
   }
 }

@@ -12,21 +12,21 @@
 
 namespace player {
   struct Asset {
-    const uint8_t* data;
+    const uint8_t *data;
     size_t len;
   };
 
   Asset assets[] = {
-    { number0_wav, number0_wav_len },
-    { number1_wav, number1_wav_len },
-    { number2_wav, number2_wav_len },
-    { number3_wav, number3_wav_len },
-    { number4_wav, number4_wav_len },
-    { number5_wav, number5_wav_len },
-    { number6_wav, number6_wav_len },
-    { number7_wav, number7_wav_len },
-    { number8_wav, number8_wav_len },
-    { number9_wav, number9_wav_len },
+      {number0_wav, number0_wav_len},
+      {number1_wav, number1_wav_len},
+      {number2_wav, number2_wav_len},
+      {number3_wav, number3_wav_len},
+      {number4_wav, number4_wav_len},
+      {number5_wav, number5_wav_len},
+      {number6_wav, number6_wav_len},
+      {number7_wav, number7_wav_len},
+      {number8_wav, number8_wav_len},
+      {number9_wav, number9_wav_len},
   };
 
   void playNumber(int n) {

@@ -3,7 +3,7 @@
 #include "assets/desu.h"
 
 namespace player {
-  void playTime(int hour, int minute) {  
+  void playTime(int hour, int minute) {
     play(currenttimeis_wav, currenttimeis_wav_len);
     playNumber(hour);
     playNumber(minute);

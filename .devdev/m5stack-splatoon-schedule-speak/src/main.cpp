@@ -24,7 +24,7 @@ void setup() {
   M5.Speaker.tone(800, 200);
   M5.delay(500);
 
-  int hour   = ntp.getHours();
+  int hour = ntp.getHours();
   int minute = ntp.getMinutes();
   player::playTime(hour, minute);
 
