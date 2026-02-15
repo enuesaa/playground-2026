@@ -1,7 +1,17 @@
 #include <M5Unified.h>
+#include <HTTPClient.h>
 #include <ArduinoJson.h>
-#include <time.h>
 #include "player/player.h"
+#include "vars.hpp"
+
+HTTPClient http;
+
+const char* fetchSchedule() {
+  http.begin(STAGE_API_URL);
+  int code = http.GET();
+  String resbody = http.getString();
+  return resbody.c_str();
+}
 
 int getStartHour(const char *t) {
   if (t[11] == '2' && t[12] == '3') {
@@ -16,7 +26,7 @@ int getStartHour(const char *t) {
   return -1;
 }
 
-void parseSchedule(String payload) {
+void parseSchedule(const char* payload) {
   JsonDocument doc;
   deserializeJson(doc, payload);
 
@@ -37,9 +47,8 @@ void parseSchedule(String payload) {
     if (stages.isNull() || stages.size() == 0) {
       continue;
     }
-    const char *stage1Name = stages[0]["name"];
-    player::playStage(stage1Name);
-    const char *stage2Name = stages[1]["name"];
-    player::playStage(stage2Name);
+    player::playStage(stages[0]["name"]);
+    player::playStage(stages[1]["name"]);
+    M5.delay(500);
   }
 }

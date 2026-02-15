@@ -23,13 +23,13 @@
 #include "assets/koukashita.h"
 
 namespace player {
-  struct Asset {
+  struct AssetStage {
     const char *name;
     const uint8_t *data;
     size_t len;
   };
 
-  Asset assets[] = {
+  AssetStage stages[] = {
       {"ユノハナ大渓谷", yunohana_wav, yunohana_wav_len},
       {"ゴンズイ地区", gonzui_wav, gonzui_wav_len},
       {"ヤガラ市場", yagara_wav, yagara_wav_len},
@@ -53,17 +53,17 @@ namespace player {
       {"デカライン高架下", koukashita_wav, koukashita_wav_len},
   };
 
-  const Asset *getStageWav(const char *stageName) {
-    for (int i = 0; i < sizeof(assets) / sizeof(assets[0]); i++) {
-      if (strcmp(assets[i].name, stageName) == 0) {
-        return &assets[i];
+  const AssetStage *getStageWav(const char *stageName) {
+    for (int i = 0; i < sizeof(stages) / sizeof(stages[0]); i++) {
+      if (strcmp(stages[i].name, stageName) == 0) {
+        return &stages[i];
       }
     }
     return nullptr;
   }
 
   void playStage(const char *stageName) {
-    const Asset *wav = getStageWav(stageName);
+    const AssetStage *wav = getStageWav(stageName);
     if (wav) {
       play(wav->data, wav->len);
       return;

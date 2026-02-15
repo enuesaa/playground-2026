@@ -3,7 +3,7 @@ version: '3'
 tasks:
   default:
     cmds:
-      - pio run --target upload --target monitor --environment m5stack-atoms3r
+      - pio run --target upload --environment m5stack-atoms3r
 
   convert:
     dir: ./src/speak/assets/

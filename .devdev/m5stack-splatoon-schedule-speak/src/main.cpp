@@ -3,20 +3,21 @@
 #include <NTPClient.h>
 #include <HTTPClient.h>
 #include "player/player.h"
-#include "parse.h"
+#include "handle.cpp"
 #include "vars.hpp"
 
 WiFiUDP ntpUDP;
 NTPClient ntp(ntpUDP, "pool.ntp.org", 9 * 3600);
+HTTPClient http;
 
 void setup() {
   M5.begin();
-  M5.Speaker.setVolume(150);
-  M5.Speaker.setAllChannelVolume(150);
+  M5.Speaker.setVolume(120);
+  M5.Speaker.setAllChannelVolume(120);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    M5.delay(1000);
   }
   ntp.begin();
   ntp.update();
@@ -28,12 +29,8 @@ void setup() {
   int minute = ntp.getMinutes();
   player::playTime(hour, minute);
 
-  // HTTPClient http;
-  // http.begin(STAGE_API_URL);
-  // int httpCode = http.GET();
-
-  // String payload = http.getString();
-  parseSchedule(MOCK_PAYLOAD);
+  // const char* schedule = fetchSchedule();
+  parseSchedule(MOCK_SCHEDULE);
 }
 
 void loop() {

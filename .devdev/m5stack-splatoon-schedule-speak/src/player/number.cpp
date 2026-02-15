@@ -11,12 +11,12 @@
 #include "assets/number9.h"
 
 namespace player {
-  struct Asset {
+  struct AssetNumber {
     const uint8_t *data;
     size_t len;
   };
 
-  Asset assets[] = {
+  AssetNumber numbers[] = {
       {number0_wav, number0_wav_len},
       {number1_wav, number1_wav_len},
       {number2_wav, number2_wav_len},
@@ -34,7 +34,7 @@ namespace player {
       return;
     }
     if (n <= 9) {
-      play(assets[n].data, assets[n].len);
+      play(numbers[n].data, numbers[n].len);
       return;
     }
     playNumber(n / 10);
