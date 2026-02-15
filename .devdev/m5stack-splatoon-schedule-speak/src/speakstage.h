@@ -20,6 +20,7 @@
 #include "speakstage/taraport.h"
 #include "speakstage/yagara.h"
 #include "speakstage/zatou.h"
+#include "speakstage/unknown.h"
 
 struct StageWavData {
   const uint8_t* data;
@@ -51,9 +52,8 @@ StageAudio stageAudios[] = {
   {17,"コンブトラック",   {track_wav, track_wav_len}},
   {18,"マンタマリア号",   {mantamaria_wav, mantamaria_wav_len}},
   {19,"タカアシ経済特区", {takaashi_wav, takaashi_wav_len}},
-  {20,"オヒョウ海運",     {kaiun_wav, kaiun_wav_len}} // wav が無い場合
+  {20,"オヒョウ海運",     {kaiun_wav, kaiun_wav_len}},
 };
-
 
 const StageWavData* getStageWav(const char* stageName) {
   for (int i = 0; i < sizeof(stageAudios)/sizeof(stageAudios[0]); i++) {
@@ -67,10 +67,12 @@ const StageWavData* getStageWav(const char* stageName) {
 
 void playStage(const char* stageName) {
   const StageWavData* wav = getStageWav(stageName);
-  if (wav && wav->data) {
-    M5.Speaker.playWav(wav->data, wav->len);
-    while (M5.Speaker.isPlaying()) {
-      delay(10);
-    }
+  if (!wav) {
+    static const StageWavData unknown = {unknown_wav, unknown_wav_len};
+    wav = &unknown;
+  }
+  M5.Speaker.playWav(wav->data, wav->len);
+  while (M5.Speaker.isPlaying()) {
+    delay(10);
   }
 }
