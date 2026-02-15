@@ -1,19 +1,16 @@
 #include <M5Unified.h>
 #include <WiFi.h>
 #include <NTPClient.h>
-#include <HTTPClient.h>
 #include "player/player.h"
-#include "handle.cpp"
-#include "vars.hpp"
+#include "handle.h"
 
 WiFiUDP ntpUDP;
 NTPClient ntp(ntpUDP, "pool.ntp.org", 9 * 3600);
-HTTPClient http;
 
 void setup() {
   M5.begin();
-  M5.Speaker.setVolume(120);
-  M5.Speaker.setAllChannelVolume(120);
+  M5.Speaker.setVolume(150);
+  M5.Speaker.setAllChannelVolume(150);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
@@ -29,8 +26,9 @@ void setup() {
   int minute = ntp.getMinutes();
   player::playTime(hour, minute);
 
-  // const char* schedule = fetchSchedule();
-  parseSchedule(MOCK_SCHEDULE);
+  String schedule = fetchSchedule();
+  parseSchedule(schedule.c_str());
+  // parseSchedule(MOCK_SCHEDULE);
 }
 
 void loop() {

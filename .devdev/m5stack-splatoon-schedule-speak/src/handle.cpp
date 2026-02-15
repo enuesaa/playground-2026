@@ -1,16 +1,12 @@
-#include <M5Unified.h>
-#include <HTTPClient.h>
-#include <ArduinoJson.h>
-#include "player/player.h"
-#include "vars.hpp"
+#include "handle.h"
 
-HTTPClient http;
-
-const char* fetchSchedule() {
+String fetchSchedule() {
+  HTTPClient http;
   http.begin(STAGE_API_URL);
+  http.setUserAgent(STAGE_API_USER_AGENT);
   int code = http.GET();
   String resbody = http.getString();
-  return resbody.c_str();
+  return resbody;
 }
 
 int getStartHour(const char *t) {
