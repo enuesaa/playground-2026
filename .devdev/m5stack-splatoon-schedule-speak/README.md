@@ -1,1 +1,1 @@
-# M5Stack Atom Echo S3R
+# m5stack-splatoon-schedule-speak
