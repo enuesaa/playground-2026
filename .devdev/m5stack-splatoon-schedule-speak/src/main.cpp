@@ -1,8 +1,7 @@
 #include <M5Unified.h>
 #include <WiFi.h>
 #include <NTPClient.h>
-#include "player/player.h"
-#include "handle.h"
+#include "handle.hpp"
 
 WiFiUDP ntpUDP;
 NTPClient ntp(ntpUDP, "pool.ntp.org", 9 * 3600);
@@ -27,8 +26,7 @@ void setup() {
   player::playTime(hour, minute);
 
   String schedule = fetchSchedule();
-  parseSchedule(schedule.c_str());
-  // parseSchedule(MOCK_SCHEDULE);
+  parseSchedule(schedule);
 }
 
 void loop() {

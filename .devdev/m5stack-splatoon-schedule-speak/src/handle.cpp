@@ -1,10 +1,14 @@
-#include "handle.h"
+#include "handle.hpp"
 
 String fetchSchedule() {
+  if (USE_MOCK) {
+    player::playMock();
+    return String(MOCK_SCHEDULE);
+  }
   HTTPClient http;
   http.begin(STAGE_API_URL);
   http.setUserAgent(STAGE_API_USER_AGENT);
-  int code = http.GET();
+  http.GET();
   String resbody = http.getString();
   return resbody;
 }
@@ -22,7 +26,7 @@ int getStartHour(const char *t) {
   return -1;
 }
 
-void parseSchedule(const char* payload) {
+void parseSchedule(String payload) {
   JsonDocument doc;
   deserializeJson(doc, payload);
 
@@ -45,6 +49,6 @@ void parseSchedule(const char* payload) {
     }
     player::playStage(stages[0]["name"]);
     player::playStage(stages[1]["name"]);
-    M5.delay(500);
+    M5.delay(700);
   }
 }
