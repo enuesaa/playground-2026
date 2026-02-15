@@ -2,19 +2,18 @@
 #include <time.h>
 
 // 音声データ
-// xxd -i desu.wav > desu.h
-#include "speak/currenttimeis.h"
-#include "speak/desu.h"
-#include "speak/number0.h"
-#include "speak/number1.h"
-#include "speak/number2.h"
-#include "speak/number3.h"
-#include "speak/number4.h"
-#include "speak/number5.h"
-#include "speak/number6.h"
-#include "speak/number7.h"
-#include "speak/number8.h"
-#include "speak/number9.h"
+#include "assets/currenttimeis.h"
+#include "assets/desu.h"
+#include "assets/number0.h"
+#include "assets/number1.h"
+#include "assets/number2.h"
+#include "assets/number3.h"
+#include "assets/number4.h"
+#include "assets/number5.h"
+#include "assets/number6.h"
+#include "assets/number7.h"
+#include "assets/number8.h"
+#include "assets/number9.h"
 
 // 数字テーブル
 struct WavData {

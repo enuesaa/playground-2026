@@ -6,23 +6,8 @@ tasks:
       - pio run --target upload --target monitor --environment m5stack-atoms3r
 
   convert:
+    dir: ./src/speak/assets/
     cmds:
-      - task: convert:speak
-      - task: convert:speakstage
-
-  convert:speak:
-    dir: ./src/speak/
-    cmds:
-      - rm -rf *.h
-      - |
-        for f in *.wav; do
-          xxd -i "$f" > "${f%.wav}.h";
-        done
-      - sd 'unsigned char' 'EXT_RAM_ATTR const unsigned char' *.h
-
-  convert:speakstage:
-    dir: ./src/speakstage/
-    cmds: 
       - rm -rf *.h
       - |
         for f in *.wav; do
