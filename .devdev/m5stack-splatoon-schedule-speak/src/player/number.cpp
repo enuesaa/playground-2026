@@ -1,6 +1,4 @@
 #include "player.h"
-#include "assets/currenttimeis.h"
-#include "assets/desu.h"
 #include "assets/number0.h"
 #include "assets/number1.h"
 #include "assets/number2.h"
@@ -13,12 +11,12 @@
 #include "assets/number9.h"
 
 namespace player {
-  struct WavData {
+  struct Asset {
     const uint8_t* data;
     size_t len;
   };
 
-  WavData numbers[] = {
+  Asset assets[] = {
     { number0_wav, number0_wav_len },
     { number1_wav, number1_wav_len },
     { number2_wav, number2_wav_len },
@@ -36,7 +34,7 @@ namespace player {
       return;
     }
     if (n <= 9) {
-      play(numbers[n].data, numbers[n].len);
+      play(assets[n].data, assets[n].len);
       return;
     }
     playNumber(n / 10);

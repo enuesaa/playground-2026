@@ -23,13 +23,13 @@
 #include "assets/koukashita.h"
 
 namespace player {
-  struct StageWavData {
-    const char* stageName;
+  struct Asset {
+    const char* name;
     const uint8_t* data;
     size_t len;
   };
 
-  StageWavData stageWavs[] = {
+  Asset assets[] = {
     {"ユノハナ大渓谷", yunohana_wav, yunohana_wav_len},
     {"ゴンズイ地区",   gonzui_wav, gonzui_wav_len},
     {"ヤガラ市場",     yagara_wav, yagara_wav_len},
@@ -53,24 +53,21 @@ namespace player {
     {"デカライン高架下", koukashita_wav, koukashita_wav_len},
   };
 
-  const StageWavData* getStageWav(const char* stageName) {
-    for (int i = 0; i < sizeof(stageWavs)/sizeof(stageWavs[0]); i++) {
-      if (strcmp(stageWavs[i].stageName, stageName) == 0) {
-        return &stageWavs[i];
+  const Asset* getStageWav(const char* stageName) {
+    for (int i = 0; i < sizeof(assets)/sizeof(assets[0]); i++) {
+      if (strcmp(assets[i].name, stageName) == 0) {
+        return &assets[i];
       }
     }
     return nullptr;
   }
 
   void playStage(const char* stageName) {
-    const StageWavData* wav = getStageWav(stageName);
-    if (!wav) {
-      static const StageWavData unknown = {"不明", unknown_wav, unknown_wav_len};
-      wav = &unknown;
+    const Asset* wav = getStageWav(stageName);
+    if (wav) {
+      play(wav->data, wav->len);
+      return;
     }
-    M5.Speaker.playWav(wav->data, wav->len);
-    while (M5.Speaker.isPlaying()) {
-      delay(10);
-    }
+    play(unknown_wav, unknown_wav_len);
   }
 };
