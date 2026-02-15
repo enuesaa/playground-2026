@@ -43,22 +43,20 @@ void play(const uint8_t* data, size_t len) {
 }
 
 void playNumber(int n) {
-  if (n >= 0 && n <= 9) {
-    play(numbers[n].data, numbers[n].len);
+  if (n < 0) {
+    return;
   }
+  if (n <= 9) {
+    play(numbers[n].data, numbers[n].len);
+    return;
+  }
+  playNumber(n / 10);
+  playNumber(n % 10);
 }
 
 void playTime(int hour, int minute) {
   play(currenttimeis_wav, currenttimeis_wav_len);
-
-  if (hour > 9) {
-    playNumber(hour/10);
-  }
-  playNumber(hour%10);
-
-  if (minute >= 10) {
-    playNumber(minute/10);
-  }
-  playNumber(minute%10);
+  playNumber(hour);
+  playNumber(minute);
   play(desu_wav, desu_wav_len);
 }

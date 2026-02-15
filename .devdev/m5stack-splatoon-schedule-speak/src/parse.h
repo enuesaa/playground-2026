@@ -31,14 +31,7 @@ void parseSchedule(String payload) {
     if (startHour < 0) {
       continue;
     }
-    if (startHour == 23) {
-      playNumber(2);
-      playNumber(3);
-    } else if (startHour == 1) {
-      playNumber(1);
-    } else if (startHour == 3) {
-      playNumber(3);
-    }
+    playNumber(startHour);
 
     JsonArray stages = item["stages"];
     if (stages.isNull() || stages.size() == 0) {
