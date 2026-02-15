@@ -15,6 +15,9 @@
   - 一方で、構造はけっこう違う
   - dynamodbへ素直に読み書きしたいときは、こっちの方がはるかに便利そう
 - 活用できるところ色々ありそう
+- HTTPも呼べる
+  - がいまいち subscribe でどういう値が入ってくるのか理解できてない
+  - https://docs.aws.amazon.com/appsync/latest/eventapi/http-function-reference.html
 
 ## Links
 - https://zenn.dev/kmiura55/articles/appsync-events-chat
