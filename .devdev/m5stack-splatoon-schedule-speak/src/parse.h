@@ -3,17 +3,17 @@
 #include <time.h>
 #include "speakstage.h"
 
-bool isNightSlot(const char* t) {
+int getStartHour(const char* t) {
   if (t[11] == '2' && t[12] == '3') {
-    return true;
+    return 23;
   }
   if (t[11] == '0' && t[12] == '1') {
-    return true;
+    return 1;
   }
   if (t[11] == '0' && t[12] == '3') {
-    return true;
+    return 3;
   }
-  return false;
+  return -1;
 }
 
 void parseSchedule(String payload) {
@@ -27,8 +27,17 @@ void parseSchedule(String payload) {
     if (!startTime) {
       continue; 
     }
-    if (!isNightSlot(startTime)) {
-      continue; 
+    int startHour = getStartHour(startTime);
+    if (startHour < 0) {
+      continue;
+    }
+    if (startHour == 23) {
+      playNumber(2);
+      playNumber(3);
+    } else if (startHour == 1) {
+      playNumber(1);
+    } else if (startHour == 3) {
+      playNumber(3);
     }
 
     JsonArray stages = item["stages"];

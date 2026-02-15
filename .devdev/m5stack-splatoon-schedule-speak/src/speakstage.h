@@ -21,6 +21,7 @@
 #include "speakstage/yagara.h"
 #include "speakstage/zatou.h"
 #include "speakstage/unknown.h"
+#include "speakstage/koukashita.h"
 
 struct StageWavData {
   const uint8_t* data;
@@ -53,6 +54,7 @@ StageAudio stageAudios[] = {
   {18,"マンタマリア号",   {mantamaria_wav, mantamaria_wav_len}},
   {19,"タカアシ経済特区", {takaashi_wav, takaashi_wav_len}},
   {20,"オヒョウ海運",     {kaiun_wav, kaiun_wav_len}},
+  {21,"デカライン高架下", {koukashita_wav, koukashita_wav_len}},
 };
 
 const StageWavData* getStageWav(const char* stageName) {
