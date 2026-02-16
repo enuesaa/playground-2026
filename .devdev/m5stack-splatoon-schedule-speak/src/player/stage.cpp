@@ -21,6 +21,7 @@
 #include "assets/zatou.hpp"
 #include "assets/unknown.hpp"
 #include "assets/koukashita.hpp"
+#include "assets/baigaitei.hpp"
 
 namespace player {
   struct AssetStage {
@@ -50,6 +51,7 @@ namespace player {
       {"マンタマリア号", mantamaria_wav, mantamaria_wav_len},
       {"タカアシ経済特区", takaashi_wav, takaashi_wav_len},
       {"オヒョウ海運", kaiun_wav, kaiun_wav_len},
+      {"バイガイ亭", baigaitei_wav, baigaitei_wav_len},
       {"デカライン高架下", koukashita_wav, koukashita_wav_len},
   };
 
