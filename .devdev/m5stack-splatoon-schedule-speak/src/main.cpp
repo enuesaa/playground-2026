@@ -5,6 +5,7 @@
 
 WiFiUDP ntpUDP;
 NTPClient ntp(ntpUDP, "pool.ntp.org", 9 * 3600);
+String schedule;
 
 void setup() {
   M5.begin();
@@ -25,9 +26,10 @@ void setup() {
   int minute = ntp.getMinutes();
   player::playTime(hour, minute);
 
-  String schedule = fetchSchedule();
-  parseSchedule(schedule);
+  schedule = fetchSchedule();
 }
 
 void loop() {
+  parseSchedule(schedule);
+  M5.delay(5000);
 }
