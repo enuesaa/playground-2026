@@ -71,3 +71,10 @@ Functions in deletelaterapp:
   - FTPでアップロードするらしい？
   - GitHub Actions でこのファイルを見に行ってデプロイすることもできる
     - https://iret.media/118950
+
+## キャプチャ
+- <img src="./docs/top.png" width="500px" />
+- <img src="./docs/code.png" width="500px" />
+- <img src="./docs/integrations.png" width="500px" />
+- <img src="./docs/invocations.png" width="500px" />
+- <img src="./docs/metrics.png" width="500px" />
