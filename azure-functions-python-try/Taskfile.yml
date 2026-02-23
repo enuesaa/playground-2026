@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: build
+      - task: deploy
+
+  build:
+    cmds:
+      - rm -rf .python_packages
+      - uv pip install -r pyproject.toml --python-platform x86_64-unknown-linux-gnu --no-installer-metadata --no-compile-bytecode --target .python_packages/lib/site-packages
+  
+  deploy:
+    cmds:
+      - func azure functionapp publish deletelaterapp --python --no-build
