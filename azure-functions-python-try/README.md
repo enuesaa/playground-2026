@@ -7,6 +7,7 @@
   - https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-reference-python?pivots=python-mode-decorators
   - https://zenn.dev/pinter/articles/20230903functionspythondifference
   - エントリポイントのファイルが __init__.py から function_app.py へ変わったっぽい
+- azure static web apps で functions のログが取れず困ったのは、やっぱりあっちの仕様制限ぽい
 
 ## requirements
 ```bash
