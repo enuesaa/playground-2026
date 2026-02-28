@@ -1,0 +1,16 @@
+{
+  "name": "vercel-chatsdk-try",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node --env-file=.env src/index.ts"
+  },
+  "dependencies": {
+    "@chat-adapter/discord": "^4.15.0",
+    "@chat-adapter/state-redis": "^4.15.0",
+    "chat": "^4.15.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}
