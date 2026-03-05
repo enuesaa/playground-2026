@@ -32,6 +32,12 @@ gws drive files list
 }
 ```
 
+- rust で書かれてるっぽい
+- おそらく google cloud sdk を cli でラップしてる感じ。
+  - なんかエラーメッセージがJSON形式になったりするので、たぶんそうだと思う
+- けれども npm で配布してるっぽい
+- バイナリにして配布かな。
+
 ## Links
 - https://github.com/googleworkspace/cli
 - https://dev.classmethod.jp/articles/google-workspace-cli-release/
