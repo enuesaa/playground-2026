@@ -15,3 +15,11 @@
   - `Render spins down a Free web service that goes 15 minutes without receiving any inbound traffic`
   - https://render.com/docs/free#spinning-down-on-idle
   - https://note.com/pansansui/n/n3fb5ce3bee4c
+- 裏側でVPCみたいなプライベートネットワークを作るっぽく、同じリージョンにデプロイしたアプリは相互に通信できる？っぽい
+  - https://render.com/docs/private-network
+  - PrivateLink で自前のAWS VPCと接続できると書かれている。これができるのであれば render が AWS に乗っかってそうな気がしている
+  - AWSに乗っかっているっぽい
+    - https://community.render.com/t/which-render-regions-map-to-which-cloud-providers/5987/4
+
+## Links
+- https://render.com/
