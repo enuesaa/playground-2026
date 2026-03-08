@@ -1,0 +1,10 @@
+# misc
+.DS_Store
+
+# node.js
+node_modules
+
+# next.js
+.next
+.env*
+next-env.d.ts

@@ -1,0 +1,23 @@
+@keyframes comment-scroll-up {
+  0% {
+    transform: translateY(100dvh);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100dvh);
+    opacity: 0;
+  }
+}
+
+@utility comment-scroll-up {
+  animation-name: comment-scroll-up;
+  animation-duration: 10s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
