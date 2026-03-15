@@ -1,0 +1,7 @@
+services:
+  spicedb:
+    image: authzed/spicedb
+    ports:
+     - 50051:50051
+    command: serve --grpc-preshared-key "t_your_token_here_1234567deadbeef"
+
