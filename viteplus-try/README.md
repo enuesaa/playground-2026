@@ -14,7 +14,7 @@
   - Rust で書かれてそう
   - https://github.com/voidzero-dev/vite-plus
 
-## Install vp
+### Install vp
 ```bash
 curl -fsSL https://vite.plus | bash
 source ~/.zshrc
@@ -48,6 +48,15 @@ Execute:
   cache  Manage the task cache
 ```
 
-## Links
+### Links
 - https://viteplus.dev/
 - https://github.com/voidzero-dev/vite-plus
+
+## vite-task
+- vp run の内部で動いているタスクランナー？
+- https://zenn.dev/herp_inc/articles/strange-task-runner
+  - libc をフックしてるそう。
+  - 半分くらいしかわからないけど、書いてある内容は面白い。
+
+### Links
+- https://github.com/voidzero-dev/vite-task
