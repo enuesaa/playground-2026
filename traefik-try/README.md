@@ -7,6 +7,9 @@
 - traefik 自体は Go で書かれており、バイナリをダウンロードすれば動くし docker コンテナとしても動かせる
 - 優秀
 - 期待通り動く
+- systemd の unit file example
+  - https://gist.github.com/ubergesundheit/7c9d875befc2d7bfd0bf43d8b3862d85
+  - https://doc.traefik.io/traefik-enterprise/installing/on-premise/#systemd-linux-only
 
 ## EC2に立ててみる
 
