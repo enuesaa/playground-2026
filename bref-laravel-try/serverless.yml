@@ -1,0 +1,90 @@
+service: laravel
+
+provider:
+    name: aws
+    region: ap-northeast-1
+    environment:
+        APP_ENV: production
+        APP_KEY: 'base64:6MA3voleCn+EZhkP7g4vRZg+v1BFHi2/Yzsihd9Beqg='
+        APP_DEBUG: ${param:debug}
+        APP_URL: http://localhost
+        LOG_CHANNEL: stderr
+        LOG_STDERR_FORMATTER: Bref\Monolog\CloudWatchFormatter
+        #QUEUE_CONNECTION: sqs
+        #SQS_QUEUE: ${construct:jobs.queueUrl}
+        #FILESYSTEM_DISK: s3
+        #AWS_BUCKET: ${construct:storage.bucketName}
+
+functions:
+    web:
+        handler: public/index.php
+        runtime: php-83-fpm
+        timeout: 28
+        events:
+            - httpApi: '*'
+
+    # This function lets us run artisan commands in Lambda
+    artisan:
+        handler: artisan
+        runtime: php-83-console
+        timeout: 720
+        #events:
+        #    - schedule:
+        #          rate: rate(1 minute)
+        #          input: '"schedule:run"'
+
+constructs:
+    # SQS queue for Laravel jobs
+    # See https://bref.sh/docs/laravel/queues
+    #jobs:
+    #    type: queue
+    #    worker:
+    #        handler: Bref\LaravelBridge\Queue\QueueHandler
+    #        runtime: php-84
+    #        timeout: 60
+
+    # S3 bucket for file storage
+    #storage:
+    #    type: storage
+    #    lifecycleRules:
+    #        # Files in the `tmp/` folder will be cleaned after 1 day
+    #        -   prefix: tmp/
+    #            expirationInDays: 1
+
+    # CloudFront + S3 for website assets
+    # See https://bref.sh/docs/use-cases/websites
+    #website:
+    #    type: server-side-website
+    #    assets:
+    #        '/build/*': public/build
+    #        #'/vendor/*': public/vendor # Uncomment if the public/vendor exists
+    #        '/favicon.ico': public/favicon.ico
+    #        '/robots.txt': public/robots.txt
+
+params:
+    default:
+        debug: false
+    dev:
+        debug: true
+
+package:
+    patterns:
+        # exclude from deployment
+        - '!.env'
+        - '!node_modules/**'
+        - '!public/storage'
+        - '!resources/assets/**'
+        - '!resources/css/**'
+        - '!resources/images/**'
+        - '!resources/js/**'
+        - '!storage/**'
+        - '!tests/**'
+        - '!database/*.sqlite'
+        # exclude assets
+        - '!public/build/**'
+        - 'public/build/manifest.json'
+
+plugins:
+    # We need to include the Bref plugin
+    - ./vendor/bref/bref
+    # - serverless-lift
