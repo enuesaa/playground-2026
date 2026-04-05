@@ -1,0 +1,56 @@
+{
+	"name": "@enuesaa/my-svelte-template",
+	"type": "module",
+	"private": true,
+	"license": "MIT",
+	"scripts": {
+		"dev": "rm -rf .svelte-kit && svelte-kit sync && vite dev --port 3000",
+		"build": "vite build",
+		"format": "prettier --write {src,package.json}"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.50.1",
+		"@sveltejs/vite-plugin-svelte": "6.2.4",
+		"@tailwindcss/vite": "^4.1.18",
+		"@types/node": "^25.2.0",
+		"prettier": "^3.8.1",
+		"prettier-plugin-svelte": "^3.4.1",
+		"svelte": "5.49.1",
+		"tailwindcss": "^4.1.18",
+		"typescript": "^5.9.3",
+		"vite": "^7.3.1"
+	},
+	"dependencies": {
+		"@tanstack/svelte-query": "^6.0.18",
+		"lucide-svelte": "^0.563.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
+	},
+	"imports": {
+		"#app.css": "./src/routes/app.css"
+	},
+	"prettier": {
+		"printWidth": 120,
+		"tabWidth": 2,
+		"semi": false,
+		"singleQuote": true,
+		"endOfLine": "lf",
+		"trailingComma": "es5",
+		"plugins": [
+			"prettier-plugin-svelte"
+		],
+		"useTabs": true,
+		"overrides": [
+			{
+				"files": "*.svelte",
+				"options": {
+					"parser": "svelte"
+				}
+			}
+		]
+	}
+}
