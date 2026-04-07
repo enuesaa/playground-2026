@@ -1,5 +1,4 @@
-import { PUBLIC_API_ENDPOINT_BASE } from '$env/static/public'
-import { createMutation, getQueryClientContext } from '@tanstack/svelte-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export type MutateOptions = {
 	headers: {
@@ -7,13 +6,13 @@ export type MutateOptions = {
 	}
 	invalidate: string[]
 }
-export const mutate = <T, R>(method: string, path: string, options: Partial<MutateOptions> = {}) => {
-	const resolvedOptions = { headers: [], invalidate: [], ...options }
-	const queryClient = getQueryClientContext()
+export const useApiMutate = <T, R>(method: string, path: string, options: Partial<MutateOptions> = {}) => {
+	const resolvedOptions = { headers: {}, invalidate: [], ...options }
+	const queryClient = useQueryClient()
 
-	return createMutation(() => ({
+	return useMutation<R, Error, T>({
 		mutationFn: async (body: T): Promise<R> => {
-			const res = await fetch(`${PUBLIC_API_ENDPOINT_BASE}${path}`, {
+			const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT_BASE}${path}`, {
 				method,
 				headers: {
 					'Content-Type': 'application/json',
@@ -26,5 +25,5 @@ export const mutate = <T, R>(method: string, path: string, options: Partial<Muta
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: resolvedOptions.invalidate })
 		},
-	}))
+	})
 }
