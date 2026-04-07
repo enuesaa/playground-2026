@@ -4,34 +4,27 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
-		"dev": "rm -rf .svelte-kit && svelte-kit sync && vite dev --port 3000",
-		"build": "vite build",
+		"dev": "next dev --port 3000",
+		"build": "next build",
+		"start": "next start",
 		"format": "prettier --write {src,package.json}"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.55.0",
-		"@sveltejs/vite-plugin-svelte": "7.0.0",
-		"@tailwindcss/vite": "^4.2.2",
+		"@tailwindcss/postcss": "^4.2.2",
 		"@types/node": "^25.5.0",
+		"@types/react": "^19.1.0",
+		"@types/react-dom": "^19.1.0",
+		"postcss": "^8.5.3",
 		"prettier": "^3.8.1",
-		"prettier-plugin-svelte": "^3.5.1",
-		"svelte": "5.55.1",
 		"tailwindcss": "^4.2.2",
-		"typescript": "^6.0.2",
-		"vite": "^8.0.3"
+		"typescript": "^6.0.2"
 	},
 	"dependencies": {
-		"@tanstack/svelte-query": "^6.1.12",
-		"lucide-svelte": "^1.0.1"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
-	},
-	"imports": {
-		"#app.css": "./src/routes/app.css"
+		"@tanstack/react-query": "^5.75.0",
+		"lucide-react": "^0.475.0",
+		"next": "^15.3.1",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
 	},
 	"prettier": {
 		"printWidth": 120,
@@ -40,17 +33,6 @@
 		"singleQuote": true,
 		"endOfLine": "lf",
 		"trailingComma": "es5",
-		"plugins": [
-			"prettier-plugin-svelte"
-		],
-		"useTabs": true,
-		"overrides": [
-			{
-				"files": "*.svelte",
-				"options": {
-					"parser": "svelte"
-				}
-			}
-		]
+		"useTabs": true
 	}
 }
