@@ -2,7 +2,7 @@
    - Environments: .env
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 2.4s
+ ✓ Compiled successfully in 2.5s
    Linting and checking validity of types ...
    Collecting page data ...
    Generating static pages (0/4) ...
@@ -14,13 +14,16 @@
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
-┌ ○ /                                      123 B         102 kB
-└ ○ /_not-found                            994 B         103 kB
+┌ ○ /                                      970 B         116 kB
+├ ○ /_not-found                            127 B         102 kB
+├ ƒ /posts/[id]                          1.61 kB         117 kB
+└ ƒ /posts/[id]/edit                     1.16 kB         113 kB
 + First Load JS shared by all             102 kB
   ├ chunks/736-311b7e486eec912f.js       45.9 kB
   ├ chunks/73cfcf22-fbb6626bbb2d33d3.js  54.2 kB
-  └ other shared chunks (total)           1.9 kB
+  └ other shared chunks (total)          1.93 kB
 
 
-○  (Static)  prerendered as static content
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 
