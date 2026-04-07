@@ -12,6 +12,9 @@
   - `npm install -g osls`
   - https://github.com/oss-serverless/serverless
   - https://qiita.com/kenpi1313/items/f4ab501ed3daad25f81f
+- あんがい事例あるっぽい
+  - https://serverless.co.jp/blog/038/
+  - https://creators.bengo4.com/entry/2025/12/14/000000
 
 ## Links
 - https://bref.sh/
