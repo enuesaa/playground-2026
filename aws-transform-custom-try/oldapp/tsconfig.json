@@ -1,28 +1,19 @@
 {
 	"compilerOptions": {
-		"target": "ES2017",
-		"lib": ["dom", "dom.iterable", "esnext"],
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"resolveJsonModule": true,
 		"allowJs": true,
 		"checkJs": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"noEmit": true,
-		"esModuleInterop": true,
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"jsx": "preserve",
-		"incremental": true,
-		"plugins": [
-			{
-				"name": "next"
-			}
-		],
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"composite": true,
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"strict": true,
+		"outDir": "./dist"
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-	"exclude": ["node_modules"]
+	"include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "vite.config.ts", ".svelte-kit/ambient.d.ts"],
+	"exclude": ["node_modules", "dist"],
+	"extends": "./.svelte-kit/tsconfig.json"
 }

@@ -1,19 +1,19 @@
-import { useQueryGet, useMutatePut } from './common'
+import { queryGet, mutatePut } from './common'
 
 type Post = {
 	id: number
 	title: string
 }
-export const useListPosts = () => useQueryGet<Post[]>(`/posts`)
-export const useGetPost = (id: number) => useQueryGet<Post>(`/posts/${id}`)
+export const listPosts = () => queryGet<Post[]>(`/posts`)
+export const getPost = (id: number) => queryGet<Post>(`/posts/${id}`)
 
 type CreatePostRequest = {
 	title: string
 }
-export const useCreatePost = () => useMutatePut<CreatePostRequest, {}>(`/posts`)
+export const createPost = () => mutatePut<CreatePostRequest, {}>(`/posts`)
 
 type UpdatePostRequest = {
 	id: number
 	title: string
 }
-export const useUpdatePost = (id: number) => useMutatePut<UpdatePostRequest, {}>(`/posts/${id}`)
+export const updatePost = (id: number) => mutatePut<UpdatePostRequest, {}>(`/posts/${id}`)

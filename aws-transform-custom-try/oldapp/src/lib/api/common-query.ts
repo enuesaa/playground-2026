@@ -1,17 +1,18 @@
-import { useQuery } from '@tanstack/react-query'
+import { PUBLIC_API_ENDPOINT_BASE } from '$env/static/public'
+import { createQuery } from '@tanstack/svelte-query'
 
 export type QueryOptions = {
 	headers: {
 		[key: string]: string
 	}
 }
-export const useApiQuery = <R>(method: string, path: string, options: Partial<QueryOptions> = {}) => {
-	const resolvedOptions = { headers: {}, ...options }
+export const query = <R>(method: string, path: string, options: Partial<QueryOptions> = {}) => {
+	const resolvedOptions = { headers: [], ...options }
 
-	return useQuery<R>({
+	return createQuery(() => ({
 		queryKey: [path],
 		queryFn: async (): Promise<R> => {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT_BASE}${path}`, {
+			const res = await fetch(`${PUBLIC_API_ENDPOINT_BASE}${path}`, {
 				method,
 				headers: {
 					Accept: 'application/json',
@@ -21,5 +22,5 @@ export const useApiQuery = <R>(method: string, path: string, options: Partial<Qu
 			const data = await res.json()
 			return data
 		},
-	})
+	}))
 }
