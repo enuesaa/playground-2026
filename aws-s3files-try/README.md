@@ -36,6 +36,9 @@ ls /mnt/s3files
   - なので普通に EFS 使ってマウントするよりは安い？気がする
   - ファイル読み込み料金や書き込み料金はあるので、その従量課金かな
     - https://dev.classmethod.jp/articles/amazon-s3-files-pricing-visual-guide/
+- というかこれまでEFSを使ってたところは全部これに置き換えできるかも
+  - こっちの方が便利なので
+  - CMSのファイルアップロードもこれになるのでは
 
 ## Links
 - https://aws.amazon.com/jp/blogs/news/launching-s3-files-making-s3-buckets-accessible-as-file-systems/
