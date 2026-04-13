@@ -18,6 +18,10 @@
 - EC2 へマウント
   - S3Filesの管理画面にマウント方法（コマンド）が表示されるのでそれを参考に。
   - LambdaやECSにもアタッチできる様子
+- 請求は S3 のところに出るっぽい。それらしきものは下記。
+  - `USD 0.04 per GB for APN1-Files-Read in Asia Pacific (Tokyo)`
+  - `$0.36 per GB-Mo of Storage in Files`
+  - `USD 0.07 per GB for APN1-Files-Write in Asia Pacific (Tokyo)`
 
 ```bash
 curl https://amazon-efs-utils.aws.com/efs-utils-installer.sh | sudo sh -s -- --install
