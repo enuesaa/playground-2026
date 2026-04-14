@@ -1,0 +1,16 @@
+services:
+  greptime:
+    image: greptime/greptimedb:latest
+    command: >
+      standalone start
+      --http-addr 0.0.0.0:4000
+      --rpc-bind-addr 0.0.0.0:4001
+      --mysql-addr 0.0.0.0:4002
+      --postgres-addr 0.0.0.0:4003
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+      - "4002:4002"
+      - "4003:4003"
+    # volumes:
+    #   - ./greptimedb_data:/greptimedb_data
