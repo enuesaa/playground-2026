@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body>
+
+  <hello-card name="World"></hello-card>
+  <hello-card name="Tokyo"></hello-card>
+
+  <script>
+    class HelloCard extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        const wrapper = document.createElement('div');
+        const name = this.getAttribute('name') || 'unknown';
+
+        wrapper.innerHTML = `
+          <style>
+            div {
+              padding: 12px;
+              margin: 8px 0;
+              border-radius: 8px;
+              background: #f5f5f5;
+              font-family: sans-serif;
+            }
+            strong {
+              color: #007acc;
+            }
+          </style>
+          <div>
+            Hello, <strong>${name}</strong>!
+          </div>
+        `;
+        shadow.appendChild(wrapper);
+      }
+    }
+    customElements.define('hello-card', HelloCard);
+  </script>
+
+</body>
+</html>
