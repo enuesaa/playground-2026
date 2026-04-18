@@ -4,9 +4,8 @@
   "version": "0.0.1",
   "description": "Stencil App Starter",
   "scripts": {
-    "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
-    "generate": "stencil generate"
+    "dev": "stencil build --dev --watch --serve",
+    "build": "stencil build"
   },
   "devDependencies": {
     "stencil-router-v2": "^0.6.0",

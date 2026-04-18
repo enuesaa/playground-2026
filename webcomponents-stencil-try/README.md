@@ -15,3 +15,4 @@
 
 ## Links
 - https://stenciljs.com/docs/getting-started
+- https://www.mitsue.co.jp/knowledge/blog/frontend/201910/11_1852.html
