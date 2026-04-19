@@ -26,3 +26,7 @@ https://manual.sakura.ad.jp/cloud/controlpanel/settings/service-policy.html
 - 特段変わったことはない。
 - これはさくらのVPSとかと正直同じじゃないかな。まあリソースを上下できるのはあるが。
 
+## Links
+- https://cloud.sakura.ad.jp/column/sakura-cloud-network-starter-1/
+- https://cloud.sakura.ad.jp/example/
+- https://zenn.dev/sakura_internet/articles/6050096aa9bc13
