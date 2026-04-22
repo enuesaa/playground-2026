@@ -25,6 +25,7 @@ https://manual.sakura.ad.jp/cloud/controlpanel/settings/service-policy.html
 - まあサーバーだね。
 - 特段変わったことはない。
 - これはさくらのVPSとかと正直同じじゃないかな。まあリソースを上下できるのはあるが。
+- IPアドレスとる時月額最低料金がありそうなので注意。たぶん
 
 ## Links
 - https://cloud.sakura.ad.jp/column/sakura-cloud-network-starter-1/
