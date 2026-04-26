@@ -1,0 +1,9 @@
+{
+  "themes": {
+    "enabled": true
+  },
+  "traceTimeline": {
+    "enableSidePanel": true,
+    "defaultDetailPanelMode": "sidepanel"
+  }
+}

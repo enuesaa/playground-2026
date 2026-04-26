@@ -1,0 +1,12 @@
+services:
+  jaeger:
+    image: jaegertracing/jaeger:2.17.0
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      # - ./config.yml:/etc/jaeger/config.yml
+      - ./configui.json:/etc/jaeger/configui.json
+    # command: ["--config=/etc/jaeger/config.yml"]
+    command: ["--set=extensions.jaeger_query.ui.config_file=/etc/jaeger/configui.json"]
