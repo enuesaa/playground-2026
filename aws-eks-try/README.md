@@ -11,7 +11,6 @@
   - Argo CD 等をセットアップしてくれるらしい
     - 実際に Argo CD を立ててみた。
     - AWS SSO と連携する前提。SSO のユーザーを Argo CD のユーザーにマッピングする感じ
-    - https://tech.guitarrapc.com/entry/2025/12/03/220000
 
 ## ArgoCD
 - これも初めて使った。
@@ -45,5 +44,19 @@
     ```bash
     curl -sSL -o argocd-linux-arm64 https://github.com/argoproj/argo-cd/releases/download/v3.2.7/argocd-linux-arm64
     install -m 555 argocd-linux-arm64 /usr/local/bin/argocd
+    ```
+  - ArgoCD へログイン
+    - argocd login という簡単なコマンドがあるらしいけどそれは EKS Capability の制約で使えないそう
+    - https://docs.aws.amazon.com/eks/latest/userguide/argocd-register-clusters.html
+    - https://tech.guitarrapc.com/entry/2025/12/03/220000
+    - https://note.shiftinc.jp/n/n41b35d9b46d7
+    ```bash
+    export ARGOCD_SERVER=$(aws eks describe-capability --cluster-name aaa --capability-name aaa-argocd  --query 'capability.configuration.argoCd.serverUrl' --output text | sed 's|^https://||')
+    export ARGOCD_AUTH_TOKEN=
+    export ARGOCD_OPTS="--grpc-web"
     argocd repo list
+
+    # Cluster の追加
+    aws eks update-kubeconfig --name aaa --region ap-northeast-1 # これはローカルにクレデンシャルをおくっぽい
+    argocd cluster add $CLUSTER_ARN --aws-cluster-name $CLUSTER_ARN --name local-cluster   --project default
     ```
