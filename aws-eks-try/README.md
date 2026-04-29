@@ -60,3 +60,8 @@
     aws eks update-kubeconfig --name aaa --region ap-northeast-1 # これはローカルにクレデンシャルをおくっぽい
     argocd cluster add $CLUSTER_ARN --aws-cluster-name $CLUSTER_ARN --name local-cluster   --project default
     ```
+  - EKS へデプロイ
+    - の前にアクセスポリシーの修正が必要。じゃないと権限エラーっぽいのが出た。
+    - ArgoCD の IAM ロールに AmazonEKSClusterAdminPolicy を追加する。
+    - https://tech.guitarrapc.com/entry/2025/12/03/220000#EKS-Access-Entry%E3%81%AE%E6%A8%A9%E9%99%90%E3%82%92%E8%AA%BF%E6%95%B4%E3%81%99%E3%82%8B
+  - ArgoCD でデプロイしたら Pod の Private IP をAWSコンソールで確認して、CloudShell で VPC に乗り込み、レスポンスが返ってくる確認
