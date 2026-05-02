@@ -26,6 +26,7 @@ void setup() {
   net.setCertificate(AWSIOT_CERTIFICATE);
   net.setPrivateKey(AWSIOT_PRIVATE_KEY);
   client.setServer(AWSIOT_ENDPOINT, 8883);
+  client.setBufferSize(2048);
 
   while (!client.connected()) {
     if (!client.connect(AWSIOT_THING_ID)) {
@@ -42,18 +43,24 @@ void setup() {
   M5.Mic.record(rec_buffer, 16000 * 3, 16000);
   M5.delay(3000);
   M5.Display.println("Record done");
+  
+  int samples = 16000 * 3;
+  int totalBytes = samples * 2;
+  int chunkSize = 1024;
+  uint8_t* ptr = (uint8_t*)rec_buffer;
+  client.publish("sdk/test/python", "start");
 
-  M5.delay(2000);
-  M5.Display.println("Playing...");
-  M5.Speaker.playRaw((const int16_t*)rec_buffer, 16000 * 3, 16000);
-  M5.Display.println("Done");
-
-  bool ok = client.publish("audio/raw", (uint8_t*)rec_buffer, 16000 * 3);
-  if (ok) {
-    M5.Display.println("Publish OK");
-  } else {
-    M5.Display.println("Publish FAILED");
+  for (int i = 0; i < totalBytes; i += chunkSize) {
+    int size = min(chunkSize, totalBytes - i);
+    bool ok = client.publish("sdk/test/python", ptr + i, size);
+    if (!ok) {
+      M5.Display.printf("publish failed at seq=%d\n", i / chunkSize);
+    }
+    M5.Display.printf("sent chunk seq=%d size=%d\n", i / chunkSize, size);
+    M5.delay(10);
   }
+  client.publish("sdk/test/python", "end");
+  M5.Display.println("Publish done");
 }
 
 void loop() {}
