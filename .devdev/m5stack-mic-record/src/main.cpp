@@ -50,13 +50,13 @@ void setup() {
   uint8_t* ptr = (uint8_t*)rec_buffer;
   client.publish("sdk/test/python", "start");
 
+  // だいたい93チャンク
   for (int i = 0; i < totalBytes; i += chunkSize) {
     int size = min(chunkSize, totalBytes - i);
-    bool ok = client.publish("sdk/test/python", ptr + i, size);
+    bool ok = client.publish("m5/audio/chunk", ptr + i, size); // check iot core policy permission
     if (!ok) {
       M5.Display.printf("publish failed at seq=%d\n", i / chunkSize);
     }
-    M5.Display.printf("sent chunk seq=%d size=%d\n", i / chunkSize, size);
     M5.delay(10);
   }
   client.publish("sdk/test/python", "end");
