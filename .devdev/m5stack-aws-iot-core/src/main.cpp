@@ -37,5 +37,4 @@ void setup() {
 
 void loop() {
   M5.update();
-  client.publish("sdk/test/python", "hello");
 }
