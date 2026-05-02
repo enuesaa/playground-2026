@@ -49,7 +49,7 @@ void setup() {
   int totalBytes = samples * 2;
   int chunkSize = 1024;
   uint8_t* ptr = (uint8_t*)rec_buffer;
-  unsigned char b64buf[1500];
+  unsigned char b64buf[1600];
   client.publish("sdk/test/python", "start");
 
   char session[16];
@@ -59,7 +59,7 @@ void setup() {
   for (int i = 0; i < totalBytes; i += chunkSize) {
     int size = min(chunkSize, totalBytes - i);
     unsigned int out_len = encode_base64(ptr+i, size, b64buf);
-    char payload[1400];
+    char payload[1500];
     snprintf(payload, sizeof(payload), "{\"seq\":%d,\"session\":\"%s\",\"data\":\"%s\"}", i / chunkSize, session, b64buf);
 
     bool ok = client.publish("m5/audio/chunk", payload);
