@@ -1,11 +1,12 @@
 #include <M5Unified.h>
 #include <WiFi.h>
-#include <NTPClient.h>
+#include <WiFiClientSecure.h>
+#include <PubSubClient.h>
 #include "vars.hpp"
 
 WiFiUDP ntpUDP;
-NTPClient ntp(ntpUDP, "pool.ntp.org", 9 * 3600);
-String schedule;
+WiFiClientSecure net;
+PubSubClient client(net);
 
 void setup() {
   M5.begin();
@@ -16,16 +17,25 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     M5.delay(1000);
   }
-  ntp.begin();
-  ntp.update();
-
-  int hour = ntp.getHours();
-  int minute = ntp.getMinutes();
   M5.Lcd.setTextSize(6);
-  M5.Display.printf("%d %d\n", hour, minute);
-  M5.Display.printf("bbb\n");
+  M5.Display.println("OK");
+
+  net.setCACert(AWSIOT_ROOT_CA);
+  net.setCertificate(AWSIOT_CERTIFICATE);
+  net.setPrivateKey(AWSIOT_PRIVATE_KEY);
+  client.setServer(AWSIOT_ENDPOINT, 8883);
+
+  while (!client.connected()) {
+    if (client.connect(AWSIOT_THING_ID)) {
+      M5.Display.println("MQTT OK");
+    } else {
+      M5.delay(1000);
+    }
+  }
+  client.publish("sdk/test/python", "hello");
 }
 
 void loop() {
-  M5.delay(5000);
+  M5.update();
+  client.publish("sdk/test/python", "hello");
 }
