@@ -1,42 +1,32 @@
-import os
 from strands import Agent
-from strands_tools.code_interpreter import AgentCoreCodeInterpreter
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
-import mcp
-from model import load_model
+from app.mcpclient import websearch, add_numbers
+from app.model import load_model
 
 app = BedrockAgentCoreApp()
-REGION = os.getenv("AWS_REGION")
 
 @app.entrypoint
 async def invoke(payload, context):
-    session_id = getattr(context, 'session_id', 'default')
-    
-    code_interpreter = AgentCoreCodeInterpreter(
-        region=REGION,
-        session_name=session_id,
-        auto_create=True,
-        persist_sessions=True
-    )
+    prompt = payload.get('prompt')
 
-    with mcp.http_mcp_client as client:
-        tools = client.list_tools_sync()
+    with websearch as websearch_client:
+        tools = websearch_client.list_tools_sync()
         agent = Agent(
             model=load_model(),
             system_prompt='You are a helpful assistant with code execution capabilities. Use tools when appropriate',
-            tools=[code_interpreter.code_interpreter, mcp.add_numbers] + tools
+            tools=[add_numbers] + tools
         )
-        stream = agent.stream_async(payload.get("prompt"))
+        stream = agent.stream_async(prompt)
 
         async for event in stream:
-            if "data" in event and isinstance(event["data"], str):
-                yield event["data"]
+            if 'data' in event and isinstance(event['data'], str):
+                yield event['data']
 
             # if "toolUse" in event:
-            #   # Process toolUse
+            #   pass
 
-            if "result" in event:
-               yield(format_response(event["result"]))
+            if 'result' in event:
+               yield(format_response(event['result']))
 
 def format_response(result) -> str:
     parts = []
