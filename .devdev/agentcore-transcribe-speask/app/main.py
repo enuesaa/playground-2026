@@ -24,7 +24,10 @@ async def invoke(payload, context):
             # if 'toolUse' in event:
             #   pass
             if 'result' in event:
-               yield event['result']
+                yield fmt(event['result'])
+
+def fmt(result) -> str:
+    return str(result).replace('\n', '').replace('#', '')
 
 if __name__ == '__main__':
     app.run()
