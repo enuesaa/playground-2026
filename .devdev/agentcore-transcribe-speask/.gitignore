@@ -41,3 +41,4 @@ env/
 Thumbs.db
 .bedrock_agentcore.yaml
 .bedrock_agentcore*
+.vendor
