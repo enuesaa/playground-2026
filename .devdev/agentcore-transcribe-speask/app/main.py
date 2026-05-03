@@ -8,6 +8,7 @@ app = BedrockAgentCoreApp()
 
 @app.entrypoint
 async def invoke(payload, context):
+    print(payload)
     session = payload.get('session')
     app.logger.info('session: %s', session)
 
