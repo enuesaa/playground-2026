@@ -7,9 +7,19 @@
 
 WiFiUDP ntpUDP;
 WiFiClientSecure net;
-PubSubClient client(net);
+PubSubClient mqtt(net);
 
 static int16_t rec_buffer[16000 * 3];
+
+void generate_session_id(char* out, size_t length) {
+  const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+  size_t charset_len = sizeof(charset) - 1;
+
+  for (size_t i = 0; i < length; i++) {
+    out[i] = charset[esp_random() % charset_len];
+  }
+  out[length] = '\0';
+}
 
 void setup() {
   M5.begin();
@@ -26,16 +36,16 @@ void setup() {
   net.setCACert(AWSIOT_ROOT_CA);
   net.setCertificate(AWSIOT_CERTIFICATE);
   net.setPrivateKey(AWSIOT_PRIVATE_KEY);
-  client.setServer(AWSIOT_ENDPOINT, 8883);
-  client.setBufferSize(2048);
+  mqtt.setServer(AWSIOT_ENDPOINT, 8883);
+  mqtt.setBufferSize(2048);
 
-  while (!client.connected()) {
-    if (!client.connect(AWSIOT_THING_ID)) {
+  while (!mqtt.connected()) {
+    if (!mqtt.connect(AWSIOT_THING_ID)) {
       M5.delay(1000);
     }
   }
   M5.Display.println("MQTT OK");
-  client.publish("sdk/test/python", "hello");
+  mqtt.publish("debug", "hello");
 
   M5.Display.println("Start in 2 sec...");
   M5.delay(2000);
@@ -50,10 +60,10 @@ void setup() {
   int chunkSize = 1024;
   uint8_t* ptr = (uint8_t*)rec_buffer;
   unsigned char b64buf[1600];
-  client.publish("sdk/test/python", "start");
+  mqtt.publish("debug", "start");
 
-  char session[16];
-  sprintf(session, "%lu", millis());
+  char session[11];
+  generate_session_id(session, 10);
 
   // だいたい93チャンク
   for (int i = 0; i < totalBytes; i += chunkSize) {
@@ -62,13 +72,13 @@ void setup() {
     char payload[1500];
     snprintf(payload, sizeof(payload), "{\"seq\":%d,\"session\":\"%s\",\"data\":\"%s\"}", i / chunkSize, session, b64buf);
 
-    bool ok = client.publish("m5/audio/chunk", payload);
+    bool ok = mqtt.publish("m5/audio/chunk", payload);
     if (!ok) {
       M5.Display.printf("publish failed at seq=%d\n", i / chunkSize);
     }
     M5.delay(10);
   }
-  client.publish("sdk/test/python", "end");
+  mqtt.publish("m5/audio/end", "true");
   M5.Display.println("Publish done");
 }
 

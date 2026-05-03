@@ -24,15 +24,14 @@ async def invoke(payload, context):
         stream = agent.stream_async(text)
 
         async for event in stream:
-            # if 'data' in event and isinstance(event['data'], str):
-            #     yield event['data']
+            if 'data' in event and isinstance(event['data'], str):
+                app.logger.info('data: %s', event['data'])
             # if 'toolUse' in event:
             #   pass
             if 'result' in event:
-                yield fmt(event['result'])
-
-def fmt(result) -> str:
-    return str(result).replace('\n', '').replace('#', '')
+                result = str(event['result']).replace('\n', '').replace('#', '')
+                app.logger.info('result: %s', result)
+                yield result
 
 if __name__ == '__main__':
     app.run()
