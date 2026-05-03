@@ -78,7 +78,10 @@ void setup() {
     }
     M5.delay(10);
   }
-  mqtt.publish("m5/audio/end", "true");
+
+  char end_payload[64];
+  snprintf(end_payload, sizeof(end_payload), "{\"session\":\"%s\"}", session);
+  mqtt.publish("m5/audio/end", end_payload);
   M5.Display.println("Publish done");
 }
 
