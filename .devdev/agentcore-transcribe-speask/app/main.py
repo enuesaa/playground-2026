@@ -13,34 +13,18 @@ async def invoke(payload, context):
         tools = websearch_client.list_tools_sync()
         agent = Agent(
             model=load_model(),
-            system_prompt='You are a helpful assistant with code execution capabilities. Use tools when appropriate',
+            system_prompt='あなたはスマートスピーカーです。ユーザーが話をします。それに回答してください。回答文はそのまま読み上げられます。そのため構造化せず文章で回答してください。必要があればツールを用いてください',
             tools=[add_numbers] + tools
         )
         stream = agent.stream_async(prompt)
 
         async for event in stream:
-            if 'data' in event and isinstance(event['data'], str):
-                yield event['data']
-
-            # if "toolUse" in event:
+            # if 'data' in event and isinstance(event['data'], str):
+            #     yield event['data']
+            # if 'toolUse' in event:
             #   pass
-
             if 'result' in event:
-               yield(format_response(event['result']))
+               yield event['result']
 
-def format_response(result) -> str:
-    parts = []
-    try:
-        tool_metrics = result.metrics.tool_metrics.get('code_interpreter')
-        if tool_metrics and hasattr(tool_metrics, 'tool'):
-            action = tool_metrics.tool['input']['code_interpreter_input']['action']
-            if 'code' in action:
-                parts.append(f"## Executed Code:\n```{action.get('language', 'python')}\n{action['code']}\n```\n---\n")
-    except (AttributeError, KeyError):
-        pass
-
-    parts.append(f"## 📊 Result:\n{str(result)}")
-    return "\n".join(parts)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
