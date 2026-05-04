@@ -2,16 +2,21 @@
 
 namespace ui {
 
-    Button::Button(int x, int y, int w, int h, const char *label) : x(x), y(y), w(w), h(h), label(label), pressed(false) {}
+    Button::Button(int x, int y, int w, int h, const char *label) : x(x), y(y), w(w), h(h), label(label), streaming(false) {}
 
     void Button::draw() const {
-        uint32_t color = pressed ? RED : BLUE;
+        uint32_t color = streaming ? RED : BLUE;
 
         M5.Display.fillRect(x, y, w, h, color);
         M5.Display.drawRect(x, y, w, h, WHITE);
         M5.Display.setTextDatum(middle_center);
         M5.Display.setTextColor(WHITE);
         M5.Display.drawString(label, x + w / 2, y + h / 2);
+    }
+
+    void Button::setStreaming(bool is) {
+        streaming = is;
+        draw();
     }
 
     bool Button::contains(int tx, int ty) const { return (tx >= x && tx <= x + w && ty >= y && ty <= y + h); }

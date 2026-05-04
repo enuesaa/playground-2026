@@ -45,4 +45,26 @@ namespace network {
     bool publish(const char* topic, const char* payload) {
         return mqtt.publish(topic, payload);
     }
+
+    void genMsid(char *out) {
+        const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+        size_t charset_len = sizeof(charset) - 1;
+
+        for (size_t i = 0; i < 10; i++) {
+            out[i] = charset[esp_random() % charset_len];
+        }
+        out[10] = '\0';
+    }
+
+    bool publishAudioChunkMessage(const char *msid, int seq, unsigned char* data) {
+        char payload[1600];
+        snprintf(payload, sizeof(payload), "{\"seq\":%d,\"msid\":\"%s\",\"data\":\"%s\"}", seq, msid, data);
+        return network::publish("m5/audio/chunk", payload);
+    }
+
+    bool publishAudioEndMessage(const char *msid) {
+        char end_payload[64];
+        snprintf(end_payload, sizeof(end_payload), "{\"mid\":\"%s\"}", msid);
+        return mqtt.publish("m5/audio/end", end_payload);
+    }
 }; // namespace network

@@ -8,11 +8,12 @@ namespace ui {
     public:
         int x, y, w, h;
         String label;
-        bool pressed;
+        bool streaming;
 
         Button(int x, int y, int w, int h, const char *label);
 
         void draw() const;
+        void setStreaming(bool is);
         bool contains(int tx, int ty) const;
     };
 
