@@ -2,19 +2,13 @@
 #include "ui.hpp"
 #include "vars.hpp"
 #include "network.hpp"
+#include "utils.hpp"
 #include <M5Unified.h>
 
+ui::Button btn(100, 80, 120, 60, "OK");
+ui::StatusArea status(20, 160, 280, 60);
+
 static int16_t rec_buffer[16000 * 3];
-
-void generate_session_id(char *out, size_t length) {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
-    size_t charset_len = sizeof(charset) - 1;
-
-    for (size_t i = 0; i < length; i++) {
-        out[i] = charset[esp_random() % charset_len];
-    }
-    out[length] = '\0';
-}
 
 void setup() {
     M5.begin();
@@ -45,7 +39,7 @@ void setup() {
     network::publish("debug", "start");
 
     char session[11];
-    generate_session_id(session, 10);
+    utils::generate_session_id(session, 10);
 
     for (int i = 0; i < totalBytes; i += chunkSize) {
         int size = min(chunkSize, totalBytes - i);
@@ -64,9 +58,6 @@ void setup() {
     network::publish("m5/audio/end", end_payload);
     M5.Display.println("Publish done");
 }
-
-ui::Button btn(100, 80, 120, 60, "OK");
-ui::StatusArea status(20, 160, 280, 60);
 
 void loop() {
     M5.update();

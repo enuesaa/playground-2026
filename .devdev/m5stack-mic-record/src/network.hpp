@@ -1,10 +1,6 @@
 #pragma once
 
 #include <M5Unified.h>
-#include <PubSubClient.h>
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include "vars.hpp"
 
 namespace network {
     bool connectWiFi();
