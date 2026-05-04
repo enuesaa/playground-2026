@@ -85,4 +85,13 @@ void setup() {
   M5.Display.println("Publish done");
 }
 
-void loop() {}
+void loop() {
+  M5.update();
+
+  if (M5.Touch.isEnabled()) {
+    auto t = M5.Touch.getDetail();
+    if (t.isPressed()) {
+      M5.Display.printf("aaa");
+    }
+  }
+}
