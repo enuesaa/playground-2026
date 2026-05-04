@@ -100,6 +100,23 @@ void drawButton(Button& b, uint32_t color) {
     M5.Display.drawString(b.label, b.x + b.w/2, b.y + b.h/2);
 }
 
+struct StatusArea {
+    int x, y, w, h;
+} status = {20, 160, 280, 60};
+
+void drawStatus(const char* text) {
+    M5.Display.fillRect(status.x, status.y, status.w, status.h, BLACK);
+    M5.Display.drawRect(status.x, status.y, status.w, status.h, WHITE);
+    M5.Display.setTextDatum(middle_center);
+    M5.Display.setTextColor(WHITE);
+    M5.Display.drawString(
+        text,
+        status.x + status.w/2,
+        status.y + status.h/2
+    );
+}
+
+
 bool isInside(Button& b, int tx, int ty) {
     return (tx >= b.x && tx <= b.x + b.w &&
             ty >= b.y && ty <= b.y + b.h);
@@ -112,14 +129,13 @@ void loop() {
 
     if (t.wasPressed()) {
         if (isInside(btn, t.x, t.y)) {
-            printf("Button pressed!\n");
-
-            // 押された感出す
             drawButton(btn, RED);
+            drawStatus("Button pressed");
         }
     }
 
     if (t.wasReleased()) {
         drawButton(btn, BLUE);
+        drawStatus("Released");
     }
 }
