@@ -4,27 +4,27 @@
 
 namespace ui {
 
-class Button {
-public:
-    int x, y, w, h;
-    String label;
-    bool pressed;
+    class Button {
+    public:
+        int x, y, w, h;
+        String label;
+        bool pressed;
 
-    Button(int x, int y, int w, int h, const char* label);
+        Button(int x, int y, int w, int h, const char *label);
 
-    void draw() const;
-    bool contains(int tx, int ty) const;
-};
+        void draw() const;
+        bool contains(int tx, int ty) const;
+    };
 
-class StatusArea {
-public:
-    int x, y, w, h;
-    String text;
+    class StatusArea {
+    public:
+        int x, y, w, h;
+        String text;
 
-    StatusArea(int x, int y, int w, int h);
+        StatusArea(int x, int y, int w, int h);
 
-    void setText(const char* t);
-    void draw() const;
-};
+        void setText(const char *t);
+        void draw() const;
+    };
 
 } // namespace ui
