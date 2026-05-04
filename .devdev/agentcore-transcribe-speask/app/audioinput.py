@@ -12,13 +12,13 @@ AUDIO_BUCKET = os.environ['AUDIO_BUCKET']
 s3 = boto3.client('s3')
 transcribe = boto3.client('transcribe')
 
-def handle_audio_input(session: str) -> str:
-    prefix = f'audio/{session}/'
-    wavkey = f'audio/{session}/output.wav'
+def handle_audio_input(msid: str) -> str:
+    prefix = f'audio/{msid}/'
+    wavkey = f'audio/{msid}/output.wav'
     audiobytes = load_chunks(prefix)
     upload_wav(audiobytes, wavkey)
 
-    job_name = f'audio-{session}'
+    job_name = f'audio-{msid}'
     start_transcribe(job_name, wavkey)
     uri = wait_for_transcribe(job_name)
     text = fetch_transcript(uri)

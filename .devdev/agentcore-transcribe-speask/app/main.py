@@ -9,10 +9,10 @@ app = BedrockAgentCoreApp()
 @app.entrypoint
 async def invoke(payload, context):
     print(payload)
-    session = payload.get('session')
-    app.logger.info('session: %s', session)
+    msid = payload.get('msid')
+    app.logger.info('msid: %s', msid)
 
-    text = handle_audio_input(session)
+    text = handle_audio_input(msid)
     app.logger.info('text: %s', text)
 
     with websearch as websearch_client:
