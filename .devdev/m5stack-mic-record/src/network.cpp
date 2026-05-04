@@ -64,7 +64,7 @@ namespace network {
 
     bool publishAudioEndMessage(const char *msid) {
         char end_payload[64];
-        snprintf(end_payload, sizeof(end_payload), "{\"mid\":\"%s\"}", msid);
+        snprintf(end_payload, sizeof(end_payload), "{\"msid\":\"%s\"}", msid);
         return mqtt.publish("m5/audio/end", end_payload);
     }
 }; // namespace network
