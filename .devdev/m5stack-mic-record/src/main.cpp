@@ -85,13 +85,41 @@ void setup() {
   M5.Display.println("Publish done");
 }
 
+struct Button {
+    int x, y, w, h;
+    const char* label;
+};
+
+Button btn = {100, 100, 120, 60, "OK"};
+
+void drawButton(Button& b, uint32_t color) {
+    M5.Display.fillRect(b.x, b.y, b.w, b.h, color);
+    M5.Display.drawRect(b.x, b.y, b.w, b.h, WHITE);
+    M5.Display.setTextDatum(middle_center);
+    M5.Display.setTextColor(WHITE);
+    M5.Display.drawString(b.label, b.x + b.w/2, b.y + b.h/2);
+}
+
+bool isInside(Button& b, int tx, int ty) {
+    return (tx >= b.x && tx <= b.x + b.w &&
+            ty >= b.y && ty <= b.y + b.h);
+}
+
 void loop() {
   M5.update();
 
-  if (M5.Touch.isEnabled()) {
-    auto t = M5.Touch.getDetail();
-    if (t.isPressed()) {
-      M5.Display.printf("aaa");
+      auto t = M5.Touch.getDetail();
+
+    if (t.wasPressed()) {
+        if (isInside(btn, t.x, t.y)) {
+            printf("Button pressed!\n");
+
+            // 押された感出す
+            drawButton(btn, RED);
+        }
     }
-  }
+
+    if (t.wasReleased()) {
+        drawButton(btn, BLUE);
+    }
 }
