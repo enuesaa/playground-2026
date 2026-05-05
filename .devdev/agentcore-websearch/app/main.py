@@ -14,7 +14,7 @@ async def invoke(payload, context):
         tools = websearch_client.list_tools_sync()
         agent = Agent(
             model=load_model(),
-            system_prompt='あなたはスマートスピーカーです。ユーザーが話をします。それに回答してください。回答文はそのまま読み上げられます。そのため構造化せず文章で回答してください。必要があればツールを用いてください',
+            system_prompt='あなたはスマートスピーカーです。ちょうど今、人間と会話してます。話をしてください。あなたの回答は人間へそのまま読み上げられます。そのため構造化せず文章で回答してください。必要があればツールを用いてください',
             tools=tools,
         )
         stream = agent.stream_async(prompt)

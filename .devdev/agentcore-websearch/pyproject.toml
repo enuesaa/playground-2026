@@ -24,8 +24,8 @@ dependencies = [
 [dependency-groups]
 dev = [
     "bedrock-agentcore-starter-toolkit>=0.3.6",
-    "types-boto3-custom",
+    # "types-boto3-custom",
 ]
 
-[tool.uv.sources]
-types-boto3-custom = { path = ".vendor/types_boto3_custom-1.43.2-py3-none-any.whl" }
+# [tool.uv.sources]
+# types-boto3-custom = { path = ".vendor/types_boto3_custom-1.43.2-py3-none-any.whl" }
