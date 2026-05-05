@@ -19,7 +19,7 @@ PubSubClient mqtt(net);
 
 // ===== Audio =====
 typedef struct {
-    uint8_t data[1024];
+    int16_t data[1024];
     size_t len;
 } AudioChunk;
 
@@ -28,26 +28,20 @@ volatile bool isPlaying = false;
 
 // ===== MQTT callback =====
 void callback(char* topic, byte* payload, unsigned int length) {
-    StaticJsonDocument<2048> doc;
+    JsonDocument doc;
 
     if (deserializeJson(doc, payload, length)) return;
 
-    if (doc.containsKey("data")) {
+    if (doc["data"].is<const char*>()) {
         const char* b64 = doc["data"];
 
         AudioChunk chunk;
+        chunk.len = decode_base64((const unsigned char*)b64, strlen(b64), (uint8_t*)chunk.data);
 
-        chunk.len = decode_base64((const unsigned char*)b64, chunk.data);
-
-        if (chunk.len > 0 && chunk.len <= 1024) {
+        if (chunk.len > 0) {
             xQueueSend(audioQueue, &chunk, 0);
             isPlaying = true;
         }
-    }
-
-    // end通知（任意）
-    if (strcmp(topic, "m5/audio/output/end") == 0) {
-        isPlaying = false;
     }
 }
 
@@ -60,27 +54,31 @@ void audioTask(void* arg) {
             vTaskDelay(10);
             continue;
         }
-
-        // ★ 先読み（超重要）
-        if (uxQueueMessagesWaiting(audioQueue) < 8) {
-            vTaskDelay(5);
-            continue;
+        while (M5.Speaker.isPlaying()) {
+            vTaskDelay(1);
+        }
+        if (xQueueReceive(audioQueue, &chunk, 6)) {
+            M5.Speaker.playRaw(chunk.data, chunk.len / 2, 16000, false, 1, -1, false);
         }
 
-        if (xQueueReceive(audioQueue, &chunk, portMAX_DELAY)) {
-            M5.Speaker.playRaw((const int16_t*)chunk.data, chunk.len / 2, 16000, false, 1, -1, false);
-        }
         if (uxQueueMessagesWaiting(audioQueue) == 0) {
-            isPlaying = false;
+            vTaskDelay(10);
+            if (uxQueueMessagesWaiting(audioQueue) == 0) {
+                isPlaying = false;
+            }
         }
     }
 }
 
+// ===== Setup =====
 void setup() {
     M5.begin();
     M5.Lcd.setTextSize(3);
+    // auto config = M5.Speaker.config();
+    // config.sample_rate = 44100;
+    // M5.Speaker.config(config);
+    M5.Speaker.setVolume(130);
     M5.Speaker.begin();
-    M5.Speaker.setVolume(150);
 
     btn.draw();
     status.setText("Initializing...");
@@ -93,6 +91,7 @@ void setup() {
     net.setCACert(AWSIOT_ROOT_CA);
     net.setCertificate(AWSIOT_CERTIFICATE);
     net.setPrivateKey(AWSIOT_PRIVATE_KEY);
+
     mqtt.setServer(AWSIOT_ENDPOINT, 8883);
     mqtt.setCallback(callback);
     mqtt.setBufferSize(2048);
@@ -110,15 +109,15 @@ void setup() {
     mqtt.subscribe("m5/audio/output/end");
     status.setText("MQTT subscribed");
 
-    audioQueue = xQueueCreate(40, sizeof(AudioChunk));
-    xTaskCreatePinnedToCore(audioTask, "audio", 4096, NULL, 1, NULL, 1);
+    audioQueue = xQueueCreate(60, sizeof(AudioChunk));
+    xTaskCreatePinnedToCore(audioTask, "audio", 8192, NULL, 2, NULL, 1);
 }
 
+// ===== Loop =====
 void loop() {
     M5.update();
     if (!mqtt.connected()) {
         status.setText("MQTT disconnected");
     }
     mqtt.loop();
-    M5.delay(10);
 }
