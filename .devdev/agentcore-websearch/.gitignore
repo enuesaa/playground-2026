@@ -42,3 +42,4 @@ Thumbs.db
 .bedrock_agentcore.yaml
 .bedrock_agentcore*
 .vendor
+.ruff_cache
