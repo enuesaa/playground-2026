@@ -74,9 +74,6 @@ void audioTask(void* arg) {
 void setup() {
     M5.begin();
     M5.Lcd.setTextSize(3);
-    // auto config = M5.Speaker.config();
-    // config.sample_rate = 44100;
-    // M5.Speaker.config(config);
     M5.Speaker.setVolume(130);
     M5.Speaker.begin();
 
