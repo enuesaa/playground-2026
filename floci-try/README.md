@@ -2,6 +2,7 @@
 
 - localstack みたいなやつ
 - java で書かれてるっぽい
+  - moto などに依存しているわけではなさそう
 - docker compose で動かせる
 - aws cli 経由で呼び出せた
   ```bash
@@ -23,6 +24,9 @@
   ```
 - なんか create-bucket すると ./data/s3/<bucket-name> が作成された。
   - ここにアップロードファイルが永続化されるっぽい
+- 追記
+  - 順調に対応サービスが増えている
+  https://dev.classmethod.jp/articles/floci-two-months-52-services-update/
 
 ## Links
 - https://github.com/hectorvent/floci
