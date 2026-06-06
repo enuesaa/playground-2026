@@ -22,10 +22,11 @@ func main() {
 	}
 	defer c.Close()
 
-	w := worker.New(c, "hello", worker.Options{})
+	w := worker.New(c, "main", worker.Options{})
 
 	w.RegisterWorkflow(SampleWorkflow)
-	w.RegisterActivity(SampleActivity)
+	w.RegisterActivity(SayHelloActivity)
+	w.RegisterActivity(SayByeActivity)
 
 	if err := w.Run(worker.InterruptCh()); err != nil {
 		panic(err)
@@ -38,15 +39,22 @@ func SampleWorkflow(ctx workflow.Context, name string) (string, error) {
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
 		StartToCloseTimeout: 10 * time.Second,
 	})
-	if err := workflow.Sleep(ctx, 24*time.Hour); err != nil {
+	if err := workflow.ExecuteActivity(ctx, SayHelloActivity, name).Get(ctx, &result); err != nil {
 		return "", err
 	}
-	if err := workflow.ExecuteActivity(ctx, SampleActivity, name).Get(ctx, &result); err != nil {
+	if err := workflow.Sleep(ctx, 50*time.Second); err != nil {
+		return "", err
+	}
+	if err := workflow.ExecuteActivity(ctx, SayByeActivity, name).Get(ctx, &result); err != nil {
 		return "", err
 	}
 	return result, nil
 }
 
-func SampleActivity(ctx context.Context, name string) (string, error) {
+func SayHelloActivity(ctx context.Context, name string) (string, error) {
 	return fmt.Sprintf("Hello %s!", name), nil
+}
+
+func SayByeActivity(ctx context.Context, name string) (string, error) {
+	return fmt.Sprintf("Bye %s!", name), nil
 }

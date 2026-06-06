@@ -18,10 +18,10 @@ func main() {
 
 	ctx := context.Background()
 	opts := client.StartWorkflowOptions{
-		ID:        "hello_workflowID3", // 同じIDのものを指定したらまとめられるっぽい。FIFO的な
-		TaskQueue: "hello",
+		ID:        "test01", // 同じIDのものを指定したらまとめられるっぽい。FIFO的な
+		TaskQueue: "main",
 	}
-	we, err := c.ExecuteWorkflow(ctx, opts, "SampleWorkflow", "World")
+	we, err := c.ExecuteWorkflow(ctx, opts, "SampleWorkflow", "John")
 	if err != nil {
 		panic(err)
 	}
