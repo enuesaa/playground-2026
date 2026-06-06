@@ -10,7 +10,12 @@ import (
 	"go.temporal.io/sdk/workflow"
 )
 
+// これは Worker
+// ここに workflow や activity の定義を書く。定義というか実際のコードになるけど。
+// で、GUI 等でその workflow を呼び出す。
+// すると、ここで書いた関数が、このプロセスで実行される（Worker）
 func main() {
+	// Temporal Server (localhost:7233) へつなぐ
 	c, err := client.Dial(client.Options{})
 	if err != nil {
 		panic(err)
@@ -33,9 +38,10 @@ func SampleWorkflow(ctx workflow.Context, name string) (string, error) {
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
 		StartToCloseTimeout: 10 * time.Second,
 	})
-	err := workflow.ExecuteActivity(ctx, SampleActivity, name).Get(ctx, &result)
-
-	if err != nil {
+	if err := workflow.Sleep(ctx, 24*time.Hour); err != nil {
+		return "", err
+	}
+	if err := workflow.ExecuteActivity(ctx, SampleActivity, name).Get(ctx, &result); err != nil {
 		return "", err
 	}
 	return result, nil
