@@ -33,3 +33,9 @@ App ready at https://xxx.snowflakecomputing.app
 ➜ snow app teardown
 Successfully dropped application service ...
 ```
+
+### デプロイすると
+- <img src="./sapps.png" width="200px" />
+- <img src="./slogs.png" width="200px" />
+- <img src="./slogin.png" width="200px" />
+- <img src="./sapp.png" width="200px" />
