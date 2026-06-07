@@ -8,7 +8,7 @@ const styles = {
 
 export const HeaderSettingLink = () => {
   return (
-    <Link href='/setting' className={styles.link}>
+    <Link href='/settings' className={styles.link}>
       <AiTwotoneSetting className='align-middle inline' />
     </Link>
   )

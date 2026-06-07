@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "rm -rf .next && next dev",
-    "build": "next build",
+    "build": "rm -rf .next dist && next build",
+    "start": "next start",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "engines": {
