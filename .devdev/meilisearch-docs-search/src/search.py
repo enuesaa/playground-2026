@@ -1,6 +1,6 @@
 import meilisearch
 
-client = meilisearch.Client("http://localhost:7700", "masterKey")
+client = meilisearch.Client("http://localhost:7700")
 index = client.index("projects")
 
 result = index.search(
