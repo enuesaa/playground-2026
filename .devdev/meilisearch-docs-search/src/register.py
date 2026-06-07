@@ -1,5 +1,6 @@
 import pathlib
 import meilisearch
+import os
 
 client = meilisearch.Client("http://localhost:7700")
 index = client.index("projects")
@@ -18,14 +19,15 @@ for readme in pathlib.Path("../../").glob("*/README.md"):
     )
 index.add_documents(docs)
 
-# index.update_settings(
-#     {
-#         "embedders": {
-#             "default": {
-#                 "source": "openAi",
-#                 "apiKey": "...",
-#                 "model": "text-embedding-3-small",
-#             }
-#         }
-#     }
-# )
+# see https://zenn.dev/kun432/scraps/476880e7c0a638
+index.update_settings(
+    {
+        "embedders": {
+            "default": {
+                "source": "openAi",
+                "apiKey": os.environ['OPENAI_API_KEY'],
+                "model": "text-embedding-3-small",
+            }
+        }
+    }
+)
