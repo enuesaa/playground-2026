@@ -16,6 +16,11 @@
 - スイッチロール的なのもできるっぽい
 - https://minegishirei.hatenablog.com/entry/2023/01/30/141416
 
+## 料金
+- ウェアハウスのサイズ XS の稼働時間1時間に対して1クレジット。もしアカウントが aws tokyo リージョンにあり standard plan であれば、1クレジット 2.85 ドルであると理解
+- 使ってないときウェアハウスを止める設定もあった
+- https://zenn.dev/hiroshix/articles/8c60a81f76f44c
+
 ## Links
 - https://docs.snowflake.com/ja/learn-tutorials
 - https://blog.usize-tech.com/lets-start-snowflake/
