@@ -21,3 +21,6 @@
   - あとメトリクスもここでみれそう
 - Serverless ではデータアクセスポリシーやネットワークポリシーを設定する必要があるので、実際に使うときはちゃんと確認した方が良さそう
 - Bedrock Knowledge Base のバックエンドとして OpenSearch Serverless が使われることがあるらしく、で、その時にOpenSearchに慣れていないユーザーは、そのコスト増にびっくりしがちだから、その流れでもっとコスト面の障壁を抑えたいっていう意図もありそう
+
+## Links
+- https://zenn.dev/aws_japan/articles/990c9dc68b5448
