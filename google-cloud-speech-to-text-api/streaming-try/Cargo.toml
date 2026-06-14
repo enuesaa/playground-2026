@@ -1,0 +1,22 @@
+[package]
+name = "speech-streaming"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "speech-streaming"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["sync"] }
+tonic = { version = "0.12", features = ["tls", "tls-native-roots"] }
+prost = "0.13"
+prost-types = "0.13"
+gcp_auth = "0.12"
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+hound = "3"
+
+[build-dependencies]
+tonic-build = "0.12"
