@@ -11,6 +11,7 @@
 - データの同期に多少のラグはありそう
   - 数分程度
   - これは自分の設定がいけないのかも
+- なお Snowflake Connector for PostgreSQL はプレビュー中
 
 ## 参考
 
@@ -85,3 +86,8 @@ services:
       - "host.docker.internal:host-gateway"
 $ docker compose up
 ```
+
+- Connector  
+  <img src="./sapp.png" width="300px" />
+- dest db  
+  <img src="./sdestdb.png" width="300px" />
