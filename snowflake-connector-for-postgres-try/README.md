@@ -1,8 +1,11 @@
-# Transfer Postgres DB Data to Snowflake DWH
+# Snowfrake Connector for Postgres
 
-- EC2 (AL2023) に Postgres 17 の DB を立てる
-- Snowflake Connector for PostgreSQL のコンテナを立てる
-- そして Snowflake へデータを転送する。
+- Postgres のデータを Snowflake へ送るコネクタ
+- マーケットプレイスからインストールできる(無料)
+- 仕組み
+  - EC2 (AL2023) に Postgres 17 の DB を立てる
+  - Snowflake Connector for PostgreSQL のコンテナを立てる
+  - そして Snowflake へデータを転送する。
 
 ## 感想
 - EC2にDBを立てる構成であるためそのセットアップが面倒で、Snowflake Connector 用のユーザーを作ったり docker コンテナからアクセスできるよう pg_hba を調整するのが面倒だったが、
