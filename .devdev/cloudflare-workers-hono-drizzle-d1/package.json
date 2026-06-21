@@ -1,0 +1,19 @@
+{
+  "name": "cloudflare-workers-hono-drizzle-d1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen:wrangler": "wrangler types --env-interface CloudflareBindings",
+    "dev": "wrangler dev",
+    "apply": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.26"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "wrangler": "^4.4.0"
+  }
+}
