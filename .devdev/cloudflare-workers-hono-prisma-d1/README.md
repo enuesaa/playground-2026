@@ -9,8 +9,7 @@ pnpm wrangler d1 create mytestdb
 pnpm prisma init
 
 ### Create a migration file
-pnpm wrangler d1 migrations create mytestdb create_note_table
-pnpm prisma migrate diff --from-empty --to-schema ./prisma/schema.prisma --script --output ./prisma/migrations/0001_create_note_table.sql
+pnpm prisma migrate diff --from-empty --to-schema ./db/schema.prisma --script --output ./db/migrations/0001_create_note_table.sql
 
 ### Make migration
 pnpm wrangler d1 migrations apply mytestdb --local
@@ -26,7 +25,7 @@ curl http://localhost:8787/notes -X POST --json '{"title":"a","desc":"c"}'
 curl http://localhost:8787/notes
 
 ### deploy
-pnpm deploy:remote
+pnpm apply
 ```
 
 ## Links

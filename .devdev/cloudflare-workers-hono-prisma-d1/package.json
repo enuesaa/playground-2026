@@ -1,11 +1,12 @@
 {
-  "name": "ai-can-invoke-web-api",
+  "name": "cloudflare-workers-hono-prisma-d1",
+  "private": true,
   "type": "module",
   "scripts": {
     "gen:prisma": "prisma generate",
     "gen:wrangler": "wrangler types --env-interface CloudflareBindings",
     "dev": "wrangler dev",
-    "deploy:remote": "wrangler deploy --minify"
+    "apply": "wrangler deploy --minify"
   },
   "dependencies": {
     "@prisma/adapter-d1": "^7.8.0",
