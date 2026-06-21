@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  runtime  = "workerd"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Note {
+  id    String  @id  @default(uuid())
+  title String  @unique
+  desc  String?
+}
