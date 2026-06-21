@@ -1,0 +1,17 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-workers-hono-prisma-d1",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-06-21",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "mytestdb",
+			"database_id": "<id>",
+			"migrations_dir": "./prisma/migrations"
+		}
+	]
+}

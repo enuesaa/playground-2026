@@ -2,9 +2,10 @@
   "name": "ai-can-invoke-web-api",
   "type": "module",
   "scripts": {
+    "gen:prisma": "prisma generate",
+    "gen:wrangler": "wrangler types --env-interface CloudflareBindings",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "deploy:remote": "wrangler deploy --minify"
   },
   "dependencies": {
     "@prisma/adapter-d1": "^7.8.0",
