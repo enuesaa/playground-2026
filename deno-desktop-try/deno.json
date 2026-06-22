@@ -1,0 +1,12 @@
+{
+  "desktop": {
+    "app": {
+      "name": "MyTestApp",
+      "identifier": "com.example.mytestapp"
+    },
+    "backend": "webview",
+    "output": {
+      "macos": "./dist/macos"
+    }
+  }
+}
