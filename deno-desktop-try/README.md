@@ -13,3 +13,4 @@
 
 ## Links
 - https://docs.deno.com/runtime/desktop/
+- https://docs.deno.com/runtime/reference/cli/desktop/
