@@ -32,6 +32,12 @@
     - 一時停止ステータスが60秒つづいたら終了、、というふうにもできた
     - これは MicroVM の起動時に設定できる
 - AWSコンソールの挙動が若干怪しい気がする。出たばかりなので。
+- 実行できる時間は最大8時間
+  - これが肝になりそうな気がするなあ。
+  - 例えば StepFunctions で起動して何か処理して、、みたいなのには最適だと思う
+  - 一方でウェブアプリにはあんま良くない？
+  - 前段に cloudfront をおけばウェブアプリとしていけるやろう、と思ってたが、案外ダメそう？
+    - オリジングループ等駆使して頑張ればいけそうだけど
 
 ## Links
 - https://aws.amazon.com/jp/blogs/news/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/
