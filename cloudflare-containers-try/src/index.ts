@@ -4,9 +4,6 @@ import { Hono } from "hono";
 export class MyContainer extends Container<Env> {
 	defaultPort = 8080;
 	sleepAfter = "2m";
-	envVars = {
-		MESSAGE: "I was passed in via the container class!",
-	};
 	// lifecycle hooks
 	override onStart() {
 		console.log("Container successfully started");
@@ -21,29 +18,24 @@ export class MyContainer extends Container<Env> {
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.get("/", (c) => {
-	return c.text(
-		"Available endpoints:\n" +
-			"GET /container/<ID> - Start a container for each ID with a 2m timeout\n" +
-			"GET /lb - Load balance requests over multiple containers\n" +
-			"GET /singleton - Get a single specific container instance",
-	);
+app.get("/", async (c) => {
+	const container = getContainer(c.env.MY_CONTAINER, "this-is-container-name");
+	console.log(c.req.raw)
+	return await container.fetch(c.req.raw);
+});
+
+app.get("/wait30seconds", async (c) => {
+	const container = getContainer(c.env.MY_CONTAINER, "this-is-container-name");
+	console.log(c.req.raw)
+	return await container.fetch(c.req.raw);
 });
 
 app.get("/container/:id", async (c) => {
 	const id = c.req.param("id");
+	// この辺りのコードがなぜ必要なのかちょっとよくわからん。durable object に一度保存する必要あるのかな？
 	const containerId = c.env.MY_CONTAINER.idFromName(`/container/${id}`);
 	const container = c.env.MY_CONTAINER.get(containerId);
-	return await container.fetch(c.req.raw);
-});
-
-app.get("/lb", async (c) => {
-	const container = await getRandom(c.env.MY_CONTAINER, 3);
-	return await container.fetch(c.req.raw);
-});
-
-app.get("/singleton", async (c) => {
-	const container = getContainer(c.env.MY_CONTAINER);
+	console.log(c.req.raw)
 	return await container.fetch(c.req.raw);
 });
 

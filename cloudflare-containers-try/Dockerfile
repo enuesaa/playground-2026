@@ -1,17 +1,11 @@
-FROM golang:1.24-alpine AS build
+FROM golang:1.24
 
 WORKDIR /app
 
-COPY container_src/go.mod .
+COPY container_src/ .
 RUN go mod download
+RUN go build -o server .
 
-COPY container_src/*.go .
-
-RUN CGO_ENABLED=0 GOOS=linux go build -o /server
-
-FROM scratch
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /server /server
 EXPOSE 8080
 
-CMD ["/server"]
+CMD ["./server"]

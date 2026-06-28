@@ -1,13 +1,20 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "<name-here>",
+	"name": "",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-08",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
 	"observability": {
-		"enabled": true
+		"enabled": true,
+		"logs": {
+			"enabled": true,
+			"invocation_logs": true
+		},
+		"traces": {
+			"enabled": true
+		}
 	},
 	"containers": [
 		{

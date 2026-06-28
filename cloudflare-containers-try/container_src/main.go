@@ -1,52 +1,28 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 )
 
-var message = os.Getenv("MESSAGE")
 var instanceId = os.Getenv("CLOUDFLARE_DURABLE_OBJECT_ID")
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi, I'm a container and this is my message: \"%s\", my instance ID is: %s", message, instanceId)
-
-}
-
 func main() {
-	// Listen for SIGINT and SIGTERM
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
-
 	router := http.NewServeMux()
-	router.HandleFunc("/", handler)
-	router.HandleFunc("/container", handler)
-
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hi, I'm a container. my instance ID is: %s", instanceId)
+	})
+	router.HandleFunc("/wait30seconds", func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(30 * time.Second)
+		fmt.Fprintf(w, "Hi wait30seconds")
+	})
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: router,
 	}
-	go func() {
-		log.Printf("Server listening on %s\n", server.Addr)
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal(err)
-		}
-	}()
-
-	sig := <-stop
-	log.Printf("Received signal (%s), shutting down server...", sig)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal(err)
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		panic(err)
 	}
-	log.Println("Server shutdown successfully")
 }
