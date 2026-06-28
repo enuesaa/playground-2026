@@ -1,10 +1,25 @@
 <script lang="ts">
-  type Step = {
+  // ── Types ──────────────────────────────────────────────────────────────────
+  type ReplaceAction = { method: 'replace'; from: string; to: string };
+
+  type ReplaceStep = {
+    kind: 'replace';
     id: string;
     from: string;
     to: string;
   };
 
+  type SearchStep = {
+    kind: 'search';
+    id: string;
+    before: string;
+    after: string;
+    actions: (ReplaceAction & { id: string })[];
+  };
+
+  type Step = ReplaceStep | SearchStep;
+
+  // ── State ──────────────────────────────────────────────────────────────────
   let input = $state('');
   let output = $state('');
   let hasResult = $state(false);
@@ -13,32 +28,108 @@
   let importError = $state('');
 
   let steps = $state<Step[]>([
-    { id: crypto.randomUUID(), from: '', to: '' }
+    { kind: 'replace', id: crypto.randomUUID(), from: '', to: '' }
   ]);
 
-  function addStep() {
-    steps = [...steps, { id: crypto.randomUUID(), from: '', to: '' }];
+  // ── Step mutations ─────────────────────────────────────────────────────────
+  function addReplaceStep() {
+    steps = [...steps, { kind: 'replace', id: crypto.randomUUID(), from: '', to: '' }];
+  }
+
+  function addSearchStep() {
+    steps = [...steps, {
+      kind: 'search',
+      id: crypto.randomUUID(),
+      before: '',
+      after: '',
+      actions: [{ id: crypto.randomUUID(), method: 'replace', from: '', to: '' }]
+    }];
   }
 
   function removeStep(id: string) {
     steps = steps.filter(s => s.id !== id);
   }
 
+  function addAction(stepId: string) {
+    steps = steps.map(s =>
+      s.id === stepId && s.kind === 'search'
+        ? { ...s, actions: [...s.actions, { id: crypto.randomUUID(), method: 'replace' as const, from: '', to: '' }] }
+        : s
+    );
+  }
+
+  function removeAction(stepId: string, actionId: string) {
+    steps = steps.map(s =>
+      s.id === stepId && s.kind === 'search'
+        ? { ...s, actions: s.actions.filter(a => a.id !== actionId) }
+        : s
+    );
+  }
+
+  // ── Execution ──────────────────────────────────────────────────────────────
+  function applyStep(text: string, step: Step): string {
+    if (step.kind === 'replace') {
+      if (step.from === '') return text;
+      return text.replaceAll(step.from, step.to);
+    }
+    // search step: build regex from before/after, apply actions to matched target
+    const beforeRaw = step.before.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
+    const afterRaw  = step.after.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
+
+    const escapePart = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    let pattern: RegExp;
+    if (beforeRaw && afterRaw) {
+      pattern = new RegExp(`(?<=${escapePart(beforeRaw)})(.*?)(?=${escapePart(afterRaw)})`, 'gs');
+    } else if (beforeRaw) {
+      pattern = new RegExp(`(?<=${escapePart(beforeRaw)})(.*?)(?=\\n|$)`, 'gm');
+    } else if (afterRaw) {
+      pattern = new RegExp(`(?<=^|\\n)(.*?)(?=${escapePart(afterRaw)})`, 'gm');
+    } else {
+      return text;
+    }
+
+    return text.replace(pattern, (match) => {
+      let result = match;
+      for (const action of step.actions) {
+        if (action.from === '') continue;
+        result = result.replaceAll(action.from, action.to);
+      }
+      return result;
+    });
+  }
+
+  function applySteps(text: string, upTo: number): string {
+    let result = text;
+    for (let i = 0; i <= upTo; i++) {
+      result = applyStep(result, steps[i]);
+    }
+    return result;
+  }
+
   function run() {
     let result = input;
     for (const step of steps) {
-      if (step.from === '') continue;
-      result = result.replaceAll(step.from, step.to);
+      result = applyStep(result, step);
     }
     output = result;
     hasResult = true;
   }
 
+  // ── JSON export/import ─────────────────────────────────────────────────────
   function stepsToJson() {
-    return JSON.stringify(
-      { steps: steps.map(s => ({ method: 'replace', from: s.from, to: s.to })) },
-      null, 2
-    );
+    const payload = steps.map(s => {
+      if (s.kind === 'replace') {
+        return { method: 'replace', from: s.from, to: s.to };
+      }
+      return {
+        method: 'search',
+        before: s.before,
+        after: s.after,
+        actions: s.actions.map(a => ({ method: a.method, from: a.from, to: a.to }))
+      };
+    });
+    return JSON.stringify({ steps: payload }, null, 2);
   }
 
   function downloadJson() {
@@ -59,49 +150,62 @@
     navigator.clipboard.writeText(output);
   }
 
-  // Diff modal
+  function openImport() {
+    importText = '';
+    importError = '';
+    showImport = true;
+  }
+
+  function applyImport() {
+    try {
+      const data = JSON.parse(importText);
+      if (!Array.isArray(data.steps)) throw new Error();
+      steps = data.steps.map((s: any): Step => {
+        if (s.method === 'search') {
+          return {
+            kind: 'search',
+            id: crypto.randomUUID(),
+            before: s.before ?? '',
+            after: s.after ?? '',
+            actions: (s.actions ?? []).map((a: any) => ({
+              id: crypto.randomUUID(),
+              method: 'replace' as const,
+              from: a.from ?? '',
+              to: a.to ?? ''
+            }))
+          };
+        }
+        return { kind: 'replace', id: crypto.randomUUID(), from: s.from ?? '', to: s.to ?? '' };
+      });
+      showImport = false;
+    } catch {
+      importError = '有効な rules.json を貼り付けてください';
+    }
+  }
+
+  // ── Diff ───────────────────────────────────────────────────────────────────
   type DiffSpan = { type: 'same' | 'remove' | 'add'; text: string };
   type DiffLine = { before: DiffSpan[]; after: DiffSpan[] };
   type DiffModal = { title: string; lines: DiffLine[]; hasChanges: boolean } | null;
   let diffModal = $state<DiffModal>(null);
 
-  function applySteps(text: string, upTo: number): string {
-    let result = text;
-    for (let i = 0; i <= upTo; i++) {
-      if (steps[i].from === '') continue;
-      result = result.replaceAll(steps[i].from, steps[i].to);
-    }
-    return result;
-  }
-
-  // char-level LCS diff between two strings, returns spans for before and after
   function charDiff(a: string, b: string): { before: DiffSpan[]; after: DiffSpan[] } {
     const m = a.length, n = b.length;
-    // dp[i][j] = LCS length of a[i..] and b[j..]
     const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
     for (let i = m - 1; i >= 0; i--)
       for (let j = n - 1; j >= 0; j--)
-        dp[i][j] = a[i] === b[j]
-          ? dp[i + 1][j + 1] + 1
-          : Math.max(dp[i + 1][j], dp[i][j + 1]);
+        dp[i][j] = a[i] === b[j] ? dp[i+1][j+1] + 1 : Math.max(dp[i+1][j], dp[i][j+1]);
 
-    const before: DiffSpan[] = [];
-    const after: DiffSpan[] = [];
+    const before: DiffSpan[] = [], after: DiffSpan[] = [];
     let i = 0, j = 0;
-
     const push = (arr: DiffSpan[], type: DiffSpan['type'], ch: string) => {
-      if (arr.length && arr[arr.length - 1].type === type)
-        arr[arr.length - 1].text += ch;
-      else
-        arr.push({ type, text: ch });
+      if (arr.length && arr[arr.length-1].type === type) arr[arr.length-1].text += ch;
+      else arr.push({ type, text: ch });
     };
-
     while (i < m || j < n) {
       if (i < m && j < n && a[i] === b[j]) {
-        push(before, 'same', a[i]);
-        push(after, 'same', b[j]);
-        i++; j++;
-      } else if (j < n && (i >= m || dp[i + 1][j] >= dp[i][j + 1])) {
+        push(before, 'same', a[i]); push(after, 'same', b[j]); i++; j++;
+      } else if (j < n && (i >= m || dp[i+1][j] >= dp[i][j+1])) {
         push(after, 'add', b[j++]);
       } else {
         push(before, 'remove', a[i++]);
@@ -112,25 +216,20 @@
 
   function spansToHtml(spans: DiffSpan[]): string {
     return spans.map(s => {
-      const escaped = s.text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      if (s.type === 'same') return `<span class="ds">${escaped}</span>`;
-      if (s.type === 'remove') return `<span class="dr">${escaped}</span>`;
-      return `<span class="da">${escaped}</span>`;
+      const e = s.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      if (s.type === 'same')   return `<span class="ds">${e}</span>`;
+      if (s.type === 'remove') return `<span class="dr">${e}</span>`;
+      return `<span class="da">${e}</span>`;
     }).join('');
   }
 
   function computeDiff(before: string, after: string): { lines: DiffLine[]; hasChanges: boolean } {
-    const aLines = before.split('\n');
-    const bLines = after.split('\n');
+    const aLines = before.split('\n'), bLines = after.split('\n');
     const len = Math.max(aLines.length, bLines.length);
     let hasChanges = false;
     const lines: DiffLine[] = [];
     for (let i = 0; i < len; i++) {
-      const a = aLines[i] ?? '';
-      const b = bLines[i] ?? '';
+      const a = aLines[i] ?? '', b = bLines[i] ?? '';
       const { before: bSpans, after: aSpans } = charDiff(a, b);
       if (a !== b) hasChanges = true;
       lines.push({ before: bSpans, after: aSpans });
@@ -151,27 +250,6 @@
     const { lines, hasChanges } = computeDiff(input, output);
     diffModal = { title: 'result — diff', lines, hasChanges };
   }
-
-  function openImport() {
-    importText = '';
-    importError = '';
-    showImport = true;
-  }
-
-  function applyImport() {
-    try {
-      const data = JSON.parse(importText);
-      if (!Array.isArray(data.steps)) throw new Error();
-      steps = data.steps.map((s: { from: string; to: string }) => ({
-        id: crypto.randomUUID(),
-        from: s.from ?? '',
-        to: s.to ?? ''
-      }));
-      showImport = false;
-    } catch {
-      importError = '有効な rules.json を貼り付けてください';
-    }
-  }
 </script>
 
 <div class="app">
@@ -184,11 +262,7 @@
     <div class="workspace">
       <section class="panel input-panel">
         <span class="panel-label">入力テキスト</span>
-        <textarea
-          bind:value={input}
-          placeholder="ここにテキストを貼り付けてください..."
-          spellcheck="false"
-        ></textarea>
+        <textarea bind:value={input} placeholder="ここにテキストを貼り付けてください..." spellcheck="false"></textarea>
         <div class="panel-meta">{input.length} 文字</div>
       </section>
 
@@ -224,41 +298,114 @@
 
         <div class="steps-list">
           {#each steps as step, i (step.id)}
-            <div class="step">
-              <button class="step-num" onclick={() => openDiff(i)} title="diffを表示">{i + 1}</button>
-              <div class="step-fields">
-                <div class="field">
-                  <span class="field-label">from</span>
-                  <input type="text" bind:value={step.from} placeholder="置換前" spellcheck="false" />
+            <div class="step-block">
+              {#if step.kind === 'replace'}
+                <div class="step">
+                  <button class="step-num" onclick={() => openDiff(i)} title="diffを表示">{i + 1}</button>
+                  <div class="step-fields">
+                    <div class="field">
+                      <span class="field-label">from</span>
+                      <input type="text" bind:value={step.from} placeholder="置換前" spellcheck="false" />
+                    </div>
+                    <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                    <div class="field">
+                      <span class="field-label">to</span>
+                      <input type="text" bind:value={step.to} placeholder="置換後" spellcheck="false" />
+                    </div>
+                  </div>
+                  {#if steps.length > 1}
+                    <button class="btn-remove" onclick={() => removeStep(step.id)} aria-label="ルールを削除">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </button>
+                  {/if}
                 </div>
-                <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                  <polyline points="12 5 19 12 12 19"/>
-                </svg>
-                <div class="field">
-                  <span class="field-label">to</span>
-                  <input type="text" bind:value={step.to} placeholder="置換後" spellcheck="false" />
+
+              {:else}
+                <!-- search step -->
+                <div class="step search-step">
+                  <button class="step-num" onclick={() => openDiff(i)} title="diffを表示">{i + 1}</button>
+                  <div class="search-block">
+                    <div class="search-context">
+                      <span class="search-label">search</span>
+                      <div class="search-fields">
+                        <div class="field">
+                          <span class="field-label">after</span>
+                          <input type="text" bind:value={step.after} placeholder='\n' spellcheck="false" />
+                        </div>
+                        <div class="field">
+                          <span class="field-label">before</span>
+                          <input type="text" bind:value={step.before} placeholder='\n' spellcheck="false" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="actions-list">
+                      {#each step.actions as action (action.id)}
+                        <div class="action-row">
+                          <svg class="action-indent" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="9 18 15 12 9 6"/>
+                          </svg>
+                          <div class="step-fields">
+                            <div class="field">
+                              <span class="field-label">from</span>
+                              <input type="text" bind:value={action.from} placeholder="置換前" spellcheck="false" />
+                            </div>
+                            <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                              <line x1="5" y1="12" x2="19" y2="12"/>
+                              <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                            <div class="field">
+                              <span class="field-label">to</span>
+                              <input type="text" bind:value={action.to} placeholder="置換後" spellcheck="false" />
+                            </div>
+                          </div>
+                          {#if step.actions.length > 1}
+                            <button class="btn-remove" onclick={() => removeAction(step.id, action.id)} aria-label="アクションを削除">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                              </svg>
+                            </button>
+                          {/if}
+                        </div>
+                      {/each}
+                    </div>
+                  </div>
+                  {#if steps.length > 1}
+                    <button class="btn-remove" onclick={() => removeStep(step.id)} aria-label="ルールを削除">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </button>
+                  {/if}
                 </div>
-              </div>
-              {#if steps.length > 1}
-                <button class="btn-remove" onclick={() => removeStep(step.id)} aria-label="ルールを削除">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                  </svg>
-                </button>
               {/if}
             </div>
           {/each}
         </div>
 
-        <button class="btn-add" onclick={addStep}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          ルールを追加
-        </button>
+        <div class="add-buttons">
+          <button class="btn-add" onclick={addReplaceStep}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            replace
+          </button>
+          <button class="btn-add" onclick={addSearchStep}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            search
+          </button>
+        </div>
 
         <button class="btn-run" onclick={run}>
           置換を実行
@@ -334,6 +481,8 @@
     </div>
   </div>
 {/if}
+
+<!-- Import modal -->
 {#if showImport}
   <div class="overlay" onclick={() => showImport = false}>
     <div class="modal" onclick={(e) => e.stopPropagation()}>
@@ -346,12 +495,7 @@
           </svg>
         </button>
       </div>
-      <textarea
-        class="import-textarea"
-        bind:value={importText}
-        placeholder={'{\n  "steps": [\n    { "method": "replace", "from": "a", "to": "b" }\n  ]\n}'}
-        spellcheck="false"
-      ></textarea>
+      <textarea class="import-textarea" bind:value={importText} placeholder={'{\n  "steps": [\n    { "method": "replace", "from": "a", "to": "b" }\n  ]\n}'} spellcheck="false"></textarea>
       {#if importError}
         <span class="error">{importError}</span>
       {/if}
@@ -361,11 +505,7 @@
 {/if}
 
 <style>
-  .app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  .app { min-height: 100vh; display: flex; flex-direction: column; }
 
   header {
     padding: 20px 32px;
@@ -383,10 +523,7 @@
     letter-spacing: -0.3px;
   }
 
-  .tagline {
-    font-size: 12px;
-    color: #555;
-  }
+  .tagline { font-size: 12px; color: #555; }
 
   main {
     flex: 1;
@@ -443,30 +580,25 @@
     outline: none;
   }
 
-  textarea:focus {
-    border-color: #3a3a3a;
-  }
+  textarea:focus { border-color: #3a3a3a; }
+  textarea::placeholder { color: #333; }
 
-  textarea::placeholder {
-    color: #333;
-  }
-
+  /* Steps */
   .steps-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .header-actions {
-    display: flex;
-    gap: 6px;
-  }
+  .header-actions { display: flex; gap: 6px; }
 
   .steps-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
+
+  .step-block { display: flex; flex-direction: column; }
 
   .step {
     display: flex;
@@ -486,11 +618,11 @@
     cursor: pointer;
     padding: 0;
     transition: color 0.15s;
+    align-self: flex-start;
+    padding-top: 10px;
   }
 
-  .step-num:hover {
-    color: #7ee787;
-  }
+  .step-num:hover { color: #7ee787; }
 
   .step-fields {
     flex: 1;
@@ -527,14 +659,9 @@
     width: 100%;
   }
 
-  .field input::placeholder {
-    color: #2e2e2e;
-  }
+  .field input::placeholder { color: #2e2e2e; }
 
-  .arrow {
-    color: #333;
-    flex-shrink: 0;
-  }
+  .arrow { color: #333; flex-shrink: 0; }
 
   .btn-remove {
     background: none;
@@ -551,7 +678,67 @@
 
   .btn-remove:hover { color: #888; }
 
+  /* Search step */
+  .search-step { align-items: flex-start; }
+
+  .search-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .search-context {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .search-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #7ee787;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .search-fields {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+  }
+
+  .actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 4px;
+  }
+
+  .action-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .action-indent {
+    color: #2a2a2a;
+    flex-shrink: 0;
+  }
+
+  /* Add buttons */
+  .add-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
   .btn-add {
+    flex: 1;
     background: none;
     border: 1px dashed #2a2a2a;
     border-radius: 6px;
@@ -562,14 +749,12 @@
     padding: 9px 14px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 7px;
     transition: border-color 0.15s, color 0.15s;
   }
 
-  .btn-add:hover {
-    border-color: #404040;
-    color: #888;
-  }
+  .btn-add:hover { border-color: #404040; color: #888; }
 
   .btn-run {
     background: #7ee787;
@@ -606,11 +791,9 @@
     transition: color 0.15s, border-color 0.15s;
   }
 
-  .btn-icon:hover {
-    color: #888;
-    border-color: #3a3a3a;
-  }
+  .btn-icon:hover { color: #888; border-color: #3a3a3a; }
 
+  /* Output */
   .output-section {
     background: #161616;
     border: 1px solid #222;
@@ -645,7 +828,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0,0,0,0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -670,10 +853,7 @@
     justify-content: space-between;
   }
 
-  .import-textarea {
-    min-height: 200px;
-    font-size: 12px;
-  }
+  .import-textarea { min-height: 200px; font-size: 12px; }
 
   .btn-close {
     background: none;
@@ -694,6 +874,7 @@
     font-family: 'IBM Plex Mono', monospace;
   }
 
+  /* Diff */
   .diff-modal {
     width: 800px;
     max-height: 80vh;
@@ -721,22 +902,11 @@
     text-transform: uppercase;
   }
 
-  .diff-col-header span {
-    padding: 6px 12px;
-  }
+  .diff-col-header span { padding: 6px 12px; }
+  .diff-col-header span:first-child { border-right: 1px solid #242424; }
 
-  .diff-col-header span:first-child {
-    border-right: 1px solid #242424;
-  }
-
-  .diff-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .diff-row + .diff-row {
-    border-top: 1px solid #1a1a1a;
-  }
+  .diff-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .diff-row + .diff-row { border-top: 1px solid #1a1a1a; }
 
   .diff-cell {
     display: flex;
@@ -745,14 +915,8 @@
     min-width: 0;
   }
 
-  .diff-cell-remove {
-    border-right: 1px solid #242424;
-    background: rgba(248, 81, 73, 0.04);
-  }
-
-  .diff-cell-add {
-    background: rgba(126, 231, 135, 0.04);
-  }
+  .diff-cell-remove { border-right: 1px solid #242424; background: rgba(248,81,73,0.04); }
+  .diff-cell-add { background: rgba(126,231,135,0.04); }
 
   .diff-linenum {
     flex-shrink: 0;
@@ -772,10 +936,9 @@
     min-width: 0;
   }
 
-  /* injected via {@html} */
   :global(.ds) { color: #888; }
-  :global(.dr) { background: rgba(248, 81, 73, 0.3); color: #f87171; border-radius: 2px; }
-  :global(.da) { background: rgba(126, 231, 135, 0.3); color: #7ee787; border-radius: 2px; }
+  :global(.dr) { background: rgba(248,81,73,0.3); color: #f87171; border-radius: 2px; }
+  :global(.da) { background: rgba(126,231,135,0.3); color: #7ee787; border-radius: 2px; }
 
   .diff-empty {
     font-size: 12px;
