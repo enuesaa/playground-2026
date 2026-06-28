@@ -59,6 +59,99 @@
     navigator.clipboard.writeText(output);
   }
 
+  // Diff modal
+  type DiffSpan = { type: 'same' | 'remove' | 'add'; text: string };
+  type DiffLine = { before: DiffSpan[]; after: DiffSpan[] };
+  type DiffModal = { title: string; lines: DiffLine[]; hasChanges: boolean } | null;
+  let diffModal = $state<DiffModal>(null);
+
+  function applySteps(text: string, upTo: number): string {
+    let result = text;
+    for (let i = 0; i <= upTo; i++) {
+      if (steps[i].from === '') continue;
+      result = result.replaceAll(steps[i].from, steps[i].to);
+    }
+    return result;
+  }
+
+  // char-level LCS diff between two strings, returns spans for before and after
+  function charDiff(a: string, b: string): { before: DiffSpan[]; after: DiffSpan[] } {
+    const m = a.length, n = b.length;
+    // dp[i][j] = LCS length of a[i..] and b[j..]
+    const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = m - 1; i >= 0; i--)
+      for (let j = n - 1; j >= 0; j--)
+        dp[i][j] = a[i] === b[j]
+          ? dp[i + 1][j + 1] + 1
+          : Math.max(dp[i + 1][j], dp[i][j + 1]);
+
+    const before: DiffSpan[] = [];
+    const after: DiffSpan[] = [];
+    let i = 0, j = 0;
+
+    const push = (arr: DiffSpan[], type: DiffSpan['type'], ch: string) => {
+      if (arr.length && arr[arr.length - 1].type === type)
+        arr[arr.length - 1].text += ch;
+      else
+        arr.push({ type, text: ch });
+    };
+
+    while (i < m || j < n) {
+      if (i < m && j < n && a[i] === b[j]) {
+        push(before, 'same', a[i]);
+        push(after, 'same', b[j]);
+        i++; j++;
+      } else if (j < n && (i >= m || dp[i + 1][j] >= dp[i][j + 1])) {
+        push(after, 'add', b[j++]);
+      } else {
+        push(before, 'remove', a[i++]);
+      }
+    }
+    return { before, after };
+  }
+
+  function spansToHtml(spans: DiffSpan[]): string {
+    return spans.map(s => {
+      const escaped = s.text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      if (s.type === 'same') return `<span class="ds">${escaped}</span>`;
+      if (s.type === 'remove') return `<span class="dr">${escaped}</span>`;
+      return `<span class="da">${escaped}</span>`;
+    }).join('');
+  }
+
+  function computeDiff(before: string, after: string): { lines: DiffLine[]; hasChanges: boolean } {
+    const aLines = before.split('\n');
+    const bLines = after.split('\n');
+    const len = Math.max(aLines.length, bLines.length);
+    let hasChanges = false;
+    const lines: DiffLine[] = [];
+    for (let i = 0; i < len; i++) {
+      const a = aLines[i] ?? '';
+      const b = bLines[i] ?? '';
+      const { before: bSpans, after: aSpans } = charDiff(a, b);
+      if (a !== b) hasChanges = true;
+      lines.push({ before: bSpans, after: aSpans });
+    }
+    return { lines, hasChanges };
+  }
+
+  function openDiff(stepIndex: number) {
+    if (!input) return;
+    const before = stepIndex === 0 ? input : applySteps(input, stepIndex - 1);
+    const after = applySteps(input, stepIndex);
+    const { lines, hasChanges } = computeDiff(before, after);
+    diffModal = { title: `step ${stepIndex + 1} — diff`, lines, hasChanges };
+  }
+
+  function openOutputDiff() {
+    if (!input || !hasResult) return;
+    const { lines, hasChanges } = computeDiff(input, output);
+    diffModal = { title: 'result — diff', lines, hasChanges };
+  }
+
   function openImport() {
     importText = '';
     importError = '';
@@ -132,7 +225,7 @@
         <div class="steps-list">
           {#each steps as step, i (step.id)}
             <div class="step">
-              <span class="step-num">{i + 1}</span>
+              <button class="step-num" onclick={() => openDiff(i)} title="diffを表示">{i + 1}</button>
               <div class="step-fields">
                 <div class="field">
                   <span class="field-label">from</span>
@@ -180,13 +273,21 @@
       <section class="output-section">
         <div class="output-header">
           <span class="panel-label">結果</span>
-          <button class="btn-icon" onclick={copyOutput}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            コピー
-          </button>
+          <div class="header-actions">
+            <button class="btn-icon" onclick={openOutputDiff}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>
+              </svg>
+              diff
+            </button>
+            <button class="btn-icon" onclick={copyOutput}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              コピー
+            </button>
+          </div>
         </div>
         <pre class="output-text">{output}</pre>
         <div class="panel-meta">{output.length} 文字</div>
@@ -195,7 +296,44 @@
   </main>
 </div>
 
-<!-- Import modal -->
+<!-- Diff modal -->
+{#if diffModal}
+  <div class="overlay" onclick={() => diffModal = null}>
+    <div class="modal diff-modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <span class="panel-label">{diffModal.title}</span>
+        <button class="btn-close" onclick={() => diffModal = null} aria-label="閉じる">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      {#if !diffModal.hasChanges}
+        <p class="diff-empty">このステップによる変更はありません</p>
+      {:else}
+        <div class="diff-view">
+          <div class="diff-col-header">
+            <span>before</span>
+            <span>after</span>
+          </div>
+          {#each diffModal.lines as line, i}
+            <div class="diff-row">
+              <div class="diff-cell diff-cell-remove">
+                <span class="diff-linenum">{i + 1}</span>
+                <pre class="diff-pre">{@html spansToHtml(line.before)}</pre>
+              </div>
+              <div class="diff-cell diff-cell-add">
+                <span class="diff-linenum">{i + 1}</span>
+                <pre class="diff-pre">{@html spansToHtml(line.after)}</pre>
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  </div>
+{/if}
 {#if showImport}
   <div class="overlay" onclick={() => showImport = false}>
     <div class="modal" onclick={(e) => e.stopPropagation()}>
@@ -343,6 +481,15 @@
     width: 16px;
     text-align: right;
     flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s;
+  }
+
+  .step-num:hover {
+    color: #7ee787;
   }
 
   .step-fields {
@@ -366,7 +513,7 @@
   .field-label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
-    color: #aaaaaa;
+    color: #aaa;
     letter-spacing: 0.5px;
   }
 
@@ -545,6 +692,97 @@
     font-size: 12px;
     color: #f87171;
     font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .diff-modal {
+    width: 800px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .diff-view {
+    overflow-y: auto;
+    border: 1px solid #242424;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .diff-col-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid #242424;
+    font-size: 10px;
+    color: #444;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .diff-col-header span {
+    padding: 6px 12px;
+  }
+
+  .diff-col-header span:first-child {
+    border-right: 1px solid #242424;
+  }
+
+  .diff-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .diff-row + .diff-row {
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .diff-cell {
+    display: flex;
+    gap: 10px;
+    padding: 2px 12px;
+    min-width: 0;
+  }
+
+  .diff-cell-remove {
+    border-right: 1px solid #242424;
+    background: rgba(248, 81, 73, 0.04);
+  }
+
+  .diff-cell-add {
+    background: rgba(126, 231, 135, 0.04);
+  }
+
+  .diff-linenum {
+    flex-shrink: 0;
+    color: #333;
+    user-select: none;
+    min-width: 20px;
+    text-align: right;
+    padding-top: 1px;
+  }
+
+  .diff-pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #555;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* injected via {@html} */
+  :global(.ds) { color: #888; }
+  :global(.dr) { background: rgba(248, 81, 73, 0.3); color: #f87171; border-radius: 2px; }
+  :global(.da) { background: rgba(126, 231, 135, 0.3); color: #7ee787; border-radius: 2px; }
+
+  .diff-empty {
+    font-size: 12px;
+    color: #555;
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: center;
+    padding: 24px 0;
   }
 
   @media (max-width: 768px) {
