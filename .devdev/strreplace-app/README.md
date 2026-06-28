@@ -1,4 +1,4 @@
-# kakkoreplacepoc-app
+# strreplace-app
 
 ### データ構造
 ```json

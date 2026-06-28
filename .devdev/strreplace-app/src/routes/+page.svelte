@@ -76,27 +76,27 @@
     const beforeRaw = step.before.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
     const afterRaw  = step.after.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
-    const escapePart = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    let pattern: RegExp;
-    if (beforeRaw && afterRaw) {
-      pattern = new RegExp(`(?<=${escapePart(beforeRaw)})(.*?)(?=${escapePart(afterRaw)})`, 'gs');
-    } else if (beforeRaw) {
-      pattern = new RegExp(`(?<=${escapePart(beforeRaw)})(.*?)(?=\\n|$)`, 'gm');
-    } else if (afterRaw) {
-      pattern = new RegExp(`(?<=^|\\n)(.*?)(?=${escapePart(afterRaw)})`, 'gm');
-    } else {
-      return text;
-    }
-
-    return text.replace(pattern, (match) => {
-      let result = match;
-      for (const action of step.actions) {
-        if (action.from === '') continue;
-        result = result.replaceAll(action.from, action.to);
+    // Build a pattern that matches only `action.from` when it appears in the specified position.
+    // We do this per-action: replace each action.from only when surrounded by the context.
+    let result = text;
+    for (const action of step.actions) {
+      if (action.from === '') continue;
+      let pattern: RegExp;
+      if (beforeRaw && afterRaw) {
+        // action.from must be immediately preceded by beforeRaw and followed by afterRaw
+        pattern = new RegExp(`(?<=${esc(beforeRaw)})${esc(action.from)}(?=${esc(afterRaw)})`, 'g');
+      } else if (beforeRaw) {
+        pattern = new RegExp(`(?<=${esc(beforeRaw)})${esc(action.from)}`, 'g');
+      } else if (afterRaw) {
+        pattern = new RegExp(`${esc(action.from)}(?=${esc(afterRaw)})`, 'g');
+      } else {
+        continue;
       }
-      return result;
-    });
+      result = result.replace(pattern, action.to);
+    }
+    return result;
   }
 
   function applySteps(text: string, upTo: number): string {
