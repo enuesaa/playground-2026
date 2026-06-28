@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" .
+      - GOOS=js GOARCH=wasm go build -o main.wasm

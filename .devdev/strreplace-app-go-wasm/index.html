@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<body>
+<input id="text" value="aaa">
+<input id="from" value="a">
+<input id="to" value="b">
+<button onclick="run()">Replace</button>
+
+<p id="result"></p>
+
+<script src="wasm_exec.js"></script>
+<script>
+const go = new Go();
+
+WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
+  .then((result) => {
+    go.run(result.instance);
+  });
+
+function run() {
+  const text = document.getElementById("text").value;
+  const fromtext = document.getElementById("from").value;
+  const totext = document.getElementById("to").value;
+  const result = poc.fns.replaceString(JSON.stringify({
+    text: text,
+    old: fromtext,
+    new: totext,
+  }));
+  document.getElementById("result").textContent = result;
+}
+</script>
+</body>
+</html>
