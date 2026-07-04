@@ -6,6 +6,7 @@ module "app" {
   region           = local.region
 
   # vpc
+  network_id        = module.vpc.network_id
   network_self_link = module.vpc.network_self_link     # なんかvpcの識別子(id)らしい
   subnet_self_link  = module.vpc.subnets_self_links[0]
   subnet_cidr       = local.subnet_cidr
