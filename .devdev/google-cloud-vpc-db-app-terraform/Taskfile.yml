@@ -1,0 +1,11 @@
+version: '3'
+
+tasks:
+  pushimage:
+    env:
+      REPO_URI: asia-northeast1-docker.pkg.dev/project-id/name
+    cmds:
+      # see https://docs.cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling?hl=ja
+      - gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+      - docker build -t $REPO_URI/app:latest .
+      - docker push $REPO_URI/app:latest
