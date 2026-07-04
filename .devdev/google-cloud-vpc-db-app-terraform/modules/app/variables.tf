@@ -19,7 +19,7 @@ variable "network_self_link" {
   type = string
 }
 
-variable "subnet_self_link" {
+variable "subnet_name" {
   type = string
 }
 
