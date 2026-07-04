@@ -9,7 +9,7 @@ module "vpc" {
   subnets = [
     {
       subnet_name           = "${local.identifier}-subnet"
-      subnet_ip             = "10.0.1.0/24"
+      subnet_ip             = local.subnet_cidr
       subnet_region         = local.region
       subnet_private_access = "true"
     }
