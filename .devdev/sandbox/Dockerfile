@@ -33,7 +33,7 @@ RUN curl -fsSL https://go.dev/dl/go1.24.5.linux-amd64.tar.gz | tar -C /usr/local
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # AWS CLI v2
-RUN curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
+RUN curl https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip -o awscliv2.zip \
     && unzip awscliv2.zip \
     && ./aws/install \
     && rm -rf aws awscliv2.zip
@@ -42,3 +42,5 @@ WORKDIR /workspace
 
 EXPOSE 80
 EXPOSE 3000
+
+CMD ["sleep", "infinity"]
