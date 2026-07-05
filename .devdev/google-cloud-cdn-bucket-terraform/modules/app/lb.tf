@@ -1,9 +1,9 @@
+# https
 resource "google_compute_url_map" "main" {
   name            = var.identifier
   default_service = google_compute_backend_bucket.main.id
 }
 
-# https
 resource "google_compute_target_https_proxy" "main" {
   name            = "${var.identifier}-https"
   url_map         = google_compute_url_map.main.id
@@ -22,7 +22,7 @@ resource "google_compute_global_forwarding_rule" "https" {
   target                = google_compute_target_https_proxy.main.id
   port_range            = "443"
   ip_address            = google_compute_global_address.main.id
-  load_balancing_scheme = "EXTERNAL"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
 }
 
 resource "google_compute_global_address" "main" {
@@ -30,6 +30,7 @@ resource "google_compute_global_address" "main" {
 }
 
 # http
+# よく分からないが HTTP 用のLBを別に立てないとリダイレクト設定できなそう
 resource "google_compute_url_map" "http" {
   name = "${var.identifier}-http"
 
@@ -49,5 +50,5 @@ resource "google_compute_global_forwarding_rule" "http" {
   target                = google_compute_target_http_proxy.main.id
   port_range            = "80"
   ip_address            = google_compute_global_address.main.id
-  load_balancing_scheme = "EXTERNAL"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
 }
