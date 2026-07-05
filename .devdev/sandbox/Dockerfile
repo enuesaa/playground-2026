@@ -8,13 +8,11 @@ RUN apt-get install -y \
         ca-certificates \
         curl \
         git \
-        unzip \
-    && rm -rf /var/lib/apt/lists/*
+        unzip
 
 # Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y nodejs
 
 # PHP
 RUN apt-get install -y \
@@ -22,15 +20,13 @@ RUN apt-get install -y \
         php-curl \
         php-mbstring \
         php-xml \
-        php-zip \
-    && rm -rf /var/lib/apt/lists/*
+        php-zip
 
 # Python
 RUN apt-get install -y \
         python3 \
         python3-pip \
-        python3-venv \
-    && rm -rf /var/lib/apt/lists/*
+        python3-venv
 
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.24.5.linux-amd64.tar.gz | tar -C /usr/local -xz
