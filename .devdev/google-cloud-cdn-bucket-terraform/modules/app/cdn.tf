@@ -12,14 +12,3 @@ resource "google_compute_backend_bucket" "main" {
     max_ttl     = 86400
   }
 }
-
-resource "google_compute_url_map" "main" {
-  project         = var.project_id
-  name            = var.identifier
-  default_service = google_compute_backend_bucket.main.id
-}
-
-resource "google_compute_global_address" "main" {
-  project = var.project_id
-  name    = var.identifier
-}

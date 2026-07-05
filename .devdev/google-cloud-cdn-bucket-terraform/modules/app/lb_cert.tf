@@ -9,6 +9,7 @@
 # }
 
 # 証明書
+# ルート証明書は Google Trust Services の WR3 ってところだった。https://pki.goog/repository/
 resource "google_certificate_manager_certificate" "main" {
   name = var.identifier
 
@@ -18,6 +19,7 @@ resource "google_certificate_manager_certificate" "main" {
   }
 }
 
+# これ検証まで時間かかる。数分
 resource "google_certificate_manager_dns_authorization" "main" {
   name   = var.identifier
   domain = var.domain
