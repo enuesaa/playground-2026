@@ -1,6 +1,5 @@
 # CDN backend bucket
 resource "google_compute_backend_bucket" "main" {
-  project     = var.project_id
   name        = var.identifier
   bucket_name = google_storage_bucket.main.name
   enable_cdn  = true
