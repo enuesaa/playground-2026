@@ -30,5 +30,14 @@ OK
 1) "a"
 ```
 
-## Liks
+### Liks
 - https://valkey.io/
+
+## ElastiCache と MemoryDB の違い
+MemoryDB の方がデータの耐久性がありそうという理解。
+ただ ElastiCache にもそういう機能があるらしく剪定は難しいと思った。
+
+- https://blog.serverworks.co.jp/amazon-memorydb-multi-region-ga#Amazon-ElastiCache%E3%81%A8%E3%81%AE%E9%81%95%E3%81%84
+- https://docs.aws.amazon.com/ja_jp/AmazonElastiCache/latest/dg/related-services-choose-between-memorydb-and-redis.html
+- https://www.reddit.com/r/aws/comments/pchg4m/elasticache_or_memorydb_which_i_should_i_use/?tl=ja
+- https://dev.classmethod.jp/articles/amazon-elasticache-valkey-durability/
