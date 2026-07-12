@@ -26,6 +26,7 @@
       ```bash
       curl -H 'X-aws-proxy-auth:xxx' -H 'X-aws-proxy-port:8000' https://xxx.lambda-microvm.ap-northeast-1.on.aws/
       ```
+    - これちなみに 80 番ポートは空いてないっぽくて https:// って指定しないとリクエストが通らなかった
     - docker コンテナで expose しているけどあんまり意味なさそう
   - MicroVM を実行 -> 一時停止 -> 終了 というふうにステータスが変わる
     - 例えば60秒間何も触らなかったら一時停止
