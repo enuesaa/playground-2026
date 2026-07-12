@@ -3,8 +3,8 @@ services:
     image: drupal:11-apache
     ports:
       - 8080:80
-    volumes:
-      - ./drupal:/opt/drupal/web/sites/default/files
+    # volumes:
+    #   - ./drupal:/opt/drupal/web/sites/default/files
     depends_on:
       - db
 
