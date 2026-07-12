@@ -1,0 +1,10 @@
+services:
+  quickwit:
+    image: quickwit/quickwit:latest
+    ports:
+      - 7280:7280
+    volumes:
+      - ./data:/quickwit/qwdata
+      - ./config.yaml:/quickwit/config/quickwit.yaml
+    command:
+      - run

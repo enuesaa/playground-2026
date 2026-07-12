@@ -1,0 +1,2 @@
+{"timestamp":"2026-07-12T12:00:00Z","level":"INFO","message":"hello world"}
+{"timestamp":"2026-07-12T12:01:00Z","level":"ERROR","message":"database error"}
