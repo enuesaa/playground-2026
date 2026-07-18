@@ -12,3 +12,16 @@
 composer create-project symfony/skeleton:"8.1.*" .
 composer require webapp
 ```
+
+entity の作成
+```bash
+# ここで Note だとか指定してフィールドを追加する。
+# すると Entity と Repository ができる
+php bin/console make:entity 
+
+# Entity をみているっぽい。マイグレーションファイルができる
+php bin/console make:migration
+
+# マイグレーション
+php bin/console doctrine:migrations:migrate
+```
