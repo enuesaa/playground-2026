@@ -39,6 +39,7 @@
   - 一方でウェブアプリにはあんま良くない？
   - 前段に cloudfront をおけばウェブアプリとしていけるやろう、と思ってたが、案外ダメそう？
     - オリジングループ等駆使して頑張ればいけそうだけど
+- イメージがあるだけで料金がかかるっぽい。スナップショットという名前
 
 ## Links
 - https://aws.amazon.com/jp/blogs/news/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/
