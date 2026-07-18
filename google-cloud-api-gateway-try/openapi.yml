@@ -1,23 +1,37 @@
 swagger: "2.0"
 
 info:
-  title: My API
+  title: My Cloud Run API
   version: "1.0.0"
 
 schemes:
   - https
 
+produces:
+  - text/html
+  - application/json
+
 paths:
-  /health:
+  /:
     get:
-      summary: Health check
+      operationId: getHomePage
+      x-google-backend:
+        address: https://YOUR-CLOUD-RUN-URL.run.app
+      responses:
+        "200":
+          description: HTML page
+          schema:
+            type: string
+  /hello:
+    get:
+      operationId: hello
+      x-google-backend:
+        address: https://YOUR-CLOUD-RUN-URL.run.app
       responses:
         "200":
           description: OK
           schema:
             type: object
             properties:
-              status:
+              message:
                 type: string
-
-definitions: {}
