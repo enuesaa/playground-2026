@@ -6,6 +6,13 @@
 - 知ってたけど Attribute で routing できるのやっぱいいな
   - `php bin/console debug:router` でルーティングを一覧表示できる
   - https://symfony.com/doc/current/page_creation.html
+- ORM はデフォルトでは Doctrine ORM らしい
+  - Doctrine ってあのアノテーションで有名なやつだ。その兄弟みたいな
+    - https://www.doctrine-project.org/projects.html
+    - apache project みたいな感じだと思う
+  - v1 は active record pattern で v2 は datamapper pattern らしい
+    - https://qiita.com/77web@github/items/7cbae4bea659f32e4b98
+    - https://engineering.otobank.co.jp/entry/2021/05/17/151328
 
 ## Commands
 ```bash
