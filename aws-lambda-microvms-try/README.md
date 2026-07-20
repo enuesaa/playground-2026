@@ -41,5 +41,25 @@
     - オリジングループ等駆使して頑張ればいけそうだけど
 - イメージがあるだけで料金がかかるっぽい。スナップショットという名前
 
+## Commands
+```bash
+# MicroVM を起動
+aws lambda-microvms run-microvm \
+  --image-identifier arn:aws:lambda:ap-northeast-1:xxx:microvm-image:xxx \
+  --ingress-network-connectors \
+    arn:aws:lambda:ap-northeast-1:aws:network-connector:aws-network-connector:SHELL_INGRESS \
+  --egress-network-connectors \
+    arn:aws:lambda:ap-northeast-1:aws:network-connector:aws-network-connector:INTERNET_EGRESS \
+  --idle-policy '{
+    "autoResumeEnabled": true,
+    "maxIdleDurationSeconds": 900,
+    "suspendedDurationSeconds": 300
+  }'
+
+# MicroVM を削除
+aws lambda-microvms terminate-microvm \
+  --microvm-identifier microvm-xxx
+```
+
 ## Links
 - https://aws.amazon.com/jp/blogs/news/run-isolated-sandboxes-with-full-lifecycle-control-aws-lambda-introduces-microvms/
