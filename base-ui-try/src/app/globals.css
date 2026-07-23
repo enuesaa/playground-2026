@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+  --color-white: #fafafa;
+  --color-black: #1a1a1a;
+  --color-gray: #cccccc;
+  --color-grayer: #dddddd;
+
+  --font-zenkaku: Zen Kaku Gothic New, sans-serif;
+}
+
+/**
+for base ui
+https://base-ui.com/react/overview/quick-start
+*/
+.root {
+  isolation: isolate;
+}
+
+/* body {
+  position: relative;
+} */
