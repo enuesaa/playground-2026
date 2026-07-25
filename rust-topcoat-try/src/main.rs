@@ -31,11 +31,7 @@ async fn root_layout(slot: Result) -> Result {
 
 #[page("/")]
 async fn home() -> Result {
-    view! {
-        <main>
-            page_title(title: "PageTitle here.")
-        </main>
-    }
+    view! { <main>page_title(title: "PageTitle here.")</main> }
 }
 
 #[component]
