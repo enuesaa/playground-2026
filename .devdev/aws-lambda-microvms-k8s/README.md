@@ -43,7 +43,7 @@ curl http://localhost:8080
 ```
 
 構成ざっくり
-```mermeid
+```mermaid
 flowchart TB
     subgraph M["AWS Lambda MicroVM"]
         subgraph K["Kubernetes (kind)"]
