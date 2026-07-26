@@ -9,6 +9,14 @@
     kind create cluster
     kubectl cluster-info
     kubectl get nodes
+    cat ~/.kube/config
     kind delete cluster
     kubectl get nodes
+    ```
+  - 例えばnginxを立てるなら
+    ```bash
+    kubectl get pod --namespace default
+    kubectl apply --filename podnginx.yml --namespace default
+    kubectl get pod --namespace default
+    kubectl delete --filename podnginx.yml
     ```
