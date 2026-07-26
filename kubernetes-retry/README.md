@@ -99,3 +99,8 @@
     hello-cronjob-29750762-p8m4t   0/1     Completed           0          3s
     hello-cronjob-29750762-p8m4t   0/1     Completed           0          4s
     ```
+- コンテナのヘルスチェック的なのもできるらしい
+  - https://qiita.com/MAKOTO1995/items/a087746d6b430601f94b
+  - https://cstoku.dev/posts/2018/k8sdojo-10/
+  - 概念としては docker のヘルスチェックのやつと同じだけどできることはこっちの方が多そう
+  - Startup Probe というのはここ最近できたらしい
