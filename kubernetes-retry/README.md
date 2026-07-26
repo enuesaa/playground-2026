@@ -18,5 +18,10 @@
     kubectl get pod --namespace default
     kubectl apply --filename podnginx.yml --namespace default
     kubectl get pod --namespace default
-    kubectl delete --filename podnginx.yml
+    kubectl get pod -n default -o wide
+    kubectl describe pod nginx
+    kubectl logs -f nginx
+    kubectl exec --stdin --tty nginx -- bash
+    kubectl port-forward nginx 8000:80
+    kubectl delete pod nginx
     ```
