@@ -40,6 +40,13 @@ kubectl apply -f nginx.yml
 kubectl port-forward service/nginx 8080:80
 
 curl http://localhost:8080
+
+# install kubectl tree
+curl -L https://github.com/ahmetb/kubectl-tree/releases/download/v0.6.0/kubectl-tree_v0.6.0_linux_arm64.tar.gz -o /tmp/kubectl-tree.tar.gz
+dnf install -y tar
+tar xzf /tmp/kubectl-tree.tar.gz -C /tmp
+install /tmp/kubectl-tree /usr/local/bin/kubectl-tree
+kubectl tree --help
 ```
 
 構成ざっくり
