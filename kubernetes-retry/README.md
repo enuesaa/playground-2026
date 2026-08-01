@@ -1,17 +1,25 @@
 # Kubernetes
 
-- kind
-  - docker in docker らしい
-  - https://adengineer.internet.gmo/2019/09/19/kind-kubernetes-in-docker/
+- ディストリビューション
+  - kind
+    - docker in docker らしい
+    - https://adengineer.internet.gmo/2019/09/19/kind-kubernetes-in-docker/
+      ```bash
+      brew install kind
+      kind version
+      kind create cluster
+      kubectl cluster-info
+      kubectl get nodes
+      cat ~/.kube/config
+      kind delete cluster
+      kubectl get nodes
+      ```
+  - k3s
+    - SUSEが開発？メンテ？
+    - https://future-architect.github.io/articles/20200929/
     ```bash
-    brew install kind
-    kind version
-    kind create cluster
-    kubectl cluster-info
-    kubectl get nodes
-    cat ~/.kube/config
-    kind delete cluster
-    kubectl get nodes
+    curl -sfL https://get.k3s.io | sh -
+    k3s kubectl get nodes
     ```
 - 例えばnginxのpodを立てるなら
   ```bash
@@ -44,8 +52,6 @@
   - 正確にはpodのprivate ipアドレスをまとめあげるイメージ
   - 例えば 
     ```bash
-    kubectl delete deploymentnginx.yml
-    kubectl delete --filename deploymentnginx.yml
     kubectl apply --filename deploymentnginx.yml
     kubectl apply --filename servicenginx.yml
     kubectl port-forward service/nginx-service 8080:80
