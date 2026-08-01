@@ -1,4 +1,4 @@
-# AWS Entity Resolutions
+# AWS Entity Resolution
 
 - 2つの似たようなデータセットがあるときに、そのデータを紐付けるサービス
 - 入力は Glue Database (2つ)
@@ -15,3 +15,9 @@
   - ワークフローの作成
     - 入力となる Glue Database を選択。そのスキーマを選ぶ。
     - でマッチングのルールを選択。ルールベースで組み立てるか機械学習にするかなど
+- s3へ出力される 
+- コンソールはこんな感じ
+  <img src="./console.png" width="300px" />
+
+## Links
+- https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2025_AWS-Entity-Resolution_0120_v1.pdf
