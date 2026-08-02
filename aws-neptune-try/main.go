@@ -48,6 +48,25 @@ func main() {
 
 	g := gremlingo.Traversal_().With(conn)
 
+	// Alice 作成
+	alice, err := g.AddV("person").Property("id", "alice").Property("name", "Alice").Next()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("alice:", alice)
+
+	// Bob 作成
+	bob, err := g.AddV("person").Property("id", "bob").Property("name", "Bob").Next()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("bob:", bob)
+
+	_, err = g.V().Has("id", "alice").AddE("knows").To(g.V().Has("id", "bob")).Next()
+	if err != nil {
+		panic(err)
+	}
+
 	result, err := g.V().Limit(10).ToList()
 	if err != nil {
 		panic(err)

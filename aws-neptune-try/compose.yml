@@ -1,0 +1,7 @@
+services:
+  graph-explorer:
+    image: public.ecr.aws/neptune/graph-explorer
+    ports:
+      - "8080:80"
+    environment:
+      - PROXY_SERVER_HTTPS_CONNECTION=false
