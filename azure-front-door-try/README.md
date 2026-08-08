@@ -12,6 +12,8 @@
     - Standard plan で $35/month
     - https://azure.microsoft.com/ja-jp/pricing/details/frontdoor/
   - あとデータ転送料金
+- なんか思ったより難しい
+  - どこか設定間違えているみたいで画面を見れない
 
 ## Links
 - https://zenn.dev/headwaters/articles/7ed3a8aecbba57
