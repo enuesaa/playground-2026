@@ -14,27 +14,29 @@ class Program
             Environment.Exit(1);
         }
 
-        string selected = Prompt.Select("Please select a file", items: files);
-        try
+        while (true)
         {
-            Console.WriteLine($"=== {selected} ===");
-
-            using var reader = new StreamReader(selected!);
-            string? line;
-            while ((line = reader.ReadLine()) != null)
+            string selected = Prompt.Select("Please select a file", items: files);
+            try
             {
-                Console.WriteLine(line);
+                Console.WriteLine($"=== {selected} ===");
+
+                using var reader = new StreamReader(selected!);
+                string? line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
             }
-        }
-        catch (FileNotFoundException)
-        {
-            Console.Error.WriteLine($"file not found: {selected}");
-            Environment.Exit(1);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"err: {ex.Message}");
-            Environment.Exit(1);
+            catch (FileNotFoundException)
+            {
+                Console.Error.WriteLine($"file not found: {selected}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"err: {ex.Message}");
+            }
+            Console.WriteLine();
         }
     }
 }
