@@ -5,11 +5,12 @@ class Program
 {
     static void Main()
     {
+        Console.Write("> ");
         string? path = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(path))
         {
-            Console.Error.WriteLine("パスが入力されていません。");
+            Console.Error.WriteLine("please enter text.");
             Environment.Exit(1);
         }
 
@@ -24,12 +25,12 @@ class Program
         }
         catch (FileNotFoundException)
         {
-            Console.Error.WriteLine($"ファイルが見つかりません: {path}");
+            Console.Error.WriteLine($"file not found: {path}");
             Environment.Exit(1);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"エラー: {ex.Message}");
+            Console.Error.WriteLine($"err: {ex.Message}");
             Environment.Exit(1);
         }
     }
