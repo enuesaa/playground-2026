@@ -6,8 +6,7 @@ class Program
 {
     static void Main()
     {
-        string dir = Directory.GetCurrentDirectory();
-        var files = Directory.GetFiles(dir);
+        var files = Directory.GetFiles(".");
 
         if (files.Length == 0)
         {
@@ -16,17 +15,10 @@ class Program
         }
 
         string selected = Prompt.Select("Please select a file", items: files);
-        // Console.Write("> ");
-        // string? path = Console.ReadLine();
-
-        // if (string.IsNullOrWhiteSpace(path))
-        // {
-        //     Console.Error.WriteLine("please enter text.");
-        //     Environment.Exit(1);
-        // }
-
         try
         {
+            Console.WriteLine($"=== {selected} ===");
+
             using var reader = new StreamReader(selected!);
             string? line;
             while ((line = reader.ReadLine()) != null)
