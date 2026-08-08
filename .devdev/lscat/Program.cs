@@ -17,26 +17,13 @@ class Program
         while (true)
         {
             string selected = Prompt.Select("Please select a file", items: files);
-            try
-            {
-                Console.WriteLine($"=== {selected} ===");
-
-                using var reader = new StreamReader(selected!);
-                string? line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Console.WriteLine(line);
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                Console.Error.WriteLine($"file not found: {selected}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"err: {ex.Message}");
-            }
-            Console.WriteLine();
+            // remove prompt
+            int line = Console.CursorTop;
+            Console.SetCursorPosition(0, line - 1);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, line - 1);
+            // stdout file
+            FileViewer.Show(selected);
         }
     }
 }
