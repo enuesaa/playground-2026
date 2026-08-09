@@ -17,8 +17,13 @@
   - で、$web というところ？にファイルをアップロードすると外から見れるようになる
   - https://qiita.com/yotan/items/69ea9c005bb2bff32f45
   - のでそのURLを目掛けてオリジン設定すれば良い
+  - Front Door Premium では Private Link で接続できる。実務ではそっちだろうなあ。
+    - https://learn.microsoft.com/ja-jp/azure/frontdoor/standard-premium/how-to-enable-private-link-storage-account?pivots=front-door-portal
+    - http://tech-blog.cloud-config.jp/2025-02-14-azure-frontdoor-privatelink-applicationgateway
 - なんか思ったより難しい
   - 管理画面で設定してからラグがあるっぽい
+  - 10~30分くらい見た方がいい
+  https://qiita.com/developer-kikikaikai/items/abe391d597df873c2ac4
   - 初回構築でなんか page not found ってのが表示されることが多い？けどカスタムドメインを追加とかしてたらいつの間にか表示されている
 
 ## Links
