@@ -20,6 +20,10 @@
   - Front Door Premium では Private Link で接続できる。実務ではそっちだろうなあ。
     - https://learn.microsoft.com/ja-jp/azure/frontdoor/standard-premium/how-to-enable-private-link-storage-account?pivots=front-door-portal
     - http://tech-blog.cloud-config.jp/2025-02-14-azure-frontdoor-privatelink-applicationgateway
+- App Service をオリジンにするのもできる
+  - オリジンへの直アクセスも制限可能
+  - 比較的柔軟。筋がいいと思う
+  - https://dev.classmethod.jp/articles/azure-front-door-app-service-access-restrict/
 - なんか思ったより難しい
   - 管理画面で設定してからラグがあるっぽい
   - 10~30分くらい見た方がいい
