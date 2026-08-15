@@ -2,9 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello");
-app.MapGet("/aaa", () => "aaa");
+app.MapGet("/api/aaa", () => "aaa");
 
-app.MapGet("/db-test", async () =>
+app.MapGet("/api/db-test", async () =>
 {
     var connStr = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? Environment.GetEnvironmentVariable("SQLCONNSTR_DefaultConnection");
@@ -14,7 +14,7 @@ app.MapGet("/db-test", async () =>
     return "DB connected: " + conn.State;
 });
 
-app.MapGet("/notes", async () =>
+app.MapGet("/api/notes", async () =>
 {
     var connStr = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? Environment.GetEnvironmentVariable("SQLCONNSTR_DefaultConnection");
