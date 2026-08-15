@@ -14,3 +14,14 @@ COPY --from=build /app .
 
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "SimpleApi.dll"]
+
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+WORKDIR /src
+
+COPY *.csproj .
+RUN dotnet restore
+
+COPY . .
+
+EXPOSE 8080

@@ -4,6 +4,7 @@ var app = builder.Build();
 app.MapGet("/", () => "Hello from dotnet Web API!");
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+app.MapGet("/aaa", () => Results.Ok(new { aaa = "okok" }));
 
 app.MapGet("/echo/{message}", (string message) => new { message });
 
