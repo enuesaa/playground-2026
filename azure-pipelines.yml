@@ -14,8 +14,9 @@ pool:
 #   displayName: 'Run a multi-line script'
 
 variables:
-  azureSubscription: '<サービス接続名>'
-  webAppName: '<App Service名>'
+- group: 'testvargroup'
+  # azureSubscription: '<サービス接続名>'
+  # webAppName: '<App Service名>'
 
 steps:
 - task: ArchiveFiles@2
@@ -25,3 +26,11 @@ steps:
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/site.zip'
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appType: 'webApp'
+    appName: '$(webAppName)'
+    package: '$(Build.ArtifactStagingDirectory)/site.zip'
