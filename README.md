@@ -47,3 +47,15 @@ DELETE FROM notes;
   - <img src="./docs/storageweb.png" width="300px" />
   - <img src="./docs/storagecontainerweb.png" width="300px" />
 - するとみれる
+
+### Front Door
+- フロントドアプロファイルを作成
+- 作ったらこんな感じ
+  - <img src="./docs/frontdooroverview.png" width="300px" />
+- Blob Storage の静的ウェブホスティングをオリジンに指定（デフォルト）
+  - <img src="./docs/frontdoorstorageorigin.png" width="300px" />
+- App Service のオリジンを作成
+  - <img src="./docs/frontdoorapi.png" width="300px" />
+  - <img src="./docs/frontdoorapiorigin.png" width="300px" />
+- そしてフロントドアマネージャーにてルート設定 (/api/*)
+  - <img src="./docs/frontdoormanager.png" width="300px" />
