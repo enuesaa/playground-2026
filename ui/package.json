@@ -1,0 +1,32 @@
+{
+	"name": "@enuesaa/my-svelte-template",
+	"type": "module",
+	"private": true,
+	"license": "MIT",
+	"scripts": {
+		"dev": "rm -rf .svelte-kit && svelte-kit sync && vite dev --port 3000",
+		"build": "vite build",
+		"format": "prettier --write {src,package.json}"
+	},
+	"dependencies": {
+		"@azure/msal-browser": "^5.18.0",
+		"@tanstack/svelte-query": "^6.1.36",
+		"lucide-svelte": "^1.0.1"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.70.0",
+		"@sveltejs/vite-plugin-svelte": "7.1.2",
+		"@tailwindcss/vite": "^4.3.3",
+		"@types/node": "^26.1.1",
+		"prettier": "^3.9.5",
+		"prettier-plugin-svelte": "^4.1.1",
+		"svelte": "5.56.4",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^6.0.3",
+		"vite": "^8.1.5"
+	},
+	"imports": {
+		"#app.css": "./src/routes/app.css"
+	}
+}
