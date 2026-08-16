@@ -69,3 +69,15 @@ DELETE FROM notes;
   - <img src="./docs/frontdoorapiorigin.png" width="300px" />
 - そしてフロントドアマネージャーにてルート設定 (/api/*)
   - <img src="./docs/frontdoormanager.png" width="300px" />
+
+### Azure DevOps
+- プロジェクトを作成
+- GitHub Repository と繋ぐ
+- 作ったらこんな感じ
+  - <img src="./docs/devops.png" width="300px" />
+- ビルドスクリプトはこんな感じ。yamlで
+  - <img src="./docs/devopsyaml.png" width="300px" />
+- デプロイに成功するとこんなログ
+  - <img src="./docs/devopslog.png" width="300px" />
+- 環境変数は Library の Variable Group で管理するのが良さそう
+- Azure へは Resource Manager の workload identity federation にて接続するっぽい
