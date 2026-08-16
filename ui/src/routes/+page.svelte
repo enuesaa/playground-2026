@@ -1,7 +1,6 @@
 <script lang="ts">
-	import PageTitle from './PageTitle.svelte'
 	import { onMount } from 'svelte'
-	import { getToken } from '$lib/auth'
+	import { getToken, logout } from '$lib/auth'
 
 	let notes = $state<any[]>([])
 
@@ -14,7 +13,7 @@
 	})
 </script>
 
-<PageTitle title="Top Page" />
+<button onclick={logout}>ログアウト</button>
 
 <h1>Notes</h1>
 <ul>
