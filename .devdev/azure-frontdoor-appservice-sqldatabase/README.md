@@ -1,4 +1,17 @@
-# azure-devops-try
+# Azure でウェブアプリをホストする
+
+### 構成
+- Front Door
+- Blob Storage
+- App Service (Windows .NET 10)
+- SQL Database
+- Entra ID
+
+ざっくり。不正確な箇所あり。
+
+- <img src="./docs/arch.png" width="800px" />
+- <img src="./docs/archv.png" width="800px" />
+- <img src="./docs/archplan.png" width="800px" />
 
 ### SQL Database
 
@@ -93,10 +106,3 @@ DELETE FROM notes;
   - <img src="./docs/uilogin.png" width="300px" />
   - <img src="./docs/ui.png" width="300px" />
 - まじで使う時はちゃんと確認した方がいい
-
-### 構成図
-ざっくり。不正確な箇所あり。
-
-- <img src="./docs/arch.png" width="800px" />
-- <img src="./docs/archv.png" width="800px" />
-- <img src="./docs/archplan.png" width="800px" />
