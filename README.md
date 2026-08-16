@@ -35,3 +35,15 @@ INSERT INTO notes (title, content) VALUES
 
 DELETE FROM notes;
 ```
+
+### Blob Storage
+
+- ストレージアカウントを作成
+- 作ったらこんな感じ
+  - <img src="./docs/storageaccount.png" width="300px" />
+- 静的ウェブホスティングの設定
+  - <img src="./docs/storagestaticweb.png" width="300px" />
+- で $web というところにアップロードする
+  - <img src="./docs/storageweb.png" width="300px" />
+  - <img src="./docs/storagecontainerweb.png" width="300px" />
+- するとみれる
