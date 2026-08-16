@@ -1,6 +1,24 @@
 # azure-devops-try
 
-SQL Server でテーブル作成
+### SQL Database
+
+- SQLデータベース(無料プラン) というボタンから作成
+- 先にデータベースサーバーを作成する必要あり
+  - 認証方法は「SQL 認証」へ。
+  - 要はユーザー名/パスワードでの認証ということ。
+- できたらこんな感じ
+  - <img src="./docs/sqlserver.png" width="300px" />
+- ファイアウォールの設定は注意
+  - あんま詳しく見れてない
+  - デフォルトの設定が緩めに見えているので実運用ではちゃんと確認した方がいい
+- 接続文字列というページにいわゆる DBURI 的なものが書かれている
+  - これをApp Serviceの環境変数の接続文字列（AzureSQL）へセットする
+  - <img src="./docs/sqlserverconn.png" width="300px" />
+- クエリエディタよりSQLを実行できる
+  - <img src="./docs/sqlserverquery.png" width="300px" />
+  - <img src="./docs/sqlservertable.png" width="300px" />
+
+テーブル作成
 ```sql
 CREATE TABLE notes (
     id INT IDENTITY(1,1) PRIMARY KEY,
