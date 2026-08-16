@@ -5,7 +5,7 @@
 <header>
 	<a href="/" class="inline-block">
 		<h1>
-			my-svelte-template <Cloudy class="inline" />
+			sampleapp <Cloudy class="inline" />
 		</h1>
 	</a>
 </header>
