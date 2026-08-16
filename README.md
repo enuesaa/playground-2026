@@ -48,6 +48,16 @@ DELETE FROM notes;
   - <img src="./docs/storagecontainerweb.png" width="300px" />
 - するとみれる
 
+### App Service
+- Windows .NET 10 にて作成
+  - <img src="./docs/appservicecreate.png" width="300px" />
+- 作ったらこんな感じ
+  - <img src="./docs/appservice.png" width="300px" />
+- Front Door からのみアクセスできるよう設定する。ちなみにここでIPアドレスをホワイトリストに入れることも可能
+  - <img src="./docs/appserviceaccess.png" width="300px" />
+- よくわからんがデバッグコンソール的なものもついてくる
+  - <img src="./docs/appserviceconsole.png" width="300px" />
+
 ### Front Door
 - フロントドアプロファイルを作成
 - 作ったらこんな感じ
