@@ -81,3 +81,15 @@ DELETE FROM notes;
   - <img src="./docs/devopslog.png" width="300px" />
 - 環境変数は Library の Variable Group で管理するのが良さそう
 - Azure へは Resource Manager の workload identity federation にて接続するっぽい
+
+### EntraID
+- SPA ように client を作成（アプリケーションの登録）
+- App Service でも client を作成。EasyAuth と呼ぶらしい
+  - 「許可されたクライアント アプリケーション」に SPA の client id を入れる
+  - <img src="./docs/entraappservice.png" width="300px" />
+  - で、EntraIDでAPIの公開設定へ。
+  - <img src="./docs/entraappserviceapiallow.png" width="300px" />
+- するとログインできるようになった
+  - <img src="./docs/uilogin.png" width="300px" />
+  - <img src="./docs/ui.png" width="300px" />
+- まじで使う時はちゃんと確認した方がいい
