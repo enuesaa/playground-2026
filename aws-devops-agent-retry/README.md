@@ -19,3 +19,7 @@
   - <img src="./topology.png" width="300px" />
 - AWSネイティブなChatGPTという表現が正しいかも
   - もっとClaude Codeだとかコーディングエージェント寄りをイメージしていたがそれは難しいかも
+- html の表示みたいなのはできないけど将来的にできるようになりそうだなあ。
+- 事例
+  - https://techblog.nhn-techorus.com/archives/43984
+  - https://aws.amazon.com/jp/blogs/news/bengo4com-devops-agent-case-study/
