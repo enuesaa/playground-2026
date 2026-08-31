@@ -155,3 +155,60 @@ kubectl get ingress
 curl -H "Host: nginx.example.com" http://<publicIP>/
 curl -H "Host: app.example.com" http://<publicIP>/
 ```
+
+### ingress-nginx へ切り替え
+Traefik を消す
+```bash
+kubectl delete helmchart traefik traefik-crd -n kube-system
+kubectl get pods -n kube-system | grep traefik
+```
+
+ingress-nginx を入れる
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.2/deploy/static/provider/cloud/deploy.yaml
+kubectl get pods -n ingress-nginx
+```
+
+apply
+
+```bash
+touch ingress.yaml
+kubectl apply -f ingress.yaml
+```
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: routing
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: nginx.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: python3app
+                port:
+                  number: 8000
+```
+
+確認
+```bash
+kubectl get ingressclass # nginx になっている
+kubectl describe ingress routing
+
+kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f
+```
