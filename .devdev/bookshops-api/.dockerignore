@@ -1,0 +1,6 @@
+.git
+.gitignore
+log/*
+tmp/*
+!log/.keep
+!tmp/pids/.keep

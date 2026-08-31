@@ -1,0 +1,7 @@
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/pids/
+/tmp/pids/*
+!/tmp/pids/.keep
+/.bundle
