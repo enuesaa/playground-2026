@@ -212,3 +212,7 @@ kubectl describe ingress routing
 
 kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f
 ```
+
+## メモ
+- ingress-nginx は非推奨になったらしい。別に Nginx Ingress Controller というのがあるのでそっちがよさそう？
+  - https://cn.teldevice.co.jp/blog/p69087/
