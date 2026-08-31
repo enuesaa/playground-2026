@@ -95,7 +95,8 @@ spec:
 
 ```bash
 kubectl get pods -o wide
-kubectl logs nginx-5cf8dc6bc5-fbnxg
+kubectl logs nginx-xxx -f
+kubectl logs python3app-xxx -f
 kubectl get svc
 
 # NodePort でそれぞれアクセス
@@ -106,4 +107,51 @@ curl localhost:31277 # python3appのNodePort
 kubectl run curl --image=curlimages/curl -it --rm -- sh
 curl nginx
 curl python3app:8000
+```
+
+### Traefik で振り分け
+前提。k3s には標準で Traefik が入っている
+```bash
+kubectl get pods -n kube-system | grep traefik
+```
+
+Ingress Controller
+```bash
+touch ingress.yaml
+kubectl apply -f ingress.yaml
+```
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: routing
+spec:
+  rules:
+    - host: nginx.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: python3app
+                port:
+                  number: 8000
+```
+
+確認
+```bash
+kubectl get ingress
+curl -H "Host: nginx.example.com" http://<publicIP>/
+curl -H "Host: app.example.com" http://<publicIP>/
 ```
