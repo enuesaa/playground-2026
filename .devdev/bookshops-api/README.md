@@ -49,3 +49,8 @@ curl http://localhost:3000/books
 curl http://localhost:3000/bookshops
 curl http://localhost:3000/books/<book_id>/bookshops
 ```
+
+## メモ
+- どうでもいいけど claude code の oauth token はなんか曖昧だから注意した方がいいかも。
+  - https://fyve.co.jp/ai-agents/hermes-agent/articles/anthropic-oauth-policy-hermes-agent
+
