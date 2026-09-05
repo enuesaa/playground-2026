@@ -35,5 +35,17 @@ $ claude
   詳細（リージョン・サイズ・中身など）が必要であれば教えてください。
 ```
 
+## ブラウザでログインする方法
+```bash
+$ claude mcp add --transport http aws-mcp "https://aws-mcp.us-east-1.api.aws/mcp?oauth=initialize"
+$ claude mcp list
+aws-mcp: https://aws-mcp.us-east-1.api.aws/mcp?oauth=initialize (HTTP) - ! Needs authentication
+$ claude mcp login aws-mcp ### ブラウザが開く
+$ claude mcp list
+aws-mcp: https://aws-mcp.us-east-1.api.aws/mcp?oauth=initialize (HTTP) - ✔ Connected
+```
+
+- https://persol-serverworks.co.jp/blog/ai-agent/aws-mcp-server-oauth.html
+
 ## Links
 - https://blog.serverworks.co.jp/aws-mcp-server-ga-2026
