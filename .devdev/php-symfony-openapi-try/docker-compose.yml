@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8000:80
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      - MARIADB_DATABASE=app
+      - MARIADB_ROOT_PASSWORD=password
+    volumes:
+      - mariadbdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+volumes:
+  mariadbdata:

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+composer install
+
+# apache
+apache2-foreground
