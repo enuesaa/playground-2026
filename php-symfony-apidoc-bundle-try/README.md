@@ -1,10 +1,10 @@
-# php-symfony-openapi-try
+# NelmioApiDocBundle
 
-```bash
-docker compose up
-docker compose exec app php bin/console doctrine:migrations:migrate --no-interaction
-docker compose exec app php bin/console doctrine:fixtures:load --no-interaction
-```
+- symfony の bundle 
+- openapi のスキーマへ変換してくれる。モデルを。
+- ドキュメントをホストできる
+- 便利
 
 ## Links
 - https://symfony.com/bundles/NelmioApiDocBundle/current/index.html
+- https://github.com/nelmio/NelmioApiDocBundle
