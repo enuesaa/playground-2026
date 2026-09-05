@@ -10,3 +10,7 @@
 ```bash
 claude mcp add mygateway --scope user -- uvx mcp-proxy-for-aws@1.6.0 'https://xxx.gateway.bedrock-agentcore.ap-northeast-1.amazonaws.com/mcp' --service bedrock-agentcore --region ap-northeast-1
 ```
+
+- mcp の認証認可面倒そう
+  - https://qiita.com/icoxfog417/items/ef2c3382056968032dd5
+  - https://zenn.dev/manaty226/articles/20250614_aws-mcp-managed-architecture
