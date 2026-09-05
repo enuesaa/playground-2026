@@ -3,9 +3,10 @@ version: "3"
 tasks:
   build:
     cmds:
-      - clang++ -std=c++17 -Wall -Wextra $(pkg-config --cflags fmt) -o fmt_try main.cpp $(pkg-config --libs fmt)
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - cmake --build build
 
   run:
     deps: [build]
     cmds:
-      - ./fmt_try
+      - ./build/fmt_try
