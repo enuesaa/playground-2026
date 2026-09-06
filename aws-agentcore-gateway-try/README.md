@@ -14,3 +14,44 @@ claude mcp add mygateway --scope user -- uvx mcp-proxy-for-aws@1.6.0 'https://xx
 - mcp の認証認可面倒そう
   - https://qiita.com/icoxfog417/items/ef2c3382056968032dd5
   - https://zenn.dev/manaty226/articles/20250614_aws-mcp-managed-architecture
+
+## Lambda ターゲット
+スキーマ
+```json
+{
+  "name": "hello",
+  "description": "hello",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "message"]
+  }
+}
+```
+
+Lambda
+```py
+import json
+
+def lambda_handler(event, context):
+    caller = context.client_context.custom.get("bedrockAgentCoreToolName", "")
+    _, _, toolname = caller.partition("___")
+  
+    if toolname == "hello":
+        name = event.get("name")
+        message = event.get("message")
+
+        return {
+            "result": f"Hello, {name}! You said: {message}"
+        }
+    return {
+        "error": f"Unknown tool: {toolname}"
+    }
+```
