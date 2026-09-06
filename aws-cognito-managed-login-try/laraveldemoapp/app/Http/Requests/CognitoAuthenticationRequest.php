@@ -22,6 +22,8 @@ class CognitoAuthenticationRequest extends FormRequest
 
         $claims = Cognito::user($this->query('code'), $this->session()->pull('cognito_code_verifier'));
 
+        dd($claims);
+
         $user = User::updateOrCreate(
             ['cognito_sub' => $claims['sub']],
             ['name' => $claims['name'] ?? $claims['email'], 'email' => $claims['email']],
