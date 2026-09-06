@@ -53,7 +53,14 @@ def lambda_handler(event, context):
     }
 ```
 
-- cognito による認証が全然上手くいかない..
-- mcp の認証認可面倒そう
+claude code への登録
+```bash
+claude mcp add --transport http mygate 'https://xxx.gateway.bedrock-agentcore.ap-northeast-1.amazonaws.com/mcp' --client-id xxx --callback-port 8080
+claude mcp login mygate
+```
+
+- client id は cognito app client の client id
+- cognito のリソースサーバとして `https://xxx.gateway.bedrock-agentcore.ap-northeast-1.amazonaws.com/mcp` を登録する
+- mcp の認証認可について
   - https://qiita.com/icoxfog417/items/ef2c3382056968032dd5
   - https://zenn.dev/manaty226/articles/20250614_aws-mcp-managed-architecture
