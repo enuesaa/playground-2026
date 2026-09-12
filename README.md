@@ -42,3 +42,7 @@ curl -H "Host: app.example.com" http://<EC2 IP>/
 - ArgoCDはデフォルトで3分間隔でGitリポジトリをポーリング
   - git pushすると自動で同期される。面白い。
   - https://argo-cd.readthedocs.io/en/stable/faq/#how-often-does-argo-cd-check-for-changes-to-my-git-repository
+  - これが最初の状態  
+    <img src="./init.png" width="500px" />
+  - これがその次（コミットしたのが3分以内に反映される）  
+    <img src="./next.png" width="500px" />
