@@ -23,6 +23,11 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 # argocd ui. 立ち上げたらブラウザからログイン
 kubectl -n argocd port-forward --address 0.0.0.0 svc/argocd-server 8080:443
 
+# clone
+dnf install -y git
+git clone https://github.com/enuesaa/k8s-homelab-argocd.git
+cd k8s-homelab-argocd
+
 # application
 kubectl apply -f argocd.yaml
 kubectl -n argocd get application k8s-homelab
