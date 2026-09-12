@@ -37,3 +37,8 @@ kubectl get pods,svc,ingress
 curl -H "Host: nginx.example.com" http://<EC2 IP>/
 curl -H "Host: app.example.com" http://<EC2 IP>/
 ```
+
+## メモ
+- ArgoCDはデフォルトで3分間隔でGitリポジトリをポーリング
+  - git pushすると自動で同期される。面白い。
+  - https://argo-cd.readthedocs.io/en/stable/faq/#how-often-does-argo-cd-check-for-changes-to-my-git-repository
