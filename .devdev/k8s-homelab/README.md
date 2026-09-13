@@ -1,218 +1,50 @@
-# k8s-homelab
+# k8s-homelab-argocd
 
-nginx と python3app の pod をそれぞれ立ててルーティングしてみる
-
-## Commands
 ```bash
+# k3s
 curl -sfL https://get.k3s.io | sh -
 k3s kubectl get nodes
+
+# kubeconfig
 mkdir -p ~/.kube
 cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
-chown $(id -u):$(id -g) ~/.kube/config
 kubectl get nodes
-```
 
-### nginx
-```bash
-touch nginx.yaml
-kubectl apply -f nginx.yaml
-```
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-        - name: nginx
-          image: nginx
-          ports:
-            - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx
-spec:
-  type: NodePort
-  selector:
-    app: nginx
-  ports:
-    - port: 80
-      targetPort: 80
-```
-
-### python3app
-```bash
-touch python3app.yaml
-kubectl apply -f python3app.yaml
-```
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: python3app
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: python3app
-  template:
-    metadata:
-      labels:
-        app: python3app
-    spec:
-      containers:
-        - name: python3app
-          image: python:3-alpine
-          command: ["python3", "-m", "http.server", "8000"]
-          ports:
-            - containerPort: 8000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: python3app
-spec:
-  type: NodePort
-  selector:
-    app: python3app
-  ports:
-    - port: 8000
-      targetPort: 8000
-```
-
-確認
-
-```bash
-kubectl get pods -o wide
-kubectl logs nginx-xxx -f
-kubectl logs python3app-xxx -f
-kubectl get svc
-
-# NodePort でそれぞれアクセス
-curl localhost:32549 # nginxのNodePort
-curl localhost:31277 # python3appのNodePort
-
-# クラスタ内から疎通確認
-kubectl run curl --image=curlimages/curl -it --rm -- sh
-curl nginx
-curl python3app:8000
-```
-
-### Traefik で振り分け
-前提。k3s には標準で Traefik が入っている
-```bash
+# traefik
 kubectl get pods -n kube-system | grep traefik
-```
 
-Ingress Controller
-```bash
-touch ingress.yaml
-kubectl apply -f ingress.yaml
-```
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: routing
-spec:
-  rules:
-    - host: nginx.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx
-                port:
-                  number: 80
-    - host: app.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: python3app
-                port:
-                  number: 8000
-```
+# argocd
+# see https://argo-cd.readthedocs.io/en/release-2.1/operator-manual/installation/
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl get pods -n argocd -w
+# argocd initial password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+# argocd ui. 立ち上げたらブラウザからログイン
+kubectl -n argocd port-forward --address 0.0.0.0 svc/argocd-server 8080:443
 
-確認
-```bash
-kubectl get ingress
-curl -H "Host: nginx.example.com" http://<publicIP>/
-curl -H "Host: app.example.com" http://<publicIP>/
-```
+# clone
+dnf install -y git
+git clone https://github.com/enuesaa/k8s-homelab-argocd.git
+cd k8s-homelab-argocd
 
-### ingress-nginx へ切り替え
-Traefik を消す
-```bash
-kubectl delete helmchart traefik traefik-crd -n kube-system
-kubectl get pods -n kube-system | grep traefik
-```
+# application
+kubectl apply -f argocd.yaml
+kubectl -n argocd get application k8s-homelab
 
-ingress-nginx を入れる
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.2/deploy/static/provider/cloud/deploy.yaml
-kubectl get pods -n ingress-nginx
-```
-
-apply
-
-```bash
-touch ingress.yaml
-kubectl apply -f ingress.yaml
-```
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: routing
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: nginx.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx
-                port:
-                  number: 80
-    - host: app.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: python3app
-                port:
-                  number: 8000
-```
-
-確認
-```bash
-kubectl get ingressclass # nginx になっている
-kubectl describe ingress routing
-
-kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller -f
+# confirm
+kubectl get pods,svc,ingress
+curl -H "Host: nginx.example.com" http://<EC2 IP>/
+curl -H "Host: app.example.com" http://<EC2 IP>/
 ```
 
 ## メモ
-- ingress-nginx は非推奨になったらしい。別に Nginx Ingress Controller というのがあるのでそっちがよさそう？
-  - https://cn.teldevice.co.jp/blog/p69087/
+- ArgoCDはデフォルトで3分間隔でGitリポジトリをポーリング
+  - git pushすると自動で同期される。面白い。
+  - https://argo-cd.readthedocs.io/en/stable/faq/#how-often-does-argo-cd-check-for-changes-to-my-git-repository
+  - これが最初の状態  
+    <img src="./init.png" width="500px" />
+  - これがその次（コミットしたのが3分以内に反映される）  
+    <img src="./next.png" width="500px" />
+  - これがその次  
+    <img src="./next.png" width="500px" />
