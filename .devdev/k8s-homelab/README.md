@@ -24,6 +24,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl -n argocd port-forward --address 0.0.0.0 svc/argocd-server 8080:443
 
 # clone
+# ここではargocd.yamlさえあればいい
 dnf install -y git
 git clone https://github.com/enuesaa/k8s-homelab-argocd.git
 cd k8s-homelab-argocd
@@ -48,3 +49,5 @@ curl -H "Host: app.example.com" http://<EC2 IP>/
     <img src="./next.png" width="500px" />
   - これがその次  
     <img src="./next.png" width="500px" />
+- argocd.yaml をコミットしているが、ArgoCD で argocd.yaml をマネージする必要はない。
+  - むしろこんがらがるのでコミットしないかディレクトリ分けといた方がいいかも
