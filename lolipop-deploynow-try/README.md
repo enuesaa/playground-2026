@@ -8,6 +8,7 @@
 - 料金プラン
   - 無料プランあり
   - 何となく法人で使う際はサポートついていた方が無難に思える
+  - https://lolipop.jp/deploy-now/#pricing
 
 ## Commands
 ```bash
