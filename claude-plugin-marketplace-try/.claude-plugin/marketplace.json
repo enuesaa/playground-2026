@@ -1,0 +1,13 @@
+{
+  "name": "try-claude-plugin",
+  "owner": {
+    "name": "enuesaa"
+  },
+  "plugins": [
+    {
+      "name": "no-comments",
+      "source": "./plugins/no-comments",
+      "description": "不要なコメントを書かないルール"
+    }
+  ]
+}
