@@ -31,3 +31,9 @@ export ARGOCD_SERVER=$(aws eks describe-capability --cluster-name cluster --capa
 # Register
 argocd cluster add $CLUSTER_ARN --aws-cluster-name $CLUSTER_ARN --name in-cluster  --project default
 ```
+
+gitリポジトリの登録後
+```bash
+### EKSのAccess Policyの設定
+aws eks associate-access-policy --cluster-name cluster --principal-arn <AmazonEKSCapabilityArgoCDRoleのARN> --policy-arn <AmazonEKSClusterAdminPolicyのARN> --access-scope type=cluster
+```
