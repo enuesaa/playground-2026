@@ -4,6 +4,7 @@
 - EKS Capabilities で ArgoCD を有効化
   - AWS SSO にてログイン
   - やっぱ登場したばかりなのでこの Capabilities を使う事例は少なそう
+- type: LoadBalancer にすると NLB が立つ
 
 ### ArgoCD
 - ArgoCD へのサーバーの登録方法
