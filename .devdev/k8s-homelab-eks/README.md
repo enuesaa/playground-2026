@@ -6,7 +6,7 @@
   - やっぱ登場したばかりなのでこの Capabilities を使う事例は少なそう
 - type: LoadBalancer にすると NLB が立つ
 
-### ArgoCD
+## ArgoCD
 - ArgoCD へのサーバーの登録方法
   https://docs.aws.amazon.com/eks/latest/userguide/argocd-comparison.html
 - 以前試した時の記録
@@ -37,4 +37,10 @@ gitリポジトリの登録後
 ```bash
 ### EKSのAccess Policyの設定
 aws eks associate-access-policy --cluster-name cluster --principal-arn <AmazonEKSCapabilityArgoCDRoleのARN> --policy-arn <AmazonEKSClusterAdminPolicyのARN> --access-scope type=cluster
+```
+
+## 動作確認
+```bash
+curl -H "Host: nginx.local" <albのurl>
+curl -H "Host: python3app.local" <albのurl>
 ```
