@@ -6,3 +6,4 @@
 - セキュリティレビューをできる
 - ペネトレーションテストもできる
   - https://dev.classmethod.jp/articles/aws-security-agent-credential-test-domain/
+  - まじでテストするので気軽に実行するものではなさそう
