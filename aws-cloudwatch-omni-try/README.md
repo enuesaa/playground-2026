@@ -10,7 +10,8 @@
 - playground
   - https://cloudwatch-omni.global.app.aws/home/?playground
 - 東京リージョンにはまだない
+- cloudwatch の機能はベースにしつつも別でゼロから作った感がある
 
 ## Links
 - https://aws.amazon.com/blogs/aws/introducing-amazon-cloudwatch-omni-ai-powered-observability-for-generative-ai-and-agentic-workloads/
-
+- https://dev.classmethod.jp/articles/amazon-cloudwatch-omni-agent-observability/
