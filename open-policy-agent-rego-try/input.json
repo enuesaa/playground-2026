@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": ["users", "bob"],
+  "user": {
+    "id": "alice",
+    "role": "member"
+  }
+}
