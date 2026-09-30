@@ -21,12 +21,16 @@
       },
       "Prefix": null
   }
+  ➜ echo "hello floci" > hello.txt && AWS_ENDPOINT_URL=http://localhost:4566 AWS_DEFAULT_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws s3api put-object --bucket a --key hello.txt --body hello.txt
+  ➜ AWS_ENDPOINT_URL=http://localhost:4566 AWS_DEFAULT_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws s3api list-objects-v2 --bucket a
+  ➜ AWS_ENDPOINT_URL=http://localhost:4566 AWS_DEFAULT_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws s3 presign s3://a/hello.txt --expires-in 3600
   ```
 - なんか create-bucket すると ./data/s3/<bucket-name> が作成された。
   - ここにアップロードファイルが永続化されるっぽい
 - 追記
   - 順調に対応サービスが増えている
   https://dev.classmethod.jp/articles/floci-two-months-52-services-update/
+  - s3 はざっくりだいたい使えそうな気がする
 
 ## Links
 - https://github.com/hectorvent/floci
