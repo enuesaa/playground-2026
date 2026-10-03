@@ -59,3 +59,7 @@ Detected Project Settings:
 │ cf does not support SvelteKit projects yet. You can still use Wrangler to develop and deploy this project.
 └
 ```
+
+## Links
+- https://developers.cloudflare.com/cf/
+- https://blog.cloudflare.com/ja-jp/cf-cli-local-explorer/
