@@ -2,6 +2,7 @@
 
 - AWS API のエミュレータ
 - LocalStack みたいな
+- 基本的には AWS のエミュレータらしい。Google Cloud とかはなさそう？ それが floci との大きな違いかも
 
 ```bash
 ➜ AWS_ENDPOINT_URL=http://localhost:4566 AWS_DEFAULT_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws s3api create-bucket --bucket aaaaaaaa
