@@ -1,4 +1,4 @@
-# k8s-homelab-argocd
+# k8s-homelab-k3s-argocd
 
 ```bash
 # k3s
@@ -39,6 +39,34 @@ curl -H "Host: nginx.example.com" http://<EC2 IP>/
 curl -H "Host: app.example.com" http://<EC2 IP>/
 ```
 
+## argocd.yaml
+
+- これを `kubectl apply -f argocd.yaml` すれば Argo CD の設定がされる
+- が git にこれはないほうがいいかも。こんがらがるので
+- 代わりに UI で設定すればいい。
+- これはリポジトリ設定とアプリケーション設定しているだけ
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-homelab
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/enuesaa/k8s-homelab-argocd.git
+    targetRevision: main
+    path: .
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## メモ
 - ArgoCDはデフォルトで3分間隔でGitリポジトリをポーリング
   - git pushすると自動で同期される。面白い。
@@ -49,5 +77,3 @@ curl -H "Host: app.example.com" http://<EC2 IP>/
     <img src="./next.png" width="500px" />
   - これがその次  
     <img src="./next.png" width="500px" />
-- argocd.yaml をコミットしているが、ArgoCD で argocd.yaml をマネージする必要はない。
-  - むしろこんがらがるのでコミットしないかディレクトリ分けといた方がいいかも
