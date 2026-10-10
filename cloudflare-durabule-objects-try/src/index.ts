@@ -1,20 +1,30 @@
 import { DurableObject } from 'cloudflare:workers'
 
-export class MyDurableObject extends DurableObject<Env> {
-  async increment(): Promise<number> {
-    return this.ctx.storage.transaction(async (txn) => {
-      const count = (await txn.get<number>('count') ?? 0) + 1
-      await txn.put('count', count)
-      return count
-    })
+export class BoardRoom extends DurableObject<Env> {
+  async list(): Promise<string[]> {
+    return await this.ctx.storage.get<string[]>('posts') ?? []
+  }
+
+  async post(message: string): Promise<void> {
+    const posts = await this.list()
+    posts.push(message)
+    await this.ctx.storage.put('posts', posts)
   }
 }
 
 export default {
-  async fetch(request, env, ctx): Promise<Response> {
-    const stub = env.MY_DURABLE_OBJECT.getByName('foo')
-    const count = await stub.increment()
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url)
+    const room = url.searchParams.get('room') ?? 'general'
+    const stub = env.BOARD_ROOM.getByName(room)
 
-    return new Response(`Count: ${count}`)
+    if (request.method === 'POST') {
+      await stub.post(await request.text())
+      return new Response('Posted')
+    }
+
+    const posts = await stub.list()
+    return Response.json(posts)
   },
 } satisfies ExportedHandler<Env>
+
