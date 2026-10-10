@@ -1,0 +1,32 @@
+import { Link } from '@tanstack/react-router'
+import { useAuth } from '../../auth/useAuth'
+
+export function Header() {
+  const { isAuthenticated, isLoading, login } = useAuth()
+
+  const handleLogin: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    login()
+  }
+
+  return (
+    <header className='sticky top-0 z-10 border-b border-[#ccc] bg-[#ccc]/80 backdrop-blur-sm'>
+      <div className='mx-auto flex h-14 max-w-5xl items-center justify-between px-6'>
+        <Link to='/' className='text-lg font-medium tracking-tight text-[#1a1a1a] transition-colors hover:opacity-70'>
+          leele
+        </Link>
+
+        {!isLoading &&
+          (isAuthenticated ? (
+            <Link to='/profile' className='text-lg font-medium tracking-tight text-[#1a1a1a] transition-colors hover:opacity-70'>
+              profile
+            </Link>
+          ) : (
+            <button type='button' onClick={handleLogin} className='rounded-md border border-[#bbb] px-3 py-1.5 text-sm text-[#1a1a1a] transition-colors hover:bg-[#bbb]'>
+              ログイン
+            </button>
+          ))}
+      </div>
+    </header>
+  )
+}

@@ -1,0 +1,28 @@
+type Meta {
+	channels: [String!]!
+}
+
+type Note {
+	id: ID!
+	message: String!
+	channel: String!
+}
+
+type Mutation {
+	createNote(channel: String!, message: String!): Note!
+}
+
+type Query {
+	meta: Meta!
+	notes(channel: String!): [Note!]!
+}
+
+type Subscription {
+	onNoteCreated: Note @aws_subscribe(mutations: ["createNote"])
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}

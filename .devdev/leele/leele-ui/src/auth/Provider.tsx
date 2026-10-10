@@ -1,0 +1,19 @@
+import { Auth0Provider } from '@auth0/auth0-react'
+
+export function AuthProvider({ children }: React.PropsWithChildren) {
+  return (
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+      authorizationParams={{
+        redirect_uri: import.meta.env.VITE_AUTH0_REDIRECT_URL,
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+        scope: 'openid profile email offline_access',
+      }}
+      useRefreshTokens
+      cacheLocation={'localstorage'}
+    >
+      {children}
+    </Auth0Provider>
+  )
+}
