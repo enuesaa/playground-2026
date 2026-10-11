@@ -1,0 +1,17 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-secrets-store-try",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-10-06",
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true,
+	"secrets_store_secrets": [
+		{
+			"binding": "MY_SECRET",
+			"store_id": "<secret-id>",
+			"secret_name": "<secret-name>"
+		}
+	]
+}
