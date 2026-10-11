@@ -10,11 +10,11 @@
   - 発行したら KeyID と HMACKey が得られる。これを certbot へ渡す
 - 
 
+
+## Commands
+Setup certbot
 ```bash
-
-### certbot
 dnf install certbot
-
 certbot certonly --standalone --non-interactive \
   --agree-tos \
   --register-unsafely-without-email \
@@ -23,15 +23,37 @@ certbot certonly --standalone --non-interactive \
   --eab-hmac-key <HMACKey> \
   --key-type ecdsa --elliptic-curve secp256r1 --issuance-timeout 120 \
   -d <YourDomain>
+```
 
-systemctl enable --now certbot-renew.timer
-systemctl list-timers
-
+Setup apache
+```bash
 dnf install -y httpd mod_ssl
 vim /etc/httpd/conf.d/ssl.conf
 >SSLCertificateFile /etc/letsencrypt/live/<YourDomain>/fullchain.pem
 >SSLCertificateKeyFile /etc/letsencrypt/live/<YourDomain>/privkey.pem
+
 systemctl enable --now httpd
+```
+
+更新設定
+```bash
+systemctl enable --now certbot-renew.timer
+systemctl list-timers
+```
+
+更新した時に Apache のリロードが必要
+```bash
+vim /etc/letsencrypt/renewal-hooks/deploy/reload-httpd.sh
+>#!/bin/bash
+>/usr/bin/systemctl reload httpd
+
+chmod 755 /etc/letsencrypt/renewal-hooks/deploy/reload-httpd.sh
+```
+
+動作確認
+```bash
+certbot renew --force-renewal
+systemctl status httpd
 ```
 
 ## Links
