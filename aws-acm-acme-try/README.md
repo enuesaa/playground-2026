@@ -4,12 +4,13 @@
 - これまでの ACM の証明書とは別のリソースになっているっぽい
 - Certbot 等を用いて自動更新できるはず
 - CertBot が ACME Endpoint へアクセスするために EAB資格情報 というのが必要
-  - これはIAM権限みたいなものと理解している
+  - これを発行したら KeyID と HMACKey が得られるので、それを certbot へ渡す
   - https://dev.classmethod.jp/articles/acm-acme-endpoint-certbot-ec2-nginx-apache/#eab-%25E8%25B3%2587%25E6%25A0%25BC%25E6%2583%2585%25E5%25A0%25B1%25E3%2581%25AE%25E4%25BD%259C%25E6%2588%2590
-  - この辺りは理解不足。なんだかよくわからん
-  - 発行したら KeyID と HMACKey が得られる。これを certbot へ渡す
-- 
-
+- 証明書の更新時には Apache のリロードが必要そう
+  - https://ex1.m-yabe.com/archives/8369
+- 更新したら ACM のコンソールに更新の日付が出る
+- 発行/更新で1ドル。45日周期で更新する & 猶予期間が必要なのを踏まえると年にざっくり12回更新するので12ドル
+  - まあ妥当かなあ。
 
 ## Commands
 Setup certbot
@@ -25,13 +26,19 @@ certbot certonly --standalone --non-interactive \
   -d <YourDomain>
 ```
 
-Setup apache
+Install apache
 ```bash
 dnf install -y httpd mod_ssl
-vim /etc/httpd/conf.d/ssl.conf
->SSLCertificateFile /etc/letsencrypt/live/<YourDomain>/fullchain.pem
->SSLCertificateKeyFile /etc/letsencrypt/live/<YourDomain>/privkey.pem
+```
 
+vim /etc/httpd/conf.d/ssl.conf
+```conf
+SSLCertificateFile /etc/letsencrypt/live/<YourDomain>/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/<YourDomain>/privkey.pem
+```
+
+Start apache
+```bash
 systemctl enable --now httpd
 ```
 
@@ -41,12 +48,13 @@ systemctl enable --now certbot-renew.timer
 systemctl list-timers
 ```
 
-更新した時に Apache のリロードが必要
-```bash
+更新した時に Apache のリロードが必要。  
 vim /etc/letsencrypt/renewal-hooks/deploy/reload-httpd.sh
->#!/bin/bash
->/usr/bin/systemctl reload httpd
-
+```sh
+#!/bin/bash
+/usr/bin/systemctl reload httpd
+```
+```bash
 chmod 755 /etc/letsencrypt/renewal-hooks/deploy/reload-httpd.sh
 ```
 
