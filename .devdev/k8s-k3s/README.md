@@ -1,4 +1,4 @@
-# k8s-homelab-k3s
+# k8s-k3s
 
 ```bash
 # k3s

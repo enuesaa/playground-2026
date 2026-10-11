@@ -1,6 +1,4 @@
-# GKE
-
-## Argo CD
+# k8s-gke-argocd
 
 - 下記の手順で Argo CD をセットアップ
 - por forward した後に Cloud Shell のウェブプレビューで 8080 を見ると Argo CD のUIが表示される

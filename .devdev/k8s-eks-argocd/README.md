@@ -1,4 +1,4 @@
-# k8s-homelab-eks
+# k8s-eks-argocd
 
 - EKS のコンソールでクラスターを作成
 - EKS Capabilities で ArgoCD を有効化
