@@ -25,6 +25,8 @@
 - <img src="./sworkeraccesspolicy.png" width="300px" />
 - <img src="./spolicy.png" width="300px" />
 - https://developers.cloudflare.com/workers/configuration/cloudflare-access/
+- ちなみに Workers 単体へIPアドレス制限をかけるのは無理そうに見えている。カスタムドメインをつければそっちの方のルールでIPアドレス制限は可能
+  - https://developers.cloudflare.com/rules/
 
 ## Links
 - https://blogs.networld.co.jp/entry/2026/03/31/100251
