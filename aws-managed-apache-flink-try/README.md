@@ -15,3 +15,8 @@
   - SQLを実行できる？
   - でそのSQLの実行結果をリアルタイムに取得できる？
   - ウィジェットの近くに Apache Flink へのリンクがあって、それをクリックすると Flink 側のUIを見れる
+- どんな時に使うのかわかってないかも
+
+## Links
+- https://dev.classmethod.jp/articles/try-amazon-managed-service-for-apache-flink-studio/
+- https://aws.amazon.com/jp/managed-service-apache-flink/studio/
