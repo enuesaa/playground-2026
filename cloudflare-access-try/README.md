@@ -1,4 +1,4 @@
-# cloudflare access
+# Cloudflare Access
 
 - ウェブサイトの前段に認証機構を置いてくれるやつ
 - 事例はそれなりにある認識
@@ -16,6 +16,15 @@
   - パブリックの前段においても直でアクセスされたらダメなわけだし
 - 実際にかけるとこんな感じのログインページ  
   <img src="login.png" width="300px" />
+
+## Workers に Access による制限をかける
+
+- Workers の画面より Access の設定が可能
+- IPアドレス制限だけをかけることが可能だと思っていたがそういうわけではなく、必ず Cloudflare のアカウントでログインする必要あるっぽい
+- <img src="./sworkeraccess.png" width="300px" />
+- <img src="./sworkeraccesspolicy.png" width="300px" />
+- <img src="./spolicy.png" width="300px" />
+- https://developers.cloudflare.com/workers/configuration/cloudflare-access/
 
 ## Links
 - https://blogs.networld.co.jp/entry/2026/03/31/100251
