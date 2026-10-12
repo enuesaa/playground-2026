@@ -2,8 +2,18 @@
 
 - DB へ接続するサービス
 - Cloudflare 外にホストされている DB への接続情報を保存したり、実際に接続する（クライアント）
-- 基本的には Cloudflare Workers VPC の Tunnel 経由で DB へ接続
-- Cloudflare Worker に Hyperdrive を binding して DB へ接続できる
+  - 謎に PlanetScale と統合されている。
+  - PlanetScale との接続ボタンがある
+- 使い方
+  1. Cloudflare Workers VPC の Tunnel 経由で DB へ接続
+  2. Cloudflare Worker に Hyperdrive を binding して DB へ接続
+- MySQL or PostgreSQL に対応
+- レイヤーとしてなぜ Workers VPC をかましているのかはちょっと謎
+  - 実体は Tunnel なのだから Hyperdrive から直接 Tunnel を選ぶ感じにすればいいのに
+  - だから Tunnel を作って Workers VPC を作ってそのあと Hyperdrive の設定をして、でようやく binding できる
+- Cloudflare 側の課題間として、エッジネットワーク上の Workers からここに DB に接続していたらコネクション数が上がるという問題がある。これを解決するためのものが Hyperdrive
+  - https://developers.cloudflare.com/hyperdrive/concepts/how-hyperdrive-works/
+  - クエリのキャッシュ機能もあるらしい
 
 ## 手順
 

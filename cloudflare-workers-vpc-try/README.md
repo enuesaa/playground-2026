@@ -4,6 +4,8 @@
 - VPC を binding するイメージ
 - まだbeta
 - だいたい想像通り。Tunnel してそれを Worker から読み取るイメージ。
+- 別に Hyperdrive を立てたら DB にも接続できた
+  - https://github.com/enuesaa/playground-2026/tree/main/cloudflare-hyperdrive-try
 
 ### 手順
 1. Cloudflare のコンソールで Tunnel を作成

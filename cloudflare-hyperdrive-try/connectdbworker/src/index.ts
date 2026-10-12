@@ -17,7 +17,8 @@ export default {
       password: env.HYPERDRIVE.password,
       database: env.HYPERDRIVE.database,
       port: env.HYPERDRIVE.port,
-      disableEval: true, // 注意
+      // see https://developers.cloudflare.com/hyperdrive/#mysql
+      disableEval: true,
     })
 
     try {
