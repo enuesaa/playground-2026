@@ -14,6 +14,10 @@
 - Cloudflare 側の課題間として、エッジネットワーク上の Workers からここに DB に接続していたらコネクション数が上がるという問題がある。これを解決するためのものが Hyperdrive
   - https://developers.cloudflare.com/hyperdrive/concepts/how-hyperdrive-works/
   - クエリのキャッシュ機能もあるらしい
+- Workers の Free Plan でも Hyperdrive は使える
+  - けどクエリの数の制限があるので検討必要
+  - https://developers.cloudflare.com/workers/platform/pricing/#hyperdrive
+  - お金払っとくのが無難だろうなあ。
 
 ## 手順
 

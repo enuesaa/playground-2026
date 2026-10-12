@@ -6,6 +6,10 @@
 - だいたい想像通り。Tunnel してそれを Worker から読み取るイメージ。
 - 別に Hyperdrive を立てたら DB にも接続できた
   - https://github.com/enuesaa/playground-2026/tree/main/cloudflare-hyperdrive-try
+- beta 中はお金かからない
+  - https://developers.cloudflare.com/workers-vpc/platform/pricing/
+  - beta 終わったらお金かかるという風にも聞こえる `Workers VPC requires a Workers plan`
+  - まだ曖昧な感じかな
 
 ### 手順
 1. Cloudflare のコンソールで Tunnel を作成
