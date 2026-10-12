@@ -16,10 +16,11 @@
   - パブリックの前段においても直でアクセスされたらダメなわけだし
 - 実際にかけるとこんな感じのログインページ  
   <img src="login.png" width="300px" />
+- Cloudflare Zero Trust という製品群の中の1サービスという認識
 
 ## Workers に Access による制限をかける
 
-- Workers の画面より Access の設定が可能
+- Workers のコンソールより Access の設定が可能
 - IPアドレス制限だけをかけることが可能だと思っていたがそういうわけではなく、必ず Cloudflare のアカウントでログインする必要あるっぽい
 - <img src="./sworkeraccess.png" width="300px" />
 - <img src="./sworkeraccesspolicy.png" width="300px" />
