@@ -13,10 +13,14 @@
     - 例えば `https://imagedelivery.net/id/id/w=600,sharpen=3` というふうに。
     - これを Flexible Variants と呼ぶ
     - https://developers.cloudflare.com/images/optimization/hosted-images/enable-flexible-variants/
+  - water mark をかけることもできる
+    - なんかよくあるやつ。
 - 月額5ドルかかる
   - サブスクリプションの登録が必要
   - https://developers.cloudflare.com/images/pricing/
 - Cloudflare のコンソール上は Hosted Images って書かれてるけど Images らしい
+- こんな画面  
+<img src="./images.png" width="500px" />
 
 ## Links
 - https://developers.cloudflare.com/images/
