@@ -1,0 +1,12 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-workers-ai-try",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-10-06",
+	"observability": {
+		"enabled": true
+	},
+	"ai": {
+		"binding": "AI"
+	}
+}
