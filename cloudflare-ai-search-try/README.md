@@ -9,6 +9,11 @@
   - のでサイトからAPIを組み込めばサイト内検索を簡単に実現できる
   - サンプルコンポーネントがここに公開されている。  
   https://search.ai.cloudflare.com/
+- Workers から binding することもできるらしい
+  - https://www.mitsue.co.jp/knowledge/blog/x-tech/202601/19_1741.html
+- 2026年10月にGA
+  - https://blog.cloudflare.com/ai-search-ga/
 
 ## Links
 - https://developers.cloudflare.com/ai-search/
+- https://dev.classmethod.jp/articles/cloudflare-ai-search/
