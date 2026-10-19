@@ -1,0 +1,21 @@
+{
+  "name": "void-try",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview"
+  },
+  "dependencies": {
+    "hono": "^4.11.9",
+    "svelte": "^5.53.9"
+  },
+  "devDependencies": {
+    "void": "1.1.12",
+    "vite": "npm:@voidzero-dev/vite-plus-core@^1.2.0",
+    "typescript": "^7.0.2",
+    "vite-plus": "^1.2.0",
+    "@void/svelte": "1.1.12"
+  }
+}
