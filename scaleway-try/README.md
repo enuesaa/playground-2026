@@ -43,5 +43,17 @@
 - <img src="./scontainers-create.png" width="300px" />
 - <img src="./scontainers.png" width="300px" />
 
+## Serverless SQL
+- Postgres互換?
+- AWS でいう Aurora に相当
+  - Postgres/MySQLのサービスは別にある。
+  - のでほんとにAurora相当
+- 起動が早い
+  - 1分後に使えるようになった
+  - Aurora Express みたいな仕組みになっているのかな
+- https://www.scaleway.com/en/serverless-sql-database/
+- <img src="./sserverlesssql-create.png" width="300px" />
+- <img src="./sserverlesssql.png" width="300px" />
+
 ## Links
 - https://scaleway.com/
