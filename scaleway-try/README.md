@@ -55,6 +55,10 @@
 - <img src="./sserverlesssql-create.png" width="300px" />
 - <img src="./sserverlesssql.png" width="300px" />
 
+## Elastic Metal
+- EC2相当
+- <img src="./selasticmetal.png" width="300px" />
+
 ## VPC
 - <img src="./svpc.png" width="300px" />
 
