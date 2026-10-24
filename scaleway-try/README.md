@@ -2,8 +2,9 @@
 
 - ヨーロッパ拠点のパブリッククラウド
 - AIに強いらしい？
-- Object Storage を触ってみた。
-  - S3互換
+
+## Object Storage
+- S3互換
   - 非常にS3に似ている
   - 静的ウェブホスティングもできる
     - indexのファイルは指定できるし何ならエラーページ(404)も設定できる
@@ -22,6 +23,10 @@
   - 比較的 Paris が一番充実してそう。
   - なのでパリかなあ。
 - Billingはユーロで表示される
+- <img src="./sobjectstorage-create.png" width="300px" />
+- <img src="./sobjectstorage-files.png" width="300px" />
+- <img src="./sobjectstorage-setting.png" width="300px" />
+- <img src="./sobjectstorage-bucketpolicy.png" width="300px" />
 
 ## Serverless Functions
 - Lambda相当
