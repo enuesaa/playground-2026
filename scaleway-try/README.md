@@ -59,6 +59,10 @@
 - EC2相当
 - <img src="./selasticmetal.png" width="300px" />
 
+## Web Hosting
+- Lightsail 相当
+- CPanel や Wordpress をホストできるっぽい
+
 ## VPC
 - <img src="./svpc.png" width="300px" />
 
