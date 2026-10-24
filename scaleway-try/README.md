@@ -27,9 +27,16 @@
 - Lambda相当
 - ランタイムとして Node.js や Python や Go, Rust や PHP がある
   - PHP があるのはびっくり
+- 裏側は Docker Image っぽい
+  - Container Registry にイメージが作成されていた。
 - <img src="./sfunction-create.png" width="300px" />
 - <img src="./sfunction.png" width="300px" />
 
+## Serverless Containers
+- ECS / Cloud Run 相当
+- ALB が必須ではないという意味で Cloud Run に似ている
+- <img src="./scontainers-create.png" width="300px" />
+- <img src="./scontainers.png" width="300px" />
 
 ## Links
 - https://scaleway.com/
