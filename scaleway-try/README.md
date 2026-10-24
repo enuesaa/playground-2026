@@ -23,5 +23,13 @@
   - なのでパリかなあ。
 - Billingはユーロで表示される
 
+## Serverless Functions
+- Lambda相当
+- ランタイムとして Node.js や Python や Go, Rust や PHP がある
+  - PHP があるのはびっくり
+- <img src="./sfunction-create.png" width="300px" />
+- <img src="./sfunction.png" width="300px" />
+
+
 ## Links
 - https://scaleway.com/
