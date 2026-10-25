@@ -9,6 +9,7 @@
 - AlmaLinux と CentOS Stream 版の2つがある
   - 悩むが AlmaLinux かなー自分は。
   - Stream は安定しているのか不安がある
+- WordPress をセットアップしたらセキュリティのチェックプラグイン的なのが入っていたので案外いいかもと思った
 
 ### コマンド
 https://kusanagi.tokyo/document/kusanagi-quickstart/
