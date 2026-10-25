@@ -3,7 +3,9 @@
 - ruby のコードをバイナリにできる
 - 動いた
 - あたり前だが素のrubyより断然速いらしい
+- ruby のバージョンが古いとビルドに失敗するので注意
 
+## Commands
 ```bash
 make deps
 make
