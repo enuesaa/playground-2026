@@ -1,5 +1,10 @@
 # cpanel
 
+- サーバーの管理ツール
+  - Plesk のような。
+  - WordPress を立てたり
+  - phpMyAdmin も入っている
+  - cron の設定もできる
 - トライアル (15 Day Test License) で確認
   - ライセンスはここで確認可能。
     https://www.cpanel.net/
@@ -12,6 +17,7 @@
     - https://api.docs.cpanel.net/specifications/whm.openapi/account-creation/accounts-createacct
 - 自前で構築するのめんどくさそうな印象にある
   - whm というソフトウェアも必要っぽくて、cpanel と whm との関係性がよくわかってないが、いずれにしてもちょい面倒そう
+  - whm はサーバー管理者用らしい。cpanel 自体の管理
   - あとポートをいくつか開ける必要があって、何に使うのか、どういう設定が望ましいか判断に悩む
 
 ## Links
