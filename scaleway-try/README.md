@@ -27,6 +27,7 @@
 - <img src="./sobjectstorage-files.png" width="300px" />
 - <img src="./sobjectstorage-setting.png" width="300px" />
 - <img src="./sobjectstorage-bucketpolicy.png" width="300px" />
+- <img src="./storage-lifecycle.png" width="300px" />
 
 ## Serverless Functions
 - Lambda相当
