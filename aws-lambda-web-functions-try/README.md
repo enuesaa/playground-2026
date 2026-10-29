@@ -33,3 +33,4 @@
 ## Links
 - https://aws.amazon.com/jp/about-aws/whats-new/2026/10/aws-lambda-web-functions/
 - https://dev.classmethod.jp/articles/aws-lambda-web-functions-ga-express/
+- https://aws.amazon.com/jp/blogs/news/announcing-aws-lambda-web-functions-for-fast-consistent-web-app-performance-anywhere/
