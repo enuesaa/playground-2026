@@ -30,3 +30,16 @@ resource "aws_lambdaweb_function" "main" {
     auto_deployment_mode = "LatestRevision"
   }
 }
+
+resource "archive_file" "code" {
+  type        = "zip"
+  source_dir  = "lambdaweb"
+  output_path = "code.zip"
+}
+
+resource "aws_s3_object" "code" {
+  bucket = aws_s3_bucket.lambdaweb_code.id
+  key    = "code.zip"
+  source = archive_file.code.output_path
+  etag   = archive_file.code.output_md5
+}
