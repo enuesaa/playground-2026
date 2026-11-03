@@ -2,6 +2,8 @@
 
 - いわゆる列指向のDB。DWH
 - Big Query に思ったよりも似ている
+  - https://www.acceluniverse.com/blog/developers/2024/10/redshift-bigquery-usability.html
+  - https://data.gunosy.io/entry/sql_with_redshift_and_bigquery
 - Athena にも似ている
   - コンピューティングの使用量を気にする必要あるってのはAthenaとの大きな違いかも
   - https://business.ntt-east.co.jp/content/cloudsolution/column-116.html#section-2
