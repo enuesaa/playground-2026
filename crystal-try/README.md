@@ -20,7 +20,7 @@ crystal build hello.cr --release --no-debug
 
 curlもどき
 ```bash
-➜ crystal run mycurl.cr -- https://example.com
+➜ crystal run curlsimple.cr -- https://example.com
 HTTP 200
 <!doctype html><html lang=en><head><meta ..
 ```
