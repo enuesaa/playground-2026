@@ -1,0 +1,17 @@
+# misc
+.DS_Store
+.vscode
+.env
+
+# ui
+node_modules
+.angular
+dist
+src/environments/environment.*.ts
+
+# api
+__pycache__
+.venv
+*.zip
+.python_packages
+Taskfile.yml

@@ -1,0 +1,13 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.11"
+dependencies = [
+    "auth0-api-python>=1.0.0b6",
+    "azure-cosmos>=4.14.3",
+    "azure-functions>=1.24.0",
+    "beautifulsoup4>=4.14.3",
+    "pydantic>=2.12.5",
+    "python-ulid>=3.1.0",
+]

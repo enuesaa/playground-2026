@@ -1,0 +1,17 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "starrel": {
+      "appLocation": ".",
+      "outputLocation": "dist/starrel/browser",
+      "run": "pnpm dev",
+      "appBuildCommand": "pnpm build:prod",
+      "appDevserverUrl": "http://localhost:3000",
+      "apiLocation": "api",
+      "apiLanguage": "python",
+      "apiVersion": "3.11",
+      "apiBuildCommand": "rm -rf .python_packages && uv pip install -r pyproject.toml --python-platform x86_64-unknown-linux-gnu --no-installer-metadata --no-compile-bytecode --target .python_packages/lib/site-packages",
+      "swaConfigLocation": "."
+    }
+  }
+}
