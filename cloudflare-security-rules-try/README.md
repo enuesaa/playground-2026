@@ -10,6 +10,7 @@
   - これはたまにみるやつ。
   - Cloudflare の黒い画面が数秒表示されて、その後実際のページに遷移する。
   - この画面はカスタマイズできるらしい？
+  - https://zenn.dev/kameoncloud/articles/5e7626ed64624c
   - <img src="./noninteractivechallenge.png" width="300px" />
 - Interactive Challenge アクション
   - 人間に操作を要求する
@@ -17,5 +18,13 @@
   - <img src="./interactivechallenge.png" width="300px" />
 - Managed Challenge アクション
   - Non Interactive Challenge か Interactive Challenge のどちらかを表示するっぽい
+  - https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/#managed-challenges
   - https://blog.cloudflare.com/ja-jp/end-cloudflare-captcha
-  - https://zenn.dev/kameoncloud/articles/5e7626ed64624c
+- Block アクション
+  - こういう画面
+  - 思いっきしブロックされたってわかる。
+  - <img src="./blocked.png" width="300px" />
+- Skip アクション
+  - AWS WAF でいうカウントに相当
+  - まあ機能的には一緒なのだが Skip アクションを設定するときに追加で条件を指定する必要があって、例えば「All remaining custom rules」とか。これを難しい。どうすればいいのか。
+  - https://developers.cloudflare.com/waf/custom-rules/skip/
