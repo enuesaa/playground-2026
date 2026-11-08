@@ -5,6 +5,9 @@
 - GitHub へは GitHub App をインストールして連携する
   - エラーが出て連携できなかった
   - まだ不安定なのかもしれない
+  - S3 接続もダメそうだった
+    - 必要な権限
+    https://docs.aws.amazon.com/ja_jp/continuum/latest/userguide/cv-getting-started.html#cv-getting-started-s3
 - 東京リージョンにはまだない
 
 ## Links
