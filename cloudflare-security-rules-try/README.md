@@ -10,7 +10,8 @@
   - これはたまにみるやつ。
   - Cloudflare の黒い画面が数秒表示されて、その後実際のページに遷移する。
   - この画面はカスタマイズできるらしい？
-  - https://zenn.dev/kameoncloud/articles/5e7626ed64624c
+  https://zenn.dev/kameoncloud/articles/5e7626ed64624c
+  - チャレンジの有効期間は Challenge passage というところで設定できる
   - <img src="./noninteractivechallenge.png" width="300px" />
 - Interactive Challenge アクション
   - 人間に操作を要求する
@@ -28,3 +29,7 @@
   - AWS WAF でいうカウントに相当
   - まあ機能的には一緒なのだが Skip アクションを設定するときに追加で条件を指定する必要があって、例えば「All remaining custom rules」とか。これを難しい。どうすればいいのか。
   - https://developers.cloudflare.com/waf/custom-rules/skip/
+- Bot Fight Mode
+  - 正確には WAF の機能ではないっぽい
+  - がこれを有効にするとbotをはじけるらしい
+  - https://developers.cloudflare.com/bots/get-started/bot-fight-mode/
