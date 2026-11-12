@@ -1,0 +1,6 @@
+services:
+  awsemulator:
+    build: .
+    command: ["-p", "9297", "-a", "off"]
+    ports:
+      - 127.0.0.1:9297:9297
