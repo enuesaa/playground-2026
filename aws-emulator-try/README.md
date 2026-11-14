@@ -12,3 +12,4 @@ AWS_ENDPOINT_URL=https://127.0.0.1:9297 AWS_DEFAULT_REGION=us-east-1 AWS_ACCESS_
 
 ## Links
 - https://github.com/aws/aws-emulator
+- https://future-architect.github.io/articles/20261113a/
