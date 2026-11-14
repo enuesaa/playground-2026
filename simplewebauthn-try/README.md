@@ -1,6 +1,11 @@
-# WebAuthn
+# SimpleWebAuthn
 
+- Node.js
+- WebAuthn を実現できるライブラリ
 - Next.js App Router でパスキーをさくっと実装してもらった
 - ちなみに複数のユーザーでパスキーは使えるらしい
   - 勝手に1ユーザーだけしか使えないものと思い込んでた
   - 特定のサイトでパスキーが複数あったらどれでログインするかってダイアログが出てくる
+
+## Links
+- https://simplewebauthn.dev/
