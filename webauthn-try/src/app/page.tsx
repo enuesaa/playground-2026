@@ -1,15 +1,15 @@
-import { Header } from '../components/common/Header'
-import { Main } from '../components/common/Main'
-import { PasskeyForm } from '../components/PasskeyForm'
+import { PasskeyForm } from './PasskeyForm'
 import { getUsername } from '../lib/db'
 
 export default async function TopPage() {
   return (
     <>
-      <Header />
-      <Main>
+      <header className='w-full container mx-auto text-2xl font-semibold'>
+        testsite
+      </header>
+      <main className='w-full mx-auto container py-5'>
         <PasskeyForm me={await getUsername()} />
-      </Main>
+      </main>
     </>
   )
 }
