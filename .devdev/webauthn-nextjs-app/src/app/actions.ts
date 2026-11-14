@@ -1,37 +1,44 @@
 'use server'
 
-import {
-  generateAuthenticationOptions,
-  generateRegistrationOptions,
-  verifyAuthenticationResponse,
-  verifyRegistrationResponse,
-  type AuthenticationResponseJSON,
-  type RegistrationResponseJSON,
-} from '@simplewebauthn/server'
+import { generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse, type AuthenticationResponseJSON, type RegistrationResponseJSON } from '@simplewebauthn/server'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { loadDb, saveDb } from '../lib/db'
 
-const rpID = process.env.RP_ID ?? 'localhost'
-const origin = process.env.ORIGIN ?? 'http://localhost:3000'
-const cookieOpts = { httpOnly: true, sameSite: 'lax', path: '/', secure: origin.startsWith('https') } as const
+const rpID = 'localhost'
+const origin = 'http://localhost:3000'
+const cookieOpts = {
+  httpOnly: true,
+  sameSite: 'lax',
+  path: '/',
+  secure: origin.startsWith('https'),
+} as const
 
-const setChallenge = async (challenge: string) => (await cookies()).set('challenge', challenge, { ...cookieOpts, maxAge: 300 })
-const getChallenge = async () => (await cookies()).get('challenge')?.value ?? ''
+const setChallenge = async (challenge: string) => {
+  const cookieStore = await cookies()
+  cookieStore.set('challenge', challenge, { ...cookieOpts, maxAge: 300 })
+}
 
-const startSession = async (db: Awaited<ReturnType<typeof loadDb>>, username: string) => {
+const getChallenge = async () => {
+  const cookieStore = await cookies()
+  return cookieStore.get('challenge')?.value ?? ''
+}
+
+const startSession = async (db: Awaited<ReturnType<typeof loadDb>>, userName: string) => {
   const token = crypto.randomUUID()
-  db.sessions[token] = username
+  db.sessions[token] = userName
   await saveDb(db)
-  ;(await cookies()).set('session', token, { ...cookieOpts, maxAge: 60 * 60 * 24 * 7 })
+
+  const cookieStore = await cookies()
+  cookieStore.set('session', token, { ...cookieOpts, maxAge: 60 * 60 * 24 * 7 })
   revalidatePath('/')
 }
 
-export async function registerOptions(username: string) {
+export async function registerOptions(userName: string) {
   const options = await generateRegistrationOptions({
     rpName: 'my-nextjs-template',
     rpID,
-    userName: username,
+    userName: userName,
     attestationType: 'none',
     authenticatorSelection: { residentKey: 'required', userVerification: 'preferred' },
   })
@@ -39,10 +46,11 @@ export async function registerOptions(username: string) {
   return options
 }
 
-export async function registerVerify(username: string, res: RegistrationResponseJSON) {
+export async function registerVerify(userName: string, res: RegistrationResponseJSON) {
+  const expectedChallenge = await getChallenge()
   const v = await verifyRegistrationResponse({
     response: res,
-    expectedChallenge: await getChallenge(),
+    expectedChallenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
   })
@@ -51,11 +59,11 @@ export async function registerVerify(username: string, res: RegistrationResponse
   const { credential } = v.registrationInfo
   const db = await loadDb()
   db.creds[credential.id] = {
-    username,
+    userName,
     publicKey: Buffer.from(credential.publicKey).toString('base64url'),
     counter: credential.counter,
   }
-  await startSession(db, username)
+  await startSession(db, userName)
 }
 
 export async function loginOptions() {
@@ -69,9 +77,10 @@ export async function loginVerify(res: AuthenticationResponseJSON) {
   const cred = db.creds[res.id]
   if (!cred) throw new Error('unknown credential')
 
+  const expectedChallenge = await getChallenge()
   const v = await verifyAuthenticationResponse({
     response: res,
-    expectedChallenge: await getChallenge(),
+    expectedChallenge,
     expectedOrigin: origin,
     expectedRPID: rpID,
     credential: {
@@ -83,10 +92,11 @@ export async function loginVerify(res: AuthenticationResponseJSON) {
   if (!v.verified) throw new Error('verification failed')
 
   cred.counter = v.authenticationInfo.newCounter
-  await startSession(db, cred.username) // saveDb も内部で実行される
+  await startSession(db, cred.userName)
 }
 
 export async function logout() {
-  ;(await cookies()).delete('session')
+  const cookieStore = await cookies()
+  cookieStore.delete('session')
   revalidatePath('/')
 }

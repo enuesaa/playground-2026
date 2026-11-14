@@ -2,7 +2,11 @@ import { cookies } from 'next/headers'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 type Db = {
-  creds: Record<string, { username: string; publicKey: string; counter: number }>
+  creds: Record<string, {
+    userName: string;
+    publicKey: string;
+    counter: number;
+  }>
   sessions: Record<string, string> // token -> username
 }
 
