@@ -1,5 +1,8 @@
 # Squid
 
+- L7のフォワードプロキシ
+- 設定ファイルでブロックできる（ドメイン単位）
+
 ## Commands
 Al2023で試してみた。  
 EC2にSquidを立てて、そのEC2からexample.comへのリクエストをブロックするシンプルな構成。
@@ -31,3 +34,8 @@ $ tail /var/log/squid/access.log
 TCP_DENIED/403 CONNECT example.com:443 - HIER_NONE/- text/html
 ```
 
+今回のこれは明示的プロキシになっている。クライアントプログラムが Squid のサーバーをプロキシであると明示的に書く必要があるということ。透過的にもできるらしい
+
+## Links
+- https://www.squid-cache.org/
+- https://www.designet.co.jp/ossinfo/squid/
