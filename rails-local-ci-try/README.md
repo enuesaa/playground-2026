@@ -3,7 +3,8 @@
 - config/ci.rb にステップをかく
 - すると `bin/ci` で実行できる様子
 - ぱっと見は良さそう
-- testcontainers とかの思想に近い気がするがコンテナを立ち上げたりしないという点では別物か
+- testcontainers や Dagger と思想が近い気がする。けどコンテナを立ち上げたりしないという点では別物か
+- GitHub Actions からも bin/ci を呼び出せそう
 
 comamnds
 ```bash
