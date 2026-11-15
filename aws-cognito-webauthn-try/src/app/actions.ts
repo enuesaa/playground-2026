@@ -3,7 +3,9 @@
 import {
   CognitoIdentityProviderClient,
   CompleteWebAuthnRegistrationCommand,
+  DeleteWebAuthnCredentialCommand,
   InitiateAuthCommand,
+  ListWebAuthnCredentialsCommand,
   RespondToAuthChallengeCommand,
   StartWebAuthnRegistrationCommand,
   type AuthenticationResultType,
@@ -99,6 +101,27 @@ export async function loginVerify(username: string, credential: unknown) {
 
   cookieStore.delete('auth_session')
   await startSession(username, response.AuthenticationResult)
+}
+
+export async function listPasskeys() {
+  const accessToken = await getAccessToken()
+  const command = new ListWebAuthnCredentialsCommand({ AccessToken: accessToken })
+  const response = await cognito.send(command)
+  const credentials = response.Credentials ?? []
+
+  return credentials.map((credential) => ({
+    id: credential.CredentialId ?? '',
+    name: credential.FriendlyCredentialName ?? '',
+    attachment: credential.AuthenticatorAttachment ?? '',
+    createdAt: credential.CreatedAt?.toISOString() ?? '',
+  }))
+}
+
+export async function deletePasskey(credentialId: string) {
+  const accessToken = await getAccessToken()
+  const command = new DeleteWebAuthnCredentialCommand({ AccessToken: accessToken, CredentialId: credentialId })
+
+  await cognito.send(command)
 }
 
 export async function logout() {

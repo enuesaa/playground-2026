@@ -1,15 +1,26 @@
 'use client'
 
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
-import { useState } from 'react'
-import { loginOptions, loginVerify, logout, passwordLogin, registerOptions, registerVerify } from './actions'
+import { useEffect, useState } from 'react'
+import {
+  deletePasskey,
+  listPasskeys,
+  loginOptions,
+  loginVerify,
+  logout,
+  passwordLogin,
+  registerOptions,
+  registerVerify,
+} from './actions'
 
 type Props = { me?: string }
+type Passkey = Awaited<ReturnType<typeof listPasskeys>>[number]
 
 export const PasskeyForm = ({ me }: Props) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const [passkeys, setPasskeys] = useState<Passkey[]>([])
 
   const run = (action: () => Promise<unknown>, successMessage = '') => {
     return async () => {
@@ -23,6 +34,15 @@ export const PasskeyForm = ({ me }: Props) => {
     }
   }
 
+  const loadPasskeys = async () => {
+    const list = await listPasskeys()
+    setPasskeys(list)
+  }
+
+  useEffect(() => {
+    if (me) loadPasskeys().catch((e) => setMessage(String(e)))
+  }, [me])
+
   const handlePasswordLogin = run(async () => {
     await passwordLogin(username, password)
   })
@@ -31,6 +51,7 @@ export const PasskeyForm = ({ me }: Props) => {
     const optionsJSON = await registerOptions()
     const credential = await startRegistration({ optionsJSON })
     await registerVerify(credential)
+    await loadPasskeys()
   }, 'passkey registered')
 
   const handlePasskeyLogin = run(async () => {
@@ -38,6 +59,12 @@ export const PasskeyForm = ({ me }: Props) => {
     const credential = await startAuthentication({ optionsJSON })
     await loginVerify(username, credential)
   })
+
+  const handleDelete = (credentialId: string) =>
+    run(async () => {
+      await deletePasskey(credentialId)
+      await loadPasskeys()
+    })
 
   const handleLogout = run(async () => {
     await logout()
@@ -60,6 +87,19 @@ export const PasskeyForm = ({ me }: Props) => {
             logout
           </button>
         </div>
+        <ul className='space-y-2'>
+          {passkeys.map((passkey) => (
+            <li key={passkey.id} className='flex items-center gap-3 px-3 py-2 rounded bg-white'>
+              <span>
+                {passkey.name || 'passkey'} ({passkey.attachment === 'platform' ? 'この端末' : passkey.attachment})
+              </span>
+              <span className='text-sm'>{new Date(passkey.createdAt).toLocaleString('ja-JP')}</span>
+              <button className='ml-auto text-red-600' onClick={handleDelete(passkey.id)}>
+                delete
+              </button>
+            </li>
+          ))}
+        </ul>
         {message && <p>{message}</p>}
       </div>
     )
