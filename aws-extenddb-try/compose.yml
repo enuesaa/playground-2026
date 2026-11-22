@@ -1,0 +1,7 @@
+services:
+  extenddb:
+    image: extenddb/extenddb-dev:1.0.0
+    ports:
+      - 18080:18080
+    volumes:
+      - ./data:/var/lib/extenddb
