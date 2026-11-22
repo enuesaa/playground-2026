@@ -13,6 +13,8 @@
   - これであればSquidの代わりになるのでは？という見解も多そう
   - けど直近でなにか変わったらしくて試せてない
   - https://aws.amazon.com/jp/about-aws/whats-new/2026/08/aws-network-firewall-forward-proxy-preview/
+- NAT Gateway と統合する？Network Firewall が登場？
+  - https://aws.amazon.com/jp/about-aws/whats-new/2026/11/network-firewall-automated-internet/
 
 ## Links
 - https://qiita.com/nasuvitz/items/36be4707562f42a919c1
