@@ -8,6 +8,8 @@
   - S3 接続もダメそうだった
     - 必要な権限
     https://docs.aws.amazon.com/ja_jp/continuum/latest/userguide/cv-getting-started.html#cv-getting-started-s3
+  - 後日試したら Integration は作成できたけど 環境の作成はできなかった
+    - 権限エラーらしいけど多分違う
 - 東京リージョンにはまだない
 
 ## Links
