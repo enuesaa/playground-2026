@@ -62,6 +62,9 @@ def app(environ, start_response):
     return [body]
 ```
 
+fastapi も動いた。
+[./python-fastapi-app](./python-fastapi-app)
+
 ## Links
 - https://aws.amazon.com/jp/about-aws/whats-new/2026/10/aws-lambda-web-functions/
 - https://dev.classmethod.jp/articles/aws-lambda-web-functions-ga-express/
