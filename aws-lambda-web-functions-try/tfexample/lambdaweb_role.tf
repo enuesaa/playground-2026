@@ -14,3 +14,8 @@ resource "aws_iam_role" "lambdaweb_execution" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "lambdaweb_execution_logs" {
+  role       = aws_iam_role.lambdaweb_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}

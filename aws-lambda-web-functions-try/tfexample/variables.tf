@@ -1,5 +1,5 @@
 variable "identifier" {
   type        = string
-  default     = "mytest"
+  default     = "mytest2"
   description = "Prefix for resource names"
 }
