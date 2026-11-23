@@ -30,6 +30,38 @@
   - 環境のライフサイクルだけ注意。これまでのLambdaとは様子が異なる。
   - https://zenn.dev/aws_japan/articles/lambda-web-functions-vs-event-functions#%E7%92%B0%E5%A2%83%E3%81%AE%E5%AF%BF%E5%91%BD
 
+## Python 3.15 ランタイム
+- プレビュー中
+- 一応動いた
+- ASGI or WSGI をサポート
+  - って書いてあるけどこのレイヤーについては通常実装する分には気にする必要なさそう。さわれないので。
+  - https://docs.aws.amazon.com/lambda/latest/dg/web-functions-python.html
+- けど不思議なコード
+  - って思ったらこのコードは WSGI のエントリポイントらしい
+  - https://peps.python.org/pep-3333/#the-application-framework-side
+  - 知らなかった
+
+```py
+import json
+
+def app(environ, start_response):
+    if environ.get("PATH_INFO") == "/hello":
+        body = json.dumps({
+            "message": "hello",
+        }).encode()
+        content_type = "application/json"
+    else:
+        with open("index.html", "rb") as f:
+            body = f.read()
+        content_type = "text/html; charset=utf-8"
+
+    start_response("200 OK", [
+        ("Content-Type", content_type),
+        ("Content-Length", str(len(body))),
+    ])
+    return [body]
+```
+
 ## Links
 - https://aws.amazon.com/jp/about-aws/whats-new/2026/10/aws-lambda-web-functions/
 - https://dev.classmethod.jp/articles/aws-lambda-web-functions-ga-express/
