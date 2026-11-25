@@ -1,0 +1,7 @@
+# compose.yaml
+services:
+  tomcat:
+    image: tomcat:11.0-jdk21
+    ports:
+      - 8080:8080
+    command: sh -c "cp -r webapps.dist/* webapps/ && catalina.sh run"
